@@ -1,8 +1,8 @@
 package nahamawiki.oef.block;
 
-public class BlockOEFGenerator extends BlockOEFBase {
+public class BlockEEGenerator extends BlockEEMachineBase {
 
-	public BlockOEFGenerator() {
+	public BlockEEGenerator() {
 		super();
 		this.setHardness(7.5F);
 		this.setResistance(1000000F);
@@ -10,6 +10,6 @@ public class BlockOEFGenerator extends BlockOEFBase {
 
 	@Override
 	public boolean canProvideEE() {
-		return false;
+		return true;
 	}
 }

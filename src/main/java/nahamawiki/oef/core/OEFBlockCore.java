@@ -1,25 +1,21 @@
 package nahamawiki.oef.core;
 
-
 import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.block.BlockOEFGenerator;
+import nahamawiki.oef.block.BlockEEGenerator;
 import net.minecraft.block.Block;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFBlockCore {
 
-	public static final Block EEGen = 
-			new BlockOEFGenerator()
-			.setBlockName("EEGenerator")
-			.setBlockTextureName(OEFCore.DOMEINNAME + "eegen");
+	public static Block EEGenerator;
 
-	/**ブロックを設定する*/
-	public static void registerBlock () {
-		GameRegistry.registerBlock(EEGen, EEGen.getUnlocalizedName());
-		
-		OreDictionary.registerOre(EEGen.getUnlocalizedName(), EEGen);
-
+	public static void registerBlock() {
+		EEGenerator = new BlockEEGenerator();
+		EEGenerator.setBlockName("EEGenerator");
+		EEGenerator.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
+		GameRegistry.registerBlock(EEGenerator, EEGenerator.getUnlocalizedName());
+		OreDictionary.registerOre(EEGenerator.getUnlocalizedName(), EEGenerator);
 	}
 
 }
