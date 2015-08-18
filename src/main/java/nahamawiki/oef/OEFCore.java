@@ -41,7 +41,6 @@ public class OEFCore {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		OEFInfoCore.loadInfo(meta);
-
 		OEFBlockCore.registerBlock();
 	}
 
