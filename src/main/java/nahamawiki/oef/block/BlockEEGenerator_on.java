@@ -15,16 +15,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockEEGenerator extends BlockEEMachineBase {
+public class BlockEEGenerator_on extends BlockEEMachineBase {
 
 	private IIcon[] iicon = new IIcon[4];
 
-	public BlockEEGenerator() {
+	public BlockEEGenerator_on() {
 		super();
 		this.setHardness(7.5F);
 		this.setResistance(0.0F);
 		this.setStepSound(soundTypeMetal);
 		this.setTickRandomly(true);
+		this.setCreativeTab(null);
 	}
 
 	@Override
@@ -47,9 +48,7 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion)
     {
-    	world.setBlock(x, y, z, OEFBlockCore.EEGenerator_on ,0, 2);
-    	world.scheduleBlockUpdate(x, y, z, OEFBlockCore.EEGenerator_on, this.tickRate(world));
-    	world.notifyBlocksOfNeighborChange(x, y , z, OEFBlockCore.EEGenerator_on);
+    	world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
     	super.onBlockDestroyedByExplosion(world, x, y, z, explosion);
     }
 
@@ -74,19 +73,15 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 
 		/**イカテスト用*/
 		{
-			this.iicon[3] = iicon.registerIcon("creepermod:creeperbomb");
-			this.iicon[1] = iicon.registerIcon("creepermod:creeperbomb");
+			this.iicon[2] = iicon.registerIcon("creepermod:creeperbomb");
+			this.iicon[0] = iicon.registerIcon("creepermod:creeperbomb");
 		}
 	}
 
 	/**EE発生中は光源になるようにする*/
 	@Override
 	public int getLightValue(IBlockAccess iBlockAccess, int x, int y, int z) {
-		if (iBlockAccess.getBlockMetadata(x, y, z) >= 8) {
-			return 13;
-		} else {
-			return 0;
-		}
+		return 0;
 	}
 
 	/**ブロックが設置された時の処理*/
@@ -119,11 +114,8 @@ public class BlockEEGenerator extends BlockEEMachineBase {
      */
     public void updateTick(World world, int x, int y, int z, Random r)
     {
-    	if(world.getBlockMetadata(x, y, z) >= 8)
-    	{
-    		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-    		this.onBlockPlacedBy(world, x, y, z, null, null);
-    	}
+    	world.setBlock(x, y, z, OEFBlockCore.EEGenerator);
+    	world.notifyBlocksOfNeighborChange(x, y, z, OEFBlockCore.EEGenerator);
     }
 
     /**
@@ -136,6 +128,6 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 
 	@Override
 	public int providingEE() {
-		return 0;
+		return 30;
 	}
 }
