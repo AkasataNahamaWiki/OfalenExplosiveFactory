@@ -1,13 +1,10 @@
 package nahamawiki.oef.block;
 
-import nahamawiki.oef.OEFCore;
-import net.minecraft.block.Block;
 
-public abstract class BlockEEMachineBase extends Block {
+public abstract class BlockEEMachineBase extends BlockOEFBase {
 
 	public BlockEEMachineBase() {
-		super(OEFCore.materialOEF);
-		this.setCreativeTab(OEFCore.tabOEF);
+		super();
 		this.setHarvestLevel("pickaxe", 3);
 	}
 
