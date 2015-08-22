@@ -1,7 +1,7 @@
-package nahamawiki.oef.core;
+package wikimanagers.oef.core;
 
-import nahamawiki.oef.OEFCore;
 import net.minecraft.util.StatCollector;
+import wikimanagers.oef.OEFCore;
 import cpw.mods.fml.common.ModMetadata;
 
 public class OEFInfoCore {
@@ -11,7 +11,7 @@ public class OEFInfoCore {
 		meta.name = OEFCore.MODNAME;
 		meta.description =StatCollector.translateToLocal("info.metadescription");
 		meta.version =OEFCore.VERSION ;
-		meta.url = "http://www63.atwiki.jp/akasatanahama/pages/1.html";
+		meta.url = "";
 		meta.authorList.add("AkasataNahamaWiki's Manager");
 		meta.authorList.add("Tom Kate");
 		meta.authorList.add("Akasata Nahama");
