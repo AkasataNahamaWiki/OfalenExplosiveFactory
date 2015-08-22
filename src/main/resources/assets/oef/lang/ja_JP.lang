@@ -1,0 +1,17 @@
+﻿#----------------------------------------------------------
+# lang: Japanese
+#----------------------------------------------------------
+
+
+//クリエイティブタブの名称
+itemGroup.OEFTab=OEF
+
+//アイテムの名称
+
+//ブロックの名称
+tile.EEGenerator.name=EE発生機
+tile.EEGenerator_on.name=EE発生機
+tile.EELamp.name=EEランプ
+tile.EELamp_on.name=EEランプ
+
+//その他

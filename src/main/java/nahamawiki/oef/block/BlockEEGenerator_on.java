@@ -3,7 +3,6 @@ package nahamawiki.oef.block;
 import java.util.Random;
 
 import nahamawiki.oef.core.OEFBlockCore;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -11,8 +10,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class BlockEEGenerator_on extends BlockEEMachineBase {
@@ -52,36 +49,11 @@ public class BlockEEGenerator_on extends BlockEEMachineBase {
     	super.onBlockDestroyedByExplosion(world, x, y, z, explosion);
     }
 
-    /**メタデータにより返すIIconを変える*/
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		if (meta < 8) {
-			return side == meta ? this.iicon[2] : this.iicon[0];
-		} else {
-			return side == (meta & 7) ? this.iicon[3] : this.iicon[1];
-		}
-	}
-
-	/**メタデータ違いのテクスチャを登録する*/
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iicon) {
-		for (int i = 0; i  < 4; i ++) {
-			this.iicon[i] = iicon.registerIcon(this.getTextureName() + "-" + i);
-		}
-
-		/**イカテスト用*/
-		{
-			this.iicon[2] = iicon.registerIcon("creepermod:creeperbomb");
-			this.iicon[0] = iicon.registerIcon("creepermod:creeperbomb");
-		}
-	}
 
 	/**EE発生中は光源になるようにする*/
 	@Override
 	public int getLightValue(IBlockAccess iBlockAccess, int x, int y, int z) {
-		return 0;
+		return 9;
 	}
 
 	/**ブロックが設置された時の処理*/

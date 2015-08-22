@@ -38,7 +38,7 @@ public class OEFBlockCore {
 		EELamp_on.setCreativeTab(null);
 		EELamp_on.setBlockName("EELamp_on");
 		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
-		EELamp_on.setBlockTextureName("creepermod:creeperbomb");
+		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
 		GameRegistry.registerBlock(EELamp_on, EELamp_on.getUnlocalizedName());
 		OreDictionary.registerOre(EELamp_on.getUnlocalizedName(), EELamp_on);
 	}
