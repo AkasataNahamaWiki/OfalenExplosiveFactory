@@ -1,4 +1,4 @@
-package nahamawiki.oef.block.itemblock;
+package nahamawiki.oef.itemblock;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlockWithMetadata;
@@ -10,7 +10,6 @@ public class ItemOEFBlock extends ItemBlockWithMetadata {
 		super(block, block);
 	}
 
-	/**メタデータにより内部名を変える*/
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
 		return super.getUnlocalizedName() + "." + itemStack.getItemDamage();

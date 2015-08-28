@@ -1,6 +1,5 @@
 package nahamawiki.oef.block;
 
-
 public abstract class BlockEEMachineBase extends BlockOEFBase {
 
 	public BlockEEMachineBase() {
@@ -11,7 +10,7 @@ public abstract class BlockEEMachineBase extends BlockOEFBase {
 	public abstract boolean canProvideEE();
 
 	public abstract boolean canReciveEE();
-	
+
 	public abstract int providingEE();
 
 }

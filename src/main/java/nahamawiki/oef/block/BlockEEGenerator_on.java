@@ -11,7 +11,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-
 public class BlockEEGenerator_on extends BlockEEMachineBase {
 
 	private IIcon[] iicon = new IIcon[4];
@@ -35,34 +34,27 @@ public class BlockEEGenerator_on extends BlockEEMachineBase {
 		return false;
 	}
 
-    /**
-     * Return whether this block can drop from an explosion.
-     */
-    public boolean canDropFromExplosion(Explosion p_149659_1_)
-    {
-        return false;
-    }
+	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+		return false;
+	}
 
-    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion)
-    {
-    	world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
-    	super.onBlockDestroyedByExplosion(world, x, y, z, explosion);
-    }
+	@Override
+	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
+		super.onBlockDestroyedByExplosion(world, x, y, z, explosion);
+	}
 
-
-	/**EE発生中は光源になるようにする*/
 	@Override
 	public int getLightValue(IBlockAccess iBlockAccess, int x, int y, int z) {
 		return 9;
 	}
 
-	/**ブロックが設置された時の処理*/
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		int l = 0;
-		if(entity != null)
-		{
-			l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		if (entity != null) {
+			l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		}
 		if (l == 0) {
 			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
@@ -81,25 +73,20 @@ public class BlockEEGenerator_on extends BlockEEMachineBase {
 		}
 	}
 
-	   /**
-     * Ticks the block if it's been scheduled
-     */
-    public void updateTick(World world, int x, int y, int z, Random r)
-    {
-    	world.setBlock(x, y, z, OEFBlockCore.EEGenerator);
-    	world.notifyBlocksOfNeighborChange(x, y, z, OEFBlockCore.EEGenerator);
-    }
+	@Override
+	public void updateTick(World world, int x, int y, int z, Random r) {
+		world.setBlock(x, y, z, OEFBlockCore.EEGenerator);
+		world.notifyBlocksOfNeighborChange(x, y, z, OEFBlockCore.EEGenerator);
+	}
 
-    /**
-     * How many world ticks before ticking
-     */
-    public int tickRate(World p_149738_1_)
-    {
-        return 30;
-    }
+	@Override
+	public int tickRate(World world) {
+		return 30;
+	}
 
 	@Override
 	public int providingEE() {
 		return 30;
 	}
+
 }
