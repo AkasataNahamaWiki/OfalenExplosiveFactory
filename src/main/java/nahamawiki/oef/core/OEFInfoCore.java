@@ -6,13 +6,14 @@ import cpw.mods.fml.common.ModMetadata;
 
 public class OEFInfoCore {
 
-	public static void loadInfo(ModMetadata meta) {
+	/** MODの情報を登録する */
+	public static void registerInfo(ModMetadata meta) {
 		meta.modId = OEFCore.MODID;
 		meta.name = OEFCore.MODNAME;
 		meta.description = StatCollector.translateToLocal("info.metadescription");
 		meta.version = OEFCore.VERSION;
 		meta.url = "http://www63.atwiki.jp/akasatanahama/pages/1.html";
-		meta.authorList.add("AkasataNahamaWiki's Manager");
+		meta.authorList.add("Akasata Nahama Wiki's Manager");
 		meta.authorList.add("Tom Kate");
 		meta.authorList.add("Akasata Nahama");
 		meta.credits = "";

@@ -1,7 +1,11 @@
 package nahamawiki.oef;
 
 import nahamawiki.oef.core.OEFBlockCore;
+import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.core.OEFInfoCore;
+import nahamawiki.oef.core.OEFItemCore;
+import nahamawiki.oef.core.OEFOreDicCore;
+import nahamawiki.oef.core.OEFRecipeCore;
 import nahamawiki.oef.creativetab.OEFCreativeTab;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -40,14 +44,20 @@ public class OEFCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		OEFInfoCore.loadInfo(meta);
+		OEFInfoCore.registerInfo(meta);
+		OEFConfigCore.loadConfig(event);
+		OEFItemCore.registerItem();
 		OEFBlockCore.registerBlock();
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event) {}
+	public void init(FMLInitializationEvent event) {
+		OEFRecipeCore.registerRecipe();
+	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {}
+	public void postInit(FMLPostInitializationEvent event) {
+		OEFOreDicCore.getOres();
+	}
 
 }

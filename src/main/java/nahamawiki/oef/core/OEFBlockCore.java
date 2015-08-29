@@ -1,10 +1,12 @@
 package nahamawiki.oef.core;
 
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
 import nahamawiki.oef.block.BlockEEGenerator_on;
 import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.block.BlockEEMachineBase;
+import net.minecraft.block.Block;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -15,6 +17,9 @@ public class OEFBlockCore {
 	public static BlockEEMachineBase EELamp;
 	public static BlockEEMachineBase EELamp_on;
 
+	public static Block conductorEE;
+
+	/** ブロックを追加・登録する */
 	public static void registerBlock() {
 		EEGenerator = new BlockEEGenerator();
 		EEGenerator.setBlockName("EEGenerator");
@@ -41,6 +46,11 @@ public class OEFBlockCore {
 		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
 		GameRegistry.registerBlock(EELamp_on, EELamp_on.getUnlocalizedName());
 		OreDictionary.registerOre(EELamp_on.getUnlocalizedName(), EELamp_on);
+
+		conductorEE = new BlockEEConductor();
+		conductorEE.setBlockName("EEConductor");
+		conductorEE.setBlockTextureName(OEFCore.DOMEINNAME + "EE_Conductor");
+		GameRegistry.registerBlock(conductorEE, conductorEE.getUnlocalizedName());
 	}
 
 }
