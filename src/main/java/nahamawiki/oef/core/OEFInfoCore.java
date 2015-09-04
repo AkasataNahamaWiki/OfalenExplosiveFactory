@@ -13,7 +13,7 @@ public class OEFInfoCore {
 		meta.description = StatCollector.translateToLocal("info.metadescription");
 		meta.version = OEFCore.VERSION;
 		meta.url = "http://www63.atwiki.jp/akasatanahama/pages/1.html";
-		meta.authorList.add("Akasata Nahama Wiki's Manager");
+		meta.authorList.add("Akasata Nahama Wiki's Managers");
 		meta.authorList.add("Tom Kate");
 		meta.authorList.add("Akasata Nahama");
 		meta.credits = "";

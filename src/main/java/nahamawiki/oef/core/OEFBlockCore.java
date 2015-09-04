@@ -6,6 +6,7 @@ import nahamawiki.oef.block.BlockEEGenerator;
 import nahamawiki.oef.block.BlockEEGenerator_on;
 import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.block.BlockEEMachineBase;
+import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import net.minecraft.block.Block;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -51,6 +52,7 @@ public class OEFBlockCore {
 		conductorEE.setBlockName("EEConductor");
 		conductorEE.setBlockTextureName(OEFCore.DOMEINNAME + "EE_Conductor");
 		GameRegistry.registerBlock(conductorEE, conductorEE.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
 	}
 
 }

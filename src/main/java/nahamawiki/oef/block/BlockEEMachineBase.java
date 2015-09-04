@@ -4,6 +4,7 @@ public abstract class BlockEEMachineBase extends BlockOEFBase {
 
 	public BlockEEMachineBase() {
 		super();
+		this.setResistance(6000000.0F);
 		this.setHarvestLevel("pickaxe", 3);
 	}
 

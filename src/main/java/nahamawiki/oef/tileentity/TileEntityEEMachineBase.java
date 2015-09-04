@@ -5,25 +5,27 @@ import net.minecraft.tileentity.TileEntity;
 
 public abstract class TileEntityEEMachineBase extends TileEntity {
 
-	protected int holdingEE;
+	protected int holdingEE[] = new int[6];
 
 	/** EEを受け取る処理 */
-	public abstract void reciveEE(int amount);
+	public abstract void reciveEE(int amount, int side);
 
-	public TileEntityEEMachineBase() {
-		holdingEE = 0;
+	public TileEntityEEMachineBase() {}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		for (int i = 0; i < 6; i++) {
+			nbt.setInteger("holdingEE-" + i, holdingEE[i]);
+		}
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		holdingEE = nbt.getInteger("holdingEE");
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("holdingEE", holdingEE);
+		for (int i = 0; i < 6; i++) {
+			holdingEE[i] = nbt.getInteger("holdingEE-" + i);
+		}
 	}
 
 }
