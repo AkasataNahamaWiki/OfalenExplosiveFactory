@@ -6,6 +6,6 @@ public class OEFRecipeCore {
 	private static final OEFBlockCore BLOCK = new OEFBlockCore();
 
 	/** レシピを登録する */
-	public static void registerRecipe() {}
+	public static void registerRecipes() {}
 
 }

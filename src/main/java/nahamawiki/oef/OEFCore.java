@@ -7,6 +7,7 @@ import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.core.OEFOreDicCore;
 import nahamawiki.oef.core.OEFRecipeCore;
 import nahamawiki.oef.creativetab.OEFCreativeTab;
+import nahamawiki.oef.material.OEFMaterial;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -40,19 +41,19 @@ public class OEFCore {
 
 	public static Logger logger = LogManager.getLogger(MODID);
 	public static final CreativeTabs tabOEF = new OEFCreativeTab("OEFTab");
-	public static final Material materialOEF = new Material(MapColor.diamondColor);
+	public static final Material materialOEF = new OEFMaterial(MapColor.diamondColor);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		OEFInfoCore.registerInfo(meta);
 		OEFConfigCore.loadConfig(event);
-		OEFItemCore.registerItem();
-		OEFBlockCore.registerBlock();
+		OEFItemCore.registerItems();
+		OEFBlockCore.registerBlocks();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		OEFRecipeCore.registerRecipe();
+		OEFRecipeCore.registerRecipes();
 	}
 
 	@EventHandler

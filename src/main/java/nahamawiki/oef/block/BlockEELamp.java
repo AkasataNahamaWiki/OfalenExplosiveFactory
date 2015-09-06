@@ -58,7 +58,7 @@ public class BlockEELamp extends BlockEEMachineBase {
 			 * }
 			 * else
 			 */if (block instanceof BlockEEMachineBase && ((BlockEEMachineBase) block).canProvideEE()) {
-				if (((BlockEEMachineBase) block).providingEE() > 0) {
+				if (((BlockEEMachineBase) block).providingEE(world.getBlockMetadata(x, y, z)) > 0) {
 					world.setBlock(x, y, z, OEFBlockCore.EELamp_on, 0, 2);
 				} else {
 					world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
@@ -102,7 +102,7 @@ public class BlockEELamp extends BlockEEMachineBase {
 	}
 
 	@Override
-	public int providingEE() {
+	public int providingEE(int meta) {
 		return 0;
 	}
 

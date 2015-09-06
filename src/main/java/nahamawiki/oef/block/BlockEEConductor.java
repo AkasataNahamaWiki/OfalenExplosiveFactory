@@ -19,7 +19,7 @@ public class BlockEEConductor extends BlockEEMachineBase implements ITileEntityP
 	}
 
 	@Override
-	public int providingEE() {
+	public int providingEE(int meta) {
 		return 0;
 	}
 

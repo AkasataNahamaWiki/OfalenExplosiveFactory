@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 
 public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
+	protected int[] holdingEEArray = new int[6];
 	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
 	protected ArrayList<Integer> provider = new ArrayList<Integer>();
 	protected ArrayList<Integer> sender = new ArrayList<Integer>();
@@ -20,13 +21,18 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void reciveEE(int amount, int side) {
-		holdingEE[side] += amount;
+	public int reciveEE(int amount, int side) {
+		holdingEEArray[side] += amount;
+		return 0;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+
+		for (int i = 0; i < 6; i++) {
+			nbt.setInteger("holdingEEArray-" + i, holdingEEArray[i]);
+		}
 
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < reciver.size(); i++) {
@@ -54,6 +60,10 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
+		for (int i = 0; i < 6; i++) {
+			holdingEEArray[i] = nbt.getInteger("holdingEEArray-" + i);
+		}
+
 		reciver.clear();
 		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
 		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
@@ -75,31 +85,43 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateEntity() {
+		if (worldObj.isRemote)
+			return;
 		for (int i = 0; i < sender.size(); i++) {
 			BlockEEMachineBase machine = (BlockEEMachineBase) worldObj.getBlock(xCoord + offsetsXForSide[sender.get(i)], yCoord + offsetsYForSide[sender.get(i)], zCoord + offsetsZForSide[sender.get(i)]);
-			this.reciveEE(machine.providingEE(), sender.get(i));
+			this.reciveEE(machine.providingEE(worldObj.getBlockMetadata(xCoord + offsetsXForSide[sender.get(i)], yCoord + offsetsYForSide[sender.get(i)], zCoord + offsetsZForSide[sender.get(i)])), sender.get(i));
 		}
 		if (reciver.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {
-			if (holdingEE[i] < 1)
-				return;
+			if (holdingEEArray[i] < 1)
+				continue;
 			int sendEE;
+			int reciverNum = reciver.size();
 			if (reciver.contains(i)) {
-				if (reciver.size() < 2)
+				if (reciverNum < 2)
 					continue;
-				sendEE = holdingEE[i] / (reciver.size() - 1);
-				holdingEE[i] %= (reciver.size() - 1);
+				sendEE = holdingEEArray[i] / (reciverNum - 1);
+				holdingEEArray[i] %= (reciverNum - 1);
 			} else {
-				sendEE = holdingEE[i] / reciver.size();
-				holdingEE[i] %= reciver.size();
+				sendEE = holdingEEArray[i] / reciverNum;
+				holdingEEArray[i] %= reciverNum;
 			}
 			if (sendEE < 1)
 				continue;
 			for (int j = 0; j < 6; j++) {
 				if (reciver.contains(j) && j != i) {
+					reciverNum--;
 					TileEntityEEMachineBase machine = (TileEntityEEMachineBase) worldObj.getTileEntity(xCoord + offsetsXForSide[j], yCoord + offsetsYForSide[j], zCoord + offsetsZForSide[j]);
-					machine.reciveEE(sendEE, oppositeSide[j]);
+					int surplus = machine.reciveEE(sendEE, oppositeSide[j]);
+					if (surplus < 1)
+						continue;
+					if (reciverNum < 1) {
+						holdingEEArray[i] += surplus;
+						continue;
+					}
+					sendEE += surplus / reciverNum;
+					holdingEEArray[i] += surplus % reciverNum;
 				}
 			}
 		}
@@ -107,6 +129,8 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
+		if (worldObj.isRemote)
+			return;
 		reciver.clear();
 		provider.clear();
 		sender.clear();
