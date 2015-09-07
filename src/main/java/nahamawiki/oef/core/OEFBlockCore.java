@@ -5,6 +5,7 @@ import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
 import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.block.BlockEEMachineBase;
+import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import net.minecraft.block.Block;
 import net.minecraftforge.oredict.OreDictionary;
@@ -23,7 +24,7 @@ public class OEFBlockCore {
 		EEGenerator = new BlockEEGenerator()
 				.setBlockName("EEGenerator")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
-		GameRegistry.registerBlock(EEGenerator, EEGenerator.getUnlocalizedName());
+		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, EEGenerator.getUnlocalizedName());
 		OreDictionary.registerOre(EEGenerator.getUnlocalizedName(), EEGenerator);
 
 		EELamp = new BlockEELamp(false);
