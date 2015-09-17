@@ -9,10 +9,4 @@ public abstract class BlockEEMachineBase extends BlockOEFBase {
 		this.setHarvestLevel("pickaxe", 3);
 	}
 
-	public abstract boolean canProvideEE();
-
-	public abstract boolean canReciveEE();
-
-	public abstract int providingEE(int meta);
-
 }

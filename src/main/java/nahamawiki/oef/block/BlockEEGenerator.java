@@ -4,18 +4,21 @@ import java.util.List;
 import java.util.Random;
 
 import nahamawiki.oef.core.OEFBlockCore;
+import nahamawiki.oef.tileentity.TileEntityEEGenerator;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEEGenerator extends BlockEEMachineBase {
+public class BlockEEGenerator extends BlockEEMachineBase implements ITileEntityProvider {
 
 	private IIcon[] iicon = new IIcon[8];
 
@@ -26,28 +29,22 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 	}
 
 	@Override
-	public boolean canProvideEE() {
-		return true;
+	public TileEntity createNewTileEntity(World world, int meta) {
+		return new TileEntityEEGenerator();
 	}
 
 	@Override
-	public boolean canReciveEE() {
-		return false;
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity instanceof TileEntityEEGenerator)
+			((TileEntityEEGenerator) tileEntity).updateDirection(world, x, y, z);
 	}
 
 	@Override
-	public int providingEE(int meta) {
-		switch (meta - 4) {
-		case 0:
-			return 100;
-		case 1:
-			return 200;
-		case 2:
-			return 400;
-		case 3:
-			return 800;
-		}
-		return 0;
+	public void onBlockAdded(World world, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity instanceof TileEntityEEGenerator)
+			((TileEntityEEGenerator) tileEntity).updateDirection(world, x, y, z);
 	}
 
 	@Override
@@ -60,15 +57,6 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 		world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 4, 2);
 		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 		this.onBlockDestroyedByExplosion(world, x, y, z, explosion);
-	}
-
-	@Override
-	public int getLightValue(IBlockAccess iBlockAccess, int x, int y, int z) {
-		if (iBlockAccess.getBlockMetadata(x, y, z) > 3) {
-			return 15;
-		} else {
-			return 0;
-		}
 	}
 
 	@Override

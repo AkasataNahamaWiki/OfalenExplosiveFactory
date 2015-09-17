@@ -7,8 +7,8 @@ import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.block.BlockEEMachineBase;
 import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
+import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
-import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFBlockCore {
@@ -25,21 +25,18 @@ public class OEFBlockCore {
 				.setBlockName("EEGenerator")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
 		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, EEGenerator.getUnlocalizedName());
-		OreDictionary.registerOre(EEGenerator.getUnlocalizedName(), EEGenerator);
+		GameRegistry.registerTileEntity(TileEntityEEGenerator.class, "TileEntityEEGenerator");
 
 		EELamp = new BlockEELamp(false);
 		EELamp.setBlockName("EELamp");
 		EELamp.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp");
 		GameRegistry.registerBlock(EELamp, EELamp.getUnlocalizedName());
-		OreDictionary.registerOre(EELamp.getUnlocalizedName(), EELamp);
 
 		EELamp_on = new BlockEELamp(true);
 		EELamp_on.setCreativeTab(null);
 		EELamp_on.setBlockName("EELamp_on");
 		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
-		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
 		GameRegistry.registerBlock(EELamp_on, EELamp_on.getUnlocalizedName());
-		OreDictionary.registerOre(EELamp_on.getUnlocalizedName(), EELamp_on);
 
 		conductorEE = new BlockEEConductor()
 				.setBlockName("EEConductor")
