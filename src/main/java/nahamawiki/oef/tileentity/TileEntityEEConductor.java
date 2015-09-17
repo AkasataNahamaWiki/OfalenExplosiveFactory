@@ -4,8 +4,10 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
+import nahamawiki.oef.OEFCore;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class TileEntityEEConductor extends TileEntityEEMachineBase {
@@ -26,6 +28,22 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	@Override
 	public int reciveEE(int amount, int side) {
 		holdingEEArray[side] += amount;
+		return 0;
+	}
+
+	@Override
+	public String[] getState(int side) {
+		OEFCore.logger.info("holdingEE = " + this.holdingEE);
+		return new String[] {
+				StatCollector.translateToLocal("info.EEMachineState.name") + this.getBlockType().getLocalizedName(),
+				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
+				StatCollector.translateToLocal("info.EEMachineState.meta") + this.getBlockMetadata(),
+				StatCollector.translateToLocal("info.EEMachineState.holding") + this.holdingEE
+		};
+	}
+
+	@Override
+	public int getLevel(int meta) {
 		return 0;
 	}
 
@@ -75,7 +93,13 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote || reciver.size() < 1)
+		if (worldObj.isRemote)
+			return;
+		holdingEE = 0;
+		for (int i = 0; i < 6; i++) {
+			holdingEE += holdingEEArray[i];
+		}
+		if (reciver.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {
 			if (holdingEEArray[i] < 1)

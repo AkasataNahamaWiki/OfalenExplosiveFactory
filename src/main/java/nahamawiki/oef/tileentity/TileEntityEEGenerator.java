@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class TileEntityEEGenerator extends TileEntityEEMachineBase {
@@ -20,6 +21,37 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	@Override
 	public int reciveEE(int amount, int side) {
 		return amount;
+	}
+
+	@Override
+	public String[] getState(int side) {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		int sendingEE = 0;
+		switch (blockMetadata) {
+		case 4:
+			sendingEE = 100;
+			break;
+		case 5:
+			sendingEE = 200;
+			break;
+		case 6:
+			sendingEE = 400;
+			break;
+		case 7:
+			sendingEE = 800;
+			break;
+		}
+		return new String[] {
+				StatCollector.translateToLocal("info.EEMachineState.name") + this.getBlockType().getLocalizedName(),
+				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
+				StatCollector.translateToLocal("info.EEMachineState.meta") + this.getBlockMetadata(),
+				StatCollector.translateToLocal("info.EEMachineState.providing") + sendingEE
+		};
+	}
+
+	@Override
+	public int getLevel(int meta) {
+		return meta & 3;
 	}
 
 	@Override
@@ -72,6 +104,8 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 			reciverNum--;
 			int side = reciver.get(i);
 			ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
+			if (machine == null)
+				continue;
 			int surplus = machine.reciveEE(sendingEE, oppositeSide[side]);
 			if (surplus < 1 || reciverNum < 1)
 				continue;

@@ -20,4 +20,9 @@ public interface ITileEntityEEMachine {
 	 */
 	public int reciveEE(int amount, int side);
 
+	/** 機械の情報を返す。 */
+	public String[] getState(int side);
+
+	public int getLevel(int meta);
+
 }

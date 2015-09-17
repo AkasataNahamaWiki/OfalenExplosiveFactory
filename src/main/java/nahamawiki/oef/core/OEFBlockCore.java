@@ -17,14 +17,14 @@ public class OEFBlockCore {
 	public static BlockEEMachineBase EELamp;
 	public static BlockEEMachineBase EELamp_on;
 
-	public static Block conductorEE;
+	public static Block EEConductor;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
 		EEGenerator = new BlockEEGenerator()
 				.setBlockName("EEGenerator")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
-		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, EEGenerator.getUnlocalizedName());
+		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, "EEGenerator");
 		GameRegistry.registerTileEntity(TileEntityEEGenerator.class, "TileEntityEEGenerator");
 
 		EELamp = new BlockEELamp(false);
@@ -38,10 +38,10 @@ public class OEFBlockCore {
 		EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
 		GameRegistry.registerBlock(EELamp_on, EELamp_on.getUnlocalizedName());
 
-		conductorEE = new BlockEEConductor()
+		EEConductor = new BlockEEConductor()
 				.setBlockName("EEConductor")
-				.setBlockTextureName(OEFCore.DOMEINNAME + "EE_Conductor");
-		GameRegistry.registerBlock(conductorEE, conductorEE.getUnlocalizedName());
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
+		GameRegistry.registerBlock(EEConductor, EEConductor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
 	}
 
