@@ -5,7 +5,11 @@ import static net.minecraft.util.Facing.*;
 import java.util.ArrayList;
 
 import nahamawiki.oef.OEFCore;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -32,8 +36,14 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public String[] getState(int side) {
-		OEFCore.logger.info("holdingEE = " + this.holdingEE);
+	public String[] getState(EntityPlayer player) {
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		// if (player instanceof EntityPlayerMP) {
+		// Packet packet = this.getDescriptionPacket();
+		// if (packet != null) {
+		// ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(packet);
+		// }
+		// } else {}
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + this.getBlockType().getLocalizedName(),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
@@ -133,6 +143,20 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				}
 			}
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("holdingEE", holdingEE);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.func_148857_g();
+		holdingEE = nbt.getInteger("holdingEE");
+		OEFCore.logger.info("Set holdingEE : " + holdingEE);
 	}
 
 	/** 周囲のブロックを確認する */

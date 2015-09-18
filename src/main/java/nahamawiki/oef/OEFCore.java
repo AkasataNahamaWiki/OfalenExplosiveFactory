@@ -23,9 +23,6 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
 
 /** @author Tom Kate & Akasata Nahama */
 @Mod(modid = OEFCore.MODID, name = OEFCore.MODNAME, version = OEFCore.VERSION, dependencies = "required-after:OfalenMod;required-after:TakumiMod")
@@ -42,7 +39,6 @@ public class OEFCore {
 	@Metadata(MODID)
 	public static ModMetadata meta;
 
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(OEFCore.MODID);
 	public static Logger logger = LogManager.getLogger(MODID);
 	public static final CreativeTabs tabOEF = new OEFCreativeTab("OEFTab");
 	public static final Material materialOEF = new OEFMaterial(MapColor.diamondColor);
@@ -57,7 +53,6 @@ public class OEFCore {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		INSTANCE.registerMessage(MessageSampleHandler.class, MessageSample.class, 0, Side.SERVER);
 		OEFRecipeCore.registerRecipes();
 	}
 

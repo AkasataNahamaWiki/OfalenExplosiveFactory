@@ -4,6 +4,7 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
@@ -24,7 +25,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public String[] getState(int side) {
+	public String[] getState(EntityPlayer player) {
 		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int sendingEE = 0;
 		switch (blockMetadata) {

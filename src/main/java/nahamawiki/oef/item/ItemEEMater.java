@@ -13,7 +13,7 @@ public class ItemEEMater extends ItemOEFBase {
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity instanceof ITileEntityEEMachine) {
-			String[] state = ((ITileEntityEEMachine) tileEntity).getState(side);
+			String[] state = ((ITileEntityEEMachine) tileEntity).getState(player);
 			for (int i = 0; i < state.length; i++) {
 				player.addChatMessage(new ChatComponentText(state[i]));
 			}
