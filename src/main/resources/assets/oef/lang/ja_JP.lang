@@ -4,6 +4,10 @@ itemGroup.OEFTab=OEF
 
 //アイテム
 item.EESword.name=真・匠式宝剣
+item.EESword_RED.name=真・匠式宝剣[深紅]
+item.EESword_BLUE.name=	真・匠式宝剣[群青]
+item.EESword_GREEN.name=真・匠式宝剣[翠緑]
+item.EESword_WHITE.name=真・匠式宝剣[純白]
 
 //ブロック
 tile.EEGenerator.name=EE発生機

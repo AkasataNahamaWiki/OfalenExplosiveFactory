@@ -4,6 +4,10 @@ itemGroup.OEFTab=OEF
 
 //Item
 item.EESword.name=EESword
+item.EESword_RED.name=EESword[Red]
+item.EESword_BLUE.name=EESword[Blue]
+item.EESword_GREEN.name=EESword[Green]
+item.EESword_WHITE.name=EESword[White]
 
 //Block
 tile.EEGenerator.name=EEGenerator
