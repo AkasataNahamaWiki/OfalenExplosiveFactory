@@ -10,4 +10,16 @@ public abstract class BlockOEFBase extends Block {
 		this.setCreativeTab(OEFCore.tabOEF);
 	}
 
+	public boolean canProvideEE() {
+		return false;
+	}
+
+	public boolean canReciveEE() {
+		return false;
+	}
+
+	public int providingEE(int meta) {
+		return 0;
+	}
+
 }

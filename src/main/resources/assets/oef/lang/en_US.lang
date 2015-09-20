@@ -3,6 +3,7 @@
 itemGroup.OEFTab=OEF
 
 //Item
+item.EESword.name=EESword
 
 //Block
 tile.EEGenerator.name=EEGenerator

@@ -3,6 +3,7 @@
 itemGroup.OEFTab=OEF
 
 //アイテム
+item.EESword.name=真・匠式宝剣
 
 //ブロック
 tile.EEGenerator.name=EE発生機
