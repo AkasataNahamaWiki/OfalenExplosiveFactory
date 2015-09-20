@@ -23,7 +23,7 @@ public class OEFItemCore {
 		GameRegistry.registerItem(EEMater, EEMater.getUnlocalizedName());
 
 		EESword = new ItemEESword(EES_0)
-		.setUnlocalizedName("EESWord")
+		.setUnlocalizedName("EESword")
 		.setTextureName(OEFCore.DOMEINNAME + "EESword");
 GameRegistry.registerItem(EESword, EESword.getUnlocalizedName());
 	}
