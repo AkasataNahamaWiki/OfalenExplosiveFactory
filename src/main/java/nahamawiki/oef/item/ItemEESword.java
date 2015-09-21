@@ -63,6 +63,8 @@ public class ItemEESword extends ItemSword
         }
     }
 
+
+
     /**
      * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
      * the damage on the stack.
@@ -143,9 +145,7 @@ public class ItemEESword extends ItemSword
      */
     public boolean getIsRepairable(ItemStack p_82789_1_, ItemStack p_82789_2_)
     {
-        ItemStack mat = this.field_150933_b.getRepairItemStack();
-        if (mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, p_82789_2_, false)) return true;
-        return super.getIsRepairable(p_82789_1_, p_82789_2_);
+        return false;
     }
 
     /**
@@ -157,7 +157,7 @@ public class ItemEESword extends ItemSword
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", (double)this.field_150934_a, 0));
         return multimap;
     }
-    
+
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld)
 	{
@@ -172,5 +172,7 @@ public class ItemEESword extends ItemSword
 	{
 		itemStack.addEnchantment(TEnchantment.enchantmentDP, 1);
 	}
+
+
 
 }

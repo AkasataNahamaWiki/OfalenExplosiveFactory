@@ -2,6 +2,7 @@ package nahamawiki.oef;
 
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.core.OEFConfigCore;
+import nahamawiki.oef.core.OEFEventCore;
 import nahamawiki.oef.core.OEFInfoCore;
 import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.core.OEFOreDicCore;
@@ -11,6 +12,7 @@ import nahamawiki.oef.material.OEFMaterial;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +49,7 @@ public class OEFCore {
 	public void preInit(FMLPreInitializationEvent event) {
 		OEFInfoCore.registerInfo(meta);
 		OEFConfigCore.loadConfig(event);
+		MinecraftForge.EVENT_BUS.register(new OEFEventCore());
 		OEFItemCore.registerItems();
 		OEFBlockCore.registerBlocks();
 	}
