@@ -3,6 +3,7 @@
 itemGroup.OEFTab=OEF
 
 //Item
+item.EEMater.name=EE Mater
 item.EESword.name=EESword
 item.EESword_RED.name=EESword[Red]
 item.EESword_BLUE.name=EESword[Blue]
@@ -10,7 +11,22 @@ item.EESword_GREEN.name=EESword[Green]
 item.EESword_WHITE.name=EESword[White]
 
 //Block
-tile.EEGenerator.name=EEGenerator
-tile.EEGenerator_on.name=EEGenerator
+tile.EEGenerator.name=EE Generator
+tile.EEGenerator.0.name=EE Generator
+tile.EEGenerator.1.name=EE Generator Lv.1
+tile.EEGenerator.2.name=EE Generator Lv.2
+tile.EEGenerator.3.name=EE Generator Lv.3
+tile.EEGenerator.4.name=EE Generator
+tile.EEGenerator.5.name=EE Generator Lv.1
+tile.EEGenerator.6.name=EE Generator Lv.2
+tile.EEGenerator.7.name=EE Generator Lv.3
+tile.EEConductor.name=EE Conductor
 tile.EELamp.name=EELamp
 tile.EELamp_on.name=EELamp
+
+//Misc
+info.EEMachineState.name=Name : 
+info.EEMachineState.level=Level : 
+info.EEMachineState.meta=Meta : 
+info.EEMachineState.generating=Generating EE : 
+info.EEMachineState.holding=Holding EE : 

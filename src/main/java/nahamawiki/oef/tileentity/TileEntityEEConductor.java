@@ -4,12 +4,7 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
-import nahamawiki.oef.OEFCore;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -17,8 +12,8 @@ import net.minecraft.world.World;
 public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	protected int[] holdingEEArray = new int[6];
-	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
 	protected ArrayList<Integer> provider = new ArrayList<Integer>();
+	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
 
 	public TileEntityEEConductor() {
 		super();
@@ -32,22 +27,16 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	@Override
 	public int reciveEE(int amount, int side) {
 		holdingEEArray[side] += amount;
+		holdingEE += amount;
+		// OEFCore.logger.info("Get " + amount + " EE from side " + side + ". My holdingEE is " + holdingEE);
 		return 0;
 	}
 
 	@Override
-	public String[] getState(EntityPlayer player) {
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		// if (player instanceof EntityPlayerMP) {
-		// Packet packet = this.getDescriptionPacket();
-		// if (packet != null) {
-		// ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(packet);
-		// }
-		// } else {}
+	public String[] getState() {
 		return new String[] {
-				StatCollector.translateToLocal("info.EEMachineState.name") + this.getBlockType().getLocalizedName(),
+				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
-				StatCollector.translateToLocal("info.EEMachineState.meta") + this.getBlockMetadata(),
 				StatCollector.translateToLocal("info.EEMachineState.holding") + this.holdingEE
 		};
 	}
@@ -105,10 +94,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void updateEntity() {
 		if (worldObj.isRemote)
 			return;
-		holdingEE = 0;
-		for (int i = 0; i < 6; i++) {
-			holdingEE += holdingEEArray[i];
-		}
 		if (reciver.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {
@@ -132,6 +117,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 					reciverNum--;
 					ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[j], yCoord + offsetsYForSide[j], zCoord + offsetsZForSide[j]);
 					int surplus = machine.reciveEE(sendingEE, oppositeSide[j]);
+					holdingEE -= (sendingEE - surplus);
 					if (surplus < 1)
 						continue;
 					if (reciverNum < 1) {
@@ -143,20 +129,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				}
 			}
 		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("holdingEE", holdingEE);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.func_148857_g();
-		holdingEE = nbt.getInteger("holdingEE");
-		OEFCore.logger.info("Set holdingEE : " + holdingEE);
 	}
 
 	/** 周囲のブロックを確認する */

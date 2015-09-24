@@ -4,7 +4,6 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
@@ -25,7 +24,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public String[] getState(EntityPlayer player) {
+	public String[] getState() {
 		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int sendingEE = 0;
 		switch (blockMetadata) {
@@ -43,9 +42,8 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 			break;
 		}
 		return new String[] {
-				StatCollector.translateToLocal("info.EEMachineState.name") + this.getBlockType().getLocalizedName(),
+				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
-				StatCollector.translateToLocal("info.EEMachineState.meta") + this.getBlockMetadata(),
 				StatCollector.translateToLocal("info.EEMachineState.providing") + sendingEE
 		};
 	}
@@ -116,6 +114,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
+		reciver.clear();
 		for (int i = 0; i < 6; i++) {
 			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
 			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {

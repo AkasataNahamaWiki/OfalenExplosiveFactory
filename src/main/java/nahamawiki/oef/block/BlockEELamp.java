@@ -2,14 +2,14 @@ package nahamawiki.oef.block;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEELamp extends BlockEEMachineBase {
 
@@ -57,13 +57,16 @@ public class BlockEELamp extends BlockEEMachineBase {
 			 * world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
 			 * }
 			 * else
-			 */if (block instanceof BlockEEMachineBase && ((BlockEEMachineBase) block).canProvideEE()) {
-				if (((BlockEEMachineBase) block).providingEE(world.getBlockMetadata(x, y, z)) > 0) {
-					world.setBlock(x, y, z, OEFBlockCore.EELamp_on, 0, 2);
-				} else {
-					world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
-				}
-			}
+			 * if (block instanceof BlockEEMachineBase && ((BlockEEMachineBase)
+			 * block).canProvideEE()) {
+			 * if (((BlockEEMachineBase)
+			 * block).providingEE(world.getBlockMetadata(x, y, z)) > 0) {
+			 * world.setBlock(x, y, z, OEFBlockCore.EELamp_on, 0, 2);
+			 * } else {
+			 * world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
+			 * }
+			 * }
+			 */
 		}
 	}
 
@@ -88,21 +91,6 @@ public class BlockEELamp extends BlockEEMachineBase {
 		if (this.flag) {
 			return 15;
 		}
-		return 0;
-	}
-
-	@Override
-	public boolean canProvideEE() {
-		return false;
-	}
-
-	@Override
-	public boolean canReciveEE() {
-		return true;
-	}
-
-	@Override
-	public int providingEE(int meta) {
 		return 0;
 	}
 

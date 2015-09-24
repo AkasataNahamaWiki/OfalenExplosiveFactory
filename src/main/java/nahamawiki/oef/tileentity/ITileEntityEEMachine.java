@@ -1,7 +1,5 @@
 package nahamawiki.oef.tileentity;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 public interface ITileEntityEEMachine {
 
 	/**
@@ -23,7 +21,7 @@ public interface ITileEntityEEMachine {
 	public int reciveEE(int amount, int side);
 
 	/** 機械の情報を返す。 */
-	public String[] getState(EntityPlayer player);
+	public String[] getState();
 
 	public int getLevel(int meta);
 

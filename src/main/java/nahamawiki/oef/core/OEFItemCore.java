@@ -14,7 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFItemCore {
 
-	public static final ToolMaterial  EES_0 = EnumHelper.addToolMaterial("EES_0", 0, 250, 0, 21F, 0);
+	public static final ToolMaterial  TMEESWORD = EnumHelper.addToolMaterial("EES_0", 0, 250, 0, 21F, 0);
 
 	public static Item EEMater;
 	public static Item EESword;
@@ -30,28 +30,28 @@ public class OEFItemCore {
 				.setTextureName(OEFCore.DOMEINNAME + "EEMater");
 		GameRegistry.registerItem(EEMater, EEMater.getUnlocalizedName());
 
-		EESword = new ItemEESword(EES_0)
+		EESword = new ItemEESword(TMEESWORD)
 			.setUnlocalizedName("EESword")
 			.setTextureName(OEFCore.DOMEINNAME + "EESword");
 		GameRegistry.registerItem(EESword, EESword.getUnlocalizedName());
 
-		EESword_RED = new ItemEESword_R(EES_0)
+		EESword_RED = new ItemEESword_R(TMEESWORD)
 			.setUnlocalizedName("EESword_RED")
 			.setTextureName(OEFCore.DOMEINNAME + "EESword_RED");
 		GameRegistry.registerItem(EESword_RED, EESword_RED.getUnlocalizedName());
 
-		EESword_GREEN = new ItemEESword_G(EES_0)
+		EESword_GREEN = new ItemEESword_G(TMEESWORD)
 			.setUnlocalizedName("EESword_GREEN")
 			.setTextureName(OEFCore.DOMEINNAME + "EESword_GREEN");
 		GameRegistry.registerItem(EESword_GREEN, EESword_GREEN.getUnlocalizedName());
 
-		EESword_BLUE = new ItemEESword_B(EES_0)
+		EESword_BLUE = new ItemEESword_B(TMEESWORD)
 		.setUnlocalizedName("EESword_BLUE")
 		.setTextureName(OEFCore.DOMEINNAME + "EESword_BLUE");
 	GameRegistry.registerItem(EESword_BLUE, EESword_BLUE.getUnlocalizedName());
 
 
-		EESword_WHITE = new ItemEESword_W(EES_0)
+		EESword_WHITE = new ItemEESword_W(TMEESWORD)
 			.setUnlocalizedName("EESword_WHITE")
 			.setTextureName(OEFCore.DOMEINNAME + "EESword_WHITE");
 		GameRegistry.registerItem(EESword_WHITE, EESword_WHITE.getUnlocalizedName());

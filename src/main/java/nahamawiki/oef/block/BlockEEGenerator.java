@@ -3,6 +3,8 @@ package nahamawiki.oef.block;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
@@ -15,8 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEEGenerator extends BlockEEMachineBase implements ITileEntityProvider {
 
@@ -67,7 +67,7 @@ public class BlockEEGenerator extends BlockEEMachineBase implements ITileEntityP
 
 	@Override
 	public int tickRate(World world) {
-		return 40;
+		return 41;
 	}
 
 	@Override

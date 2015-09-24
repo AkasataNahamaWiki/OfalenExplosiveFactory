@@ -10,15 +10,22 @@ import net.minecraft.world.World;
 public class ItemEEMater extends ItemOEFBase {
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote) {
+			return true;
+		}
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity instanceof ITileEntityEEMachine) {
-			String[] state = ((ITileEntityEEMachine) tileEntity).getState(player);
+			String[] state = ((ITileEntityEEMachine) tileEntity).getState();
+			if (state == null) {
+				player.addChatMessage(new ChatComponentText("Error on reciving packet"));
+				return true;
+			}
 			for (int i = 0; i < state.length; i++) {
 				player.addChatMessage(new ChatComponentText(state[i]));
 			}
 			return true;
 		}
-		return super.onItemUseFirst(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
+		return true;
 	}
 }
