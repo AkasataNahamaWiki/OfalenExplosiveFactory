@@ -19,7 +19,7 @@ public class ItemEESword_G extends ItemEESword
      */
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase hit, EntityLivingBase player)
     {
-    	player.worldObj.createExplosion(player, player.posX, player.posY, player.posZ,10,true);
+    	player.worldObj.createExplosion(player, player.posX, player.posY, player.posZ,3,true);
         itemStack.damageItem(5, player);
         return true;
     }

@@ -4,11 +4,11 @@ itemGroup.OEFTab=OEF
 
 //Item
 item.EEMater.name=EE Mater
-item.EESword.name=EESword
-item.EESword_RED.name=EESword[Red]
-item.EESword_BLUE.name=EESword[Blue]
-item.EESword_GREEN.name=EESword[Green]
-item.EESword_WHITE.name=EESword[White]
+item.EESword.name=EE Creeper Sword
+item.EESword_RED.name=EE Creeper Sword [Crimson]
+item.EESword_GREEN.name=EE Creeper Sword [Jade]
+item.EESword_BLUE.name=EE Creeper Sword [Ultramarine]
+item.EESword_WHITE.name=EE Creeper Sword [Pure]
 
 //Block
 tile.EEGenerator.name=EE Generator
@@ -23,6 +23,7 @@ tile.EEGenerator.7.name=EE Generator Lv.3
 tile.EEConductor.name=EE Conductor
 tile.EELamp.name=EELamp
 tile.EELamp_on.name=EELamp
+tile.EESwordWall.name=EESword[Crimson]Wall
 
 //Misc
 info.EEMachineState.name=Name : 

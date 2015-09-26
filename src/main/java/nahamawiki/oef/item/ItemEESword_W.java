@@ -1,9 +1,13 @@
 package nahamawiki.oef.item;
 
+import java.util.Random;
+
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 //import takumicraft.Takumi.enchantment.TEnchantment;
+import net.minecraft.util.MathHelper;
 
 public class ItemEESword_W extends ItemEESword
 {
@@ -22,17 +26,22 @@ public class ItemEESword_W extends ItemEESword
     	double pX = player.posX;
     	double pY = player.posY;
     	double pZ = player.posZ;
-    	
-    	
-    	
-    	for(int x = -5; x <= 5; x++)
-    	{
-    		player.worldObj.createExplosion(player, pX + x, pY, pZ, 2, true);
-    	}
-    	for(int z = -5; z <= 5; z++)
-    	{
-    		player.worldObj.createExplosion(player, pX , pY, pZ + z, 2, true);
-    	}
+
+    	for(int t = 0 ; t< 5 ;t++)
+        {
+        	Random x = new Random();
+        	int sx =MathHelper.getRandomIntegerInRange(x, -5, 5);
+        	Random y = new Random();
+        	int sy = 0;
+        	Random z = new Random();
+        	int sz =MathHelper.getRandomIntegerInRange(z, -5, 5);
+
+        	EntityLightningBolt var17 = new EntityLightningBolt(player.worldObj,player.posX+ sx,player.posY+ sy,player.posZ+ sz);
+        	player.worldObj.addWeatherEffect(var17);
+        	if(!player.worldObj.isRemote)player.worldObj.createExplosion(player,player.posX+ sx,player.posY+ sy,player.posZ+ sz, 1.5F, true);
+        	player.worldObj.spawnEntityInWorld(var17);
+
+        }
     	
         itemStack.damageItem(5, player);
         return true;

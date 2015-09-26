@@ -1,5 +1,6 @@
 package nahamawiki.oef.item;
 
+import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,12 +20,33 @@ public class ItemEESword_R extends ItemEESword
      */
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase hit, EntityLivingBase player)
     {
-    	double radT = Math.atan2(hit.posX - player.posX, hit.posZ - player.posZ);
-    	for(int x = -2 ; x <= 2 ; x++)
+    	double dx = player.posX - hit.posX;
+    	double dz = player.posZ - hit.posZ;
+    	if(dx < dz)
     	{
-    		double cross = Math.toRadians(90);
-    		double z = Math.tan(radT + cross) * x;
-    		hit.worldObj.createExplosion(player,hit.posX + (x * 1.1), hit.posY, hit.posZ + (z * 1.1), 2, true);
+    		for(int x = (int) hit.posX - 2; x < hit.posX + 3; x++)
+    		{
+    			int z = (int) hit.posZ;
+    			for(int y = (int) hit.posY ; y < hit.posY + 4; y++)
+    			{
+    				player.worldObj.createExplosion(player, x, y, z, 0.5F, false);
+    			player.worldObj.setBlock( x, y , z, OEFBlockCore.EESwordWall);
+    			}
+    			
+    		}
+    	}
+    	else
+    	{
+    		for(int z = (int) hit.posZ - 2; z < hit.posZ + 3; z++)
+    		{
+    			int x = (int) hit.posX;
+    			for(int y = (int) hit.posY ; y < hit.posY + 4; y++)
+    			{
+    				player.worldObj.createExplosion(player, x, y, z, 0.5F, false);
+        			player.worldObj.setBlock( x, y ,  z, OEFBlockCore.EESwordWall);
+    			}
+    			
+    		}
     	}
         itemStack.damageItem(5, player);
         return true;

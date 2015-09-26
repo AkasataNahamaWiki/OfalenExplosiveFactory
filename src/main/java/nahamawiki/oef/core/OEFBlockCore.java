@@ -9,6 +9,8 @@ import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import takumicraft.Takumi.Block.CreeperWall_B;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFBlockCore {
@@ -18,6 +20,8 @@ public class OEFBlockCore {
 	public static BlockEEMachineBase EELamp_on;
 
 	public static Block EEConductor;
+
+	public static Block EESwordWall;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
@@ -43,6 +47,11 @@ public class OEFBlockCore {
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
 		GameRegistry.registerBlock(EEConductor, EEConductor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
+
+		EESwordWall = new CreeperWall_B(Material.rock);
+		EESwordWall.setBlockName("EESwordWall");
+		EESwordWall.setBlockTextureName(OEFCore.DOMEINNAME + "EESwordWall");
+		GameRegistry.registerBlock(EESwordWall, "EESwordWall");
 	}
 
 }
