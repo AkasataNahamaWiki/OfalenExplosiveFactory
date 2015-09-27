@@ -2,6 +2,7 @@
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.item.ItemEEBattery;
 import nahamawiki.oef.item.ItemEEMater;
 import nahamawiki.oef.item.ItemEESword;
 import nahamawiki.oef.item.ItemEESword_B;
@@ -20,6 +21,8 @@ public class OEFItemCore {
 	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 50, new int[] { 0, 0, 0, 0 }, 100);
 
 	public static Item EEMater;
+	public static Item EEBattery;
+
 	public static Item EESword;
 	public static Item EESword_RED;
 	public static Item EESword_BLUE;
@@ -37,6 +40,11 @@ public class OEFItemCore {
 				.setUnlocalizedName("EEMater")
 				.setTextureName(OEFCore.DOMEINNAME + "EEMater");
 		GameRegistry.registerItem(EEMater, EEMater.getUnlocalizedName());
+
+		EEBattery = new ItemEEBattery()
+				.setUnlocalizedName("EEBattery")
+				.setTextureName(OEFCore.DOMEINNAME + "EEBattery");
+		GameRegistry.registerItem(EEBattery, EEBattery.getUnlocalizedName());
 
 		EESword = new ItemEESword(TMEESWORD)
 				.setUnlocalizedName("EESword")
