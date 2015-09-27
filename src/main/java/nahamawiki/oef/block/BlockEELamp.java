@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 public class BlockEELamp extends BlockEEMachineBase {
 
 	private final boolean flag;
-	private static final String __OBFID = "CL_00000297";
 
 	public BlockEELamp(boolean flag) {
 		super();
@@ -28,8 +27,7 @@ public class BlockEELamp extends BlockEEMachineBase {
 
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
-		/*
-		 * if (!world.isRemote)
+		/* if (!world.isRemote)
 		 * {
 		 * if (this.flag && !(world.getBlock(x, y, z) instanceof
 		 * BlockEEMachineBase) || (world.getBlock(x, y, z) instanceof
@@ -44,15 +42,13 @@ public class BlockEELamp extends BlockEEMachineBase {
 		 * {
 		 * world.setBlock(x, y, z, OEFBlockCore.EELamp_on, 0, 2);
 		 * }
-		 * }
-		 */
+		 * } */
 	}
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		if (!world.isRemote) {
-			/*
-			 * if (this.flag && !(block instanceof BlockEEMachineBase))
+			/* if (this.flag && !(block instanceof BlockEEMachineBase))
 			 * {
 			 * world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
 			 * }
@@ -65,8 +61,7 @@ public class BlockEELamp extends BlockEEMachineBase {
 			 * } else {
 			 * world.setBlock(x, y, z, OEFBlockCore.EELamp, 0, 2);
 			 * }
-			 * }
-			 */
+			 * } */
 		}
 	}
 
