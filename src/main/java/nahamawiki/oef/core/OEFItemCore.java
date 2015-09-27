@@ -7,14 +7,17 @@ import nahamawiki.oef.item.ItemEESword_B;
 import nahamawiki.oef.item.ItemEESword_G;
 import nahamawiki.oef.item.ItemEESword_R;
 import nahamawiki.oef.item.ItemEESword_W;
+import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFItemCore {
 
 	public static final ToolMaterial  TMEESWORD = EnumHelper.addToolMaterial("EES_0", 0, 250, 0, 21F, 0);
+	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 50, new int[] {0, 0, 0, 0}, 100);
 
 	public static Item EEMater;
 	public static Item EESword;
@@ -22,6 +25,12 @@ public class OEFItemCore {
 	public static Item EESword_BLUE;
 	public static Item EESword_GREEN;
 	public static Item EESword_WHITE;
+
+	public static Item EEHelmet;
+	public static Item EEChestPlate;
+	public static Item EELeggings;
+	public static Item EEBoots;
+
 
 	/** アイテムを追加・登録する */
 	public static void registerItems() {
@@ -50,11 +59,31 @@ public class OEFItemCore {
 		.setTextureName(OEFCore.DOMEINNAME + "EESword_BLUE");
 	GameRegistry.registerItem(EESword_BLUE, EESword_BLUE.getUnlocalizedName());
 
-
 		EESword_WHITE = new ItemEESword_W(TMEESWORD)
 			.setUnlocalizedName("EESword_WHITE")
 			.setTextureName(OEFCore.DOMEINNAME + "EESword_WHITE");
 		GameRegistry.registerItem(EESword_WHITE, EESword_WHITE.getUnlocalizedName());
+
+		EEHelmet = new EEArmor(AMEE, 0)
+			.setUnlocalizedName("EEHelmet")
+			.setTextureName(OEFCore.DOMEINNAME + "EEHelmet");
+		GameRegistry.registerItem(EEHelmet, EEHelmet.getUnlocalizedName());
+
+		EEChestPlate = new EEArmor(AMEE , 1)
+			.setUnlocalizedName("EEChestPlate")
+			.setTextureName(OEFCore.DOMEINNAME + "EEChestPlate");
+		GameRegistry.registerItem(EEChestPlate, EEChestPlate.getUnlocalizedName());
+
+		EELeggings = new EEArmor(AMEE , 2)
+			.setUnlocalizedName("EELeggings")
+			.setTextureName(OEFCore.DOMEINNAME + "EELeggings");
+		GameRegistry.registerItem(EELeggings, EELeggings.getUnlocalizedName());
+
+		EEBoots = new EEArmor(AMEE , 3)
+			.setUnlocalizedName("EEBoots")
+			.setTextureName(OEFCore.DOMEINNAME + "EEBoots");
+		GameRegistry.registerItem(EEBoots, EEBoots.getUnlocalizedName());
+
 	}
 
 }

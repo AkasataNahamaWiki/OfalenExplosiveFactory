@@ -10,6 +10,11 @@ item.EESword_GREEN.name=EE Creeper Sword [Jade]
 item.EESword_BLUE.name=EE Creeper Sword [Ultramarine]
 item.EESword_WHITE.name=EE Creeper Sword [Pure]
 
+item.EEHelmet.name=EE Perfect Helmet
+item.EEChestPlate.name=EE Perfect ChestPlate
+item.EELeggings.name=EE Perfect leggings
+item.EEBoots.name=EE Perfect Boots
+
 //Block
 tile.EEGenerator.name=EE Generator
 tile.EEGenerator.0.name=EE Generator

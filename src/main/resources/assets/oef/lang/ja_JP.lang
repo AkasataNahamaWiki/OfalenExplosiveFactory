@@ -10,6 +10,11 @@ item.EESword_GREEN.name=真・匠式宝剣[翠緑]
 item.EESword_BLUE.name=	真・匠式宝剣[群青]
 item.EESword_WHITE.name=真・匠式宝剣[純白]
 
+item.EEHelmet.name=EEの万能ヘルメット
+item.EEChestPlate.name=EEの万能チェストプレート
+item.EELeggings.name=EEの万能レギンス
+item.EEBoots.name=EEの万能ブーツ
+
 //ブロック
 tile.EEGenerator.name=EE生成機
 tile.EEGenerator.0.name=EE生成機
