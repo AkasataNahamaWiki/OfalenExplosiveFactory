@@ -36,3 +36,10 @@ info.EEMachineState.level=Level :
 info.EEMachineState.meta=Meta : 
 info.EEMachineState.generating=Generating EE : 
 info.EEMachineState.holding=Holding EE : 
+info.message.update=New OEF available.
+
+info.message.update.link=Åòn Download here.
+ Åòr
+info.message.update.link.2= Click "DOWNLOAD" in the icon of creeper on tasktray.
+ 
+info.message.dl=download OEF

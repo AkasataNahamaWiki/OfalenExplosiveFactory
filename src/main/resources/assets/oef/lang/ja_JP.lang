@@ -36,3 +36,8 @@ info.EEMachineState.level=レベル :
 info.EEMachineState.meta=メタデータ : 
 info.EEMachineState.providing=生成EE : 
 info.EEMachineState.holding=貯蓄EE : 
+info.message.update=OEFの最新バージョンが存在します。
+info.message.update.link=§n ダウンロードはこちら
+ §r
+info.message.update.link.2= タスクトレイのアイコンより「ダウンロード」をクリック
+info.message.dl=OEFをダウンロード
