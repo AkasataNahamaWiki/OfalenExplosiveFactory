@@ -1,7 +1,7 @@
 package nahamawiki.oef.creativetab;
 
+import nahamawiki.oef.core.OEFItemCore;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
 public class OEFCreativeTab extends CreativeTabs {
@@ -12,7 +12,7 @@ public class OEFCreativeTab extends CreativeTabs {
 
 	@Override
 	public Item getTabIconItem() {
-		return Items.apple;
+		return OEFItemCore.EESword;
 	}
 
 }

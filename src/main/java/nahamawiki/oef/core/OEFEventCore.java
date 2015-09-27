@@ -2,21 +2,13 @@ package nahamawiki.oef.core;
 
 import nahamawiki.oef.item.ItemEESword;
 import nahamawiki.oef.item.armor.EEArmor;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.world.ExplosionEvent.Detonate;
-
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class OEFEventCore {
@@ -69,34 +61,53 @@ public class OEFEventCore {
 		}
 	}
 
-	/**プレイヤーの描画にフック**/
+	/**プレイヤーの描画にフック**//*
 	private static final ResourceLocation texture_armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-	private final ModelBase armorModel = new ModelBiped();
+	private final ModelBase armorModel = new ModelCreeper();
+	private ModelBiped modelArmorChestplate;
+	private ModelBiped modelArmor;
+
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void EEArmorEvent(RenderPlayerEvent.SetArmorModel e)
 	{
-		if(e.stack.getItem() instanceof EEArmor)
+		this.modelArmorChestplate = new ModelBiped(1.0F);
+		this.modelArmor = new ModelBiped(0.5F);
+		if(e.entityPlayer.getCurrentArmor(e.slot) != null && FMLCommonHandler.instance().getSide() == Side.CLIENT)
 		{
-			GL11.glDepthMask(true);
-			float f1 = e.entity.ticksExisted + e.partialRenderTick;
-			f1 *= 1.5F;
-			RenderManager manager = RenderManager.instance;
+			Item item = e.entityPlayer.getCurrentArmor(e.slot).getItem();
+			if (item instanceof ItemArmor)
+        {
+        	ItemArmor itemarmor = (ItemArmor)item;
+        	RenderManager manager = RenderManager.instance;
+        	e.renderer.setRenderManager(manager);
+            manager.renderEngine.bindTexture(RenderBiped.getArmorResource(e.entityPlayer, e.entityPlayer.getCurrentArmor(e.slot), e.slot, null));
+            ModelBiped modelbiped = e.slot == 2 ? this.modelArmor : this.modelArmorChestplate;
+            modelbiped.bipedHead.showModel = e.slot == 0;
+            modelbiped.bipedHeadwear.showModel = e.slot == 0;
+            modelbiped.bipedBody.showModel = e.slot == 1 || e.slot == 2;
+            modelbiped.bipedRightArm.showModel = e.slot == 1;
+            modelbiped.bipedLeftArm.showModel = e.slot == 1;
+            modelbiped.bipedRightLeg.showModel = e.slot == 2 || e.slot == 3;
+            modelbiped.bipedLeftLeg.showModel = e.slot == 2 || e.slot == 3;
+            float f1 = (float)e.entityPlayer.ticksExisted + e.partialRenderTick;
 			manager.renderEngine.bindTexture(texture_armor);
-			e.renderer.setRenderManager(manager);
             GL11.glMatrixMode(GL11.GL_TEXTURE);
             GL11.glLoadIdentity();
-            float f2 = f1 * 0.02F;
-            float f3 = f1 * 0.02F;
+            float f2 = f1 * 0.01F;
+            float f3 = f1 * 0.01F;
             GL11.glTranslatef(f2, f3, 0.0F);
-            e.renderer.setRenderPassModel(this.armorModel);
+            e.renderer.setRenderPassModel(modelbiped);
             GL11.glMatrixMode(GL11.GL_MODELVIEW);
             GL11.glEnable(GL11.GL_BLEND);
             float f4 = 0.5F;
             GL11.glColor4f(f4, f4, f4, 1.0F);
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+        }
 		}
-	}
+
+	}*/
 
 		/**プレイヤー負傷時にフック**/
 	@SubscribeEvent
@@ -118,11 +129,11 @@ public class OEFEventCore {
 
     		if(flg)
     		{
-    			if(e.source != DamageSource.outOfWorld)
+    			if(e.source != null && e.source != DamageSource.outOfWorld)
     			{
     				int i = e.entityLiving.getRNG().nextInt(4);
     				((EntityPlayer) e.entityLiving).getCurrentArmor(i).damageItem(1, e.entityLiving);
-    				e.setCanceled(flg);
+    				e.setCanceled(true);
     			}
     		}
     	}
