@@ -4,14 +4,17 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import nahamawiki.oef.util.EEUtil;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 public class ItemEEBattery extends ItemOEFBase {
 
@@ -21,6 +24,20 @@ public class ItemEEBattery extends ItemOEFBase {
 		super();
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
+	}
+
+	@Override
+	public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld) {
+		if (!itemStack.hasTagCompound()) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setInteger("holdingEE", 0);
+			itemStack.setTagCompound(nbt);
+		}
+		NBTTagCompound nbt = itemStack.getTagCompound();
+		if (nbt.getInteger("holdingEE") > EEUtil.getBaseCapacity(itemStack.getItemDamage()))
+			nbt.setInteger("holdingEE", EEUtil.getBaseCapacity(itemStack.getItemDamage()));
+		if (!nbt.hasKey("canChargeEE"))
+			nbt.setBoolean("canChargeEE", true);
 	}
 
 	@Override
@@ -41,9 +58,6 @@ public class ItemEEBattery extends ItemOEFBase {
 				return this.iicon[0][itemStack.getItemDamage()];
 			return this.iicon[1][itemStack.getItemDamage()];
 		}
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("holdingEE", 0);
-		itemStack.setTagCompound(nbt);
 		return this.iicon[0][itemStack.getItemDamage()];
 	}
 
@@ -55,11 +69,8 @@ public class ItemEEBattery extends ItemOEFBase {
 
 		for (int i = 0; i < 4; i++) {
 			itemStack = new ItemStack(item, 1, i);
-			nbt.setInteger("holdingEE", 0);
-			itemStack.setTagCompound(nbt);
-			list.add(itemStack);
-
-			nbt.setInteger("holdingEE", getCapacity(i));
+			nbt = new NBTTagCompound();
+			nbt.setInteger("holdingEE", EEUtil.getBaseCapacity(i));
 			itemStack.setTagCompound(nbt);
 			list.add(itemStack);
 		}
@@ -80,20 +91,6 @@ public class ItemEEBattery extends ItemOEFBase {
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
 		return this.getUnlocalizedName() + "." + itemStack.getItemDamage();
-	}
-
-	private int getCapacity(int level) {
-		switch (level) {
-		case 0:
-			return 4000;
-		case 1:
-			return 8000;
-		case 2:
-			return 16000;
-		case 3:
-			return 32000;
-		}
-		return 0;
 	}
 
 }

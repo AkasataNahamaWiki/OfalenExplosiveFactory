@@ -1,7 +1,7 @@
 package nahamawiki.oef.core;
 
-import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.config.Configuration;
 
 public class OEFConfigCore {
 
@@ -12,11 +12,10 @@ public class OEFConfigCore {
 
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile(), true);
 		cfg.load();
-		
-		updateType = cfg.getString("UpdateNotifyType", "General", "CHAT", "");
-		
-		cfg.save();
 
+		updateType = cfg.getString("UpdateNotifyType", "General", "CHAT", "");
+
+		cfg.save();
 	}
 
 }

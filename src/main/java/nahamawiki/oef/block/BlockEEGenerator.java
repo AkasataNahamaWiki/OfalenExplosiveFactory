@@ -25,7 +25,6 @@ public class BlockEEGenerator extends BlockEEMachineBase implements ITileEntityP
 	public BlockEEGenerator() {
 		super();
 		this.setResistance(0.0F);
-		this.setStepSound(soundTypeMetal);
 	}
 
 	@Override

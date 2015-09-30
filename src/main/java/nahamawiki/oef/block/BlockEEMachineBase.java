@@ -7,6 +7,7 @@ public abstract class BlockEEMachineBase extends BlockOEFBase {
 		this.setHardness(5.0F);
 		this.setResistance(6000000.0F);
 		this.setHarvestLevel("pickaxe", 3);
+		this.setStepSound(soundTypeMetal);
 	}
 
 }
