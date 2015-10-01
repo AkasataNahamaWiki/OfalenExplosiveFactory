@@ -2,6 +2,7 @@ package nahamawiki.oef.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.inventory.ContainerEECharger;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -12,7 +13,7 @@ import net.minecraft.util.StatCollector;
 public class GuiEECharger extends GuiContainer {
 
 	private TileEntityEECharger tileEntity;
-	private static final ResourceLocation GUITEXTURE = new ResourceLocation("textures/gui/container/furnace.png");
+	private static final ResourceLocation GUITEXTURE = new ResourceLocation(OEFCore.DOMEINNAME + "textures/gui/EECharger.png");
 
 	public GuiEECharger(EntityPlayer player, TileEntityEECharger tileEntity) {
 		super(new ContainerEECharger(player, tileEntity));
@@ -32,18 +33,18 @@ public class GuiEECharger extends GuiContainer {
 
 		this.mc.getTextureManager().bindTexture(GUITEXTURE);
 
-		int k = (this.width - this.xSize) / 2;
-		int l = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-		int i1;
-		//
-		// if (this.tileEntity.isBurning()) {
-		// i1 = this.tileEntity.getBurnTimeRemainingScaled(12);
-		// this.drawTexturedModalRect(k + 56, l + 36 + 12 - i1, 176, 12 - i1, 14, i1 + 2);
-		// }
-		//
-		// i1 = this.tileEntity.getSmeltProgressScaled(24);
-		// this.drawTexturedModalRect(k + 79, l + 34, 176, 14, i1 + 1, 16);
+		int x = (this.width - this.xSize) / 2;
+		int y = (this.height - this.ySize) / 2;
+		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+
+		if (this.tileEntity.isCharging()) {
+			this.drawTexturedModalRect(x + 78, y + 20, 176, 0, 16, 16);
+		} else {
+			this.drawTexturedModalRect(x + 78, y + 20, 192, 0, 16, 16);
+		}
+
+		int i = this.tileEntity.getHoldingEEScaled(60);
+		this.drawTexturedModalRect(x + 136, y + 12 + 60 - i, 176, 16, 15, i);
 	}
 
 }

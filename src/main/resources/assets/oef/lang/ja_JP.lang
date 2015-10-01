@@ -33,9 +33,9 @@ tile.EESwordWall.name=EE式簡易防衛壁
 //その他
 info.EEMachineState.name=ブロック名 : 
 info.EEMachineState.level=レベル : 
-info.EEMachineState.meta=メタデータ : 
-info.EEMachineState.providing=生成EE : 
-info.EEMachineState.holding=貯蓄EE : 
+info.EEMachineState.providing=生成 : 
+info.EEMachineState.capacity=容量 : 
+info.EEMachineState.holding=貯蓄 : 
 info.message.update=OEFの最新バージョンが存在します。
 info.message.update.link=§n ダウンロードはこちら
  §r

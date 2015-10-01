@@ -33,9 +33,9 @@ tile.EESwordWall.name=EESword[Crimson]Wall
 //Misc
 info.EEMachineState.name=Name : 
 info.EEMachineState.level=Level : 
-info.EEMachineState.meta=Meta : 
-info.EEMachineState.generating=Generating EE : 
-info.EEMachineState.holding=Holding EE : 
+info.EEMachineState.generating=Generating : 
+info.EEMachineState.capacity=Capacity : 
+info.EEMachineState.holding=Holding : 
 info.message.update=New OEF available.
 
 info.message.update.link=Åòn Download here.

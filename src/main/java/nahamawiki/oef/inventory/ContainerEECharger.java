@@ -13,11 +13,12 @@ public class ContainerEECharger extends Container {
 
 	private TileEntityEECharger tileEntity;
 	private int lastHoldingEE;
+	private int lastCoolTime;
 
 	public ContainerEECharger(EntityPlayer player, TileEntityEECharger tileEntity) {
 		this.tileEntity = tileEntity;
 
-		this.addSlotToContainer(new Slot(this.tileEntity, 0, 56, 17));
+		this.addSlotToContainer(new SlotEECharger(this.tileEntity, 0, 78, 38));
 		int i;
 
 		for (i = 0; i < 3; ++i) {
@@ -35,6 +36,7 @@ public class ContainerEECharger extends Container {
 	public void addCraftingToCrafters(ICrafting iCrafting) {
 		super.addCraftingToCrafters(iCrafting);
 		iCrafting.sendProgressBarUpdate(this, 0, this.tileEntity.holdingEE);
+		iCrafting.sendProgressBarUpdate(this, 1, this.tileEntity.coolTime);
 	}
 
 	@Override
@@ -42,13 +44,17 @@ public class ContainerEECharger extends Container {
 		super.detectAndSendChanges();
 
 		for (int i = 0; i < this.crafters.size(); ++i) {
-			ICrafting icrafting = (ICrafting) this.crafters.get(i);
+			ICrafting iCrafting = (ICrafting) this.crafters.get(i);
 
 			if (this.lastHoldingEE != this.tileEntity.holdingEE) {
-				icrafting.sendProgressBarUpdate(this, 0, this.tileEntity.holdingEE);
+				iCrafting.sendProgressBarUpdate(this, 0, this.tileEntity.holdingEE);
+			}
+			if (this.lastCoolTime != this.tileEntity.coolTime) {
+				iCrafting.sendProgressBarUpdate(this, 1, this.tileEntity.coolTime);
 			}
 
 			this.lastHoldingEE = this.tileEntity.holdingEE;
+			this.lastCoolTime = this.tileEntity.coolTime;
 		}
 	}
 
@@ -57,6 +63,8 @@ public class ContainerEECharger extends Container {
 	public void updateProgressBar(int par1, int par2) {
 		if (par1 == 0) {
 			this.tileEntity.holdingEE = par2;
+		} else if (par1 == 1) {
+			this.tileEntity.coolTime = par2;
 		}
 	}
 
@@ -80,7 +88,7 @@ public class ContainerEECharger extends Container {
 				}
 				slot.onSlotChange(itemStack1, itemStack);
 			} else {
-				if (itemStack1.hasTagCompound() && itemStack1.getTagCompound().getBoolean("canChargeEE")) {
+				if (itemStack1.stackSize < 2 && itemStack1.hasTagCompound() && itemStack1.getTagCompound().getBoolean("canChargeEE")) {
 					if (!this.mergeItemStack(itemStack1, 0, 1, false)) {
 						return null;
 					}

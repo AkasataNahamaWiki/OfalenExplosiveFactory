@@ -1,5 +1,8 @@
 package nahamawiki.oef.tileentity;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -10,8 +13,8 @@ import net.minecraft.util.StatCollector;
 public class TileEntityEECharger extends TileEntityEEMachineBase implements ISidedInventory {
 
 	public int holdingEE;
+	public int coolTime;
 	protected int capacity;
-	protected int coolTime;
 	protected ItemStack battery;
 
 	@Override
@@ -37,7 +40,8 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
-				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE
+				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
+				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
 	}
 
@@ -53,7 +57,8 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		nbt.setInteger("capacity", capacity);
 		nbt.setInteger("coolTime", coolTime);
 		if (battery != null)
-			nbt.setTag("Battery", battery.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
+		OEFCore.logger.info("Complete writeToNBT");
 	}
 
 	@Override
@@ -62,6 +67,8 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		holdingEE = nbt.getInteger("holdingEE");
 		capacity = nbt.getInteger("capacity");
 		coolTime = nbt.getInteger("coolTime");
+		if (nbt.getTag("battery") != null && nbt.getTag("battery") instanceof NBTTagCompound)
+			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("battery"));
 	}
 
 	protected int setCapacity() {
@@ -77,6 +84,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		if (battery == null || holdingEE <= 0 || coolTime > 0 || battery.getTagCompound().getInteger("holdingEE") > EEUtil.getBaseCapacity(battery.getItemDamage()))
 			return;
 		battery.getTagCompound().setInteger("holdingEE", battery.getTagCompound().getInteger("holdingEE") + 1);
+		holdingEE--;
 		switch (this.getLevel(this.getBlockMetadata())) {
 		case 0:
 			coolTime = 16;
@@ -90,6 +98,18 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		case 3:
 			coolTime = 2;
 		}
+		markDirty();
+	}
+
+	public boolean isCharging() {
+		return coolTime > 0;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getHoldingEEScaled(int par1) {
+		if (capacity < 1)
+			setCapacity();
+		return holdingEE * par1 / capacity;
 	}
 
 	@Override
@@ -193,9 +213,10 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
 		if (slot == 0 && battery != null) {
-			if (battery.getTagCompound().getInteger("holdingEE") == EEUtil.getBaseCapacity(battery.getItemDamage())) {
+			if (!battery.hasTagCompound() || !battery.getTagCompound().getBoolean("canChargeEE"))
 				return true;
-			}
+			if (battery.getTagCompound().getInteger("holdingEE") == EEUtil.getBaseCapacity(battery.getItemDamage()))
+				return true;
 		}
 		return false;
 	}

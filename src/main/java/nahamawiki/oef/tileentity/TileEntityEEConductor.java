@@ -28,7 +28,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public int reciveEE(int amount, int side) {
 		holdingEEArray[side] += amount;
 		holdingEE += amount;
-		// OEFCore.logger.info("Get " + amount + " EE from side " + side + ". My holdingEE is " + holdingEE);
 		return 0;
 	}
 
@@ -37,7 +36,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
-				StatCollector.translateToLocal("info.EEMachineState.holding") + this.holdingEE
+				StatCollector.translateToLocal("info.EEMachineState.holding") + this.holdingEE + " EE"
 		};
 	}
 
