@@ -1,7 +1,7 @@
 ﻿package nahamawiki.oef.core;
 
 import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.item.ItemEESword;
+import nahamawiki.oef.item.IItemEEBatteryTool;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
@@ -18,9 +18,9 @@ public class OEFEventCore {
 	/**アイテム耐久値ゼロの時にフック**/
 	@SubscribeEvent
 	public void EEItemBroken(PlayerDestroyItemEvent e) {
-		if (e.original.getItem() instanceof ItemEESword || e.original.getItem() instanceof EEArmor) {
+		if (e.original.getItem() instanceof IItemEEBatteryTool) {
 			e.entity.worldObj.createExplosion(null, e.entity.posX, e.entity.posY, e.entity.posZ, 5, true);
-			e.entity.setDead();
+			e.entity.attackEntityFrom(DamageSource.setExplosionSource(null), 100);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class OEFEventCore {
     		}
     	}
     }
-	
+
 	/**プレイヤーログイン時のイベント**/
 	@SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
@@ -104,4 +104,6 @@ public class OEFEventCore {
             OEFCore.update.notifyUpdate(event.player, Side.CLIENT);
         }
     }
+
+
 }

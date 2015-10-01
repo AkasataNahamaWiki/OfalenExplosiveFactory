@@ -1,6 +1,6 @@
 ﻿package nahamawiki.oef.core;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import nahama.ofalenmod.core.OfalenModConfigCore;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.item.ItemEEBattery;
 import nahamawiki.oef.item.ItemEEMater;
@@ -9,15 +9,18 @@ import nahamawiki.oef.item.ItemEESword_B;
 import nahamawiki.oef.item.ItemEESword_G;
 import nahamawiki.oef.item.ItemEESword_R;
 import nahamawiki.oef.item.ItemEESword_W;
+import nahamawiki.oef.item.ItemEETool;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFItemCore {
 
 	public static final ToolMaterial TMEESWORD = EnumHelper.addToolMaterial("EES_0", 0, 250, 0, 21F, 0);
+	public static ToolMaterial EET = EnumHelper.addToolMaterial("EET", 1, 1000 , OfalenModConfigCore.efficiencyPerfectTool, 0, 100);
 	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 50, new int[] { 0, 0, 0, 0 }, 100);
 
 	public static Item EEMater;
@@ -33,6 +36,8 @@ public class OEFItemCore {
 	public static Item EEChestPlate;
 	public static Item EELeggings;
 	public static Item EEBoots;
+
+	public static Item EETool;
 
 	/** アイテムを追加・登録する */
 	public static void registerItems() {
@@ -90,6 +95,12 @@ public class OEFItemCore {
 				.setUnlocalizedName("EEBoots")
 				.setTextureName(OEFCore.DOMEINNAME + "EEBoots");
 		GameRegistry.registerItem(EEBoots, EEBoots.getUnlocalizedName());
+
+		EETool = new ItemEETool(EET)
+				.setUnlocalizedName("EETool")
+				.setTextureName(OEFCore.DOMEINNAME + "EETool");
+		GameRegistry.registerItem(EETool, "EETool");
+
 
 	}
 

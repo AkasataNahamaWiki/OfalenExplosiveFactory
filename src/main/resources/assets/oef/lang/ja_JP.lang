@@ -15,6 +15,8 @@ item.EEChestPlate.name=EEの万能チェストプレート
 item.EELeggings.name=EEの万能レギンス
 item.EEBoots.name=EEの万能ブーツ
 
+item.EETool.name=EE万能ツール
+
 //ブロック
 tile.EEGenerator.name=EE生成機
 tile.EEGenerator.0.name=EE生成機
@@ -36,6 +38,7 @@ info.EEMachineState.level=レベル :
 info.EEMachineState.providing=生成 : 
 info.EEMachineState.capacity=容量 : 
 info.EEMachineState.holding=貯蓄 : 
+info.EETool.message=インベントリ
 info.message.update=OEFの最新バージョンが存在します。
 info.message.update.link=§n ダウンロードはこちら
  §r

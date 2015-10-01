@@ -1,8 +1,7 @@
 package nahamawiki.oef.item.armor;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.item.IItemEEBatteryTool;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
@@ -11,8 +10,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class EEArmor extends ItemArmor {
+public class EEArmor extends ItemArmor implements IItemEEBatteryTool{
 
 	private IIcon overlayIcon;
 	private int slotNo;

@@ -15,6 +15,8 @@ item.EEChestPlate.name=EE Perfect ChestPlate
 item.EELeggings.name=EE Perfect leggings
 item.EEBoots.name=EE Perfect Boots
 
+
+item.EETool.name=EE Perfect Tool
 //Block
 tile.EEGenerator.name=EE Generator
 tile.EEGenerator.0.name=EE Generator
@@ -36,8 +38,8 @@ info.EEMachineState.level=Level :
 info.EEMachineState.generating=Generating : 
 info.EEMachineState.capacity=Capacity : 
 info.EEMachineState.holding=Holding : 
+info.EETool.message=inventory
 info.message.update=New OEF available.
-
 info.message.update.link=Åòn Download here.
  Åòr
 info.message.update.link.2= Click "DOWNLOAD" in the icon of creeper on tasktray.

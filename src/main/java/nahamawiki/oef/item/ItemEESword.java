@@ -1,9 +1,5 @@
 package nahamawiki.oef.item;
 
-import com.google.common.collect.Multimap;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,7 +17,12 @@ import net.minecraft.world.World;
 //import takumicraft.Takumi.enchantment.TEnchantment;
 import takumicraft.Takumi.enchantment.TEnchantment;
 
-public class ItemEESword extends ItemSword {
+import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class ItemEESword extends ItemSword implements IItemEEBatteryTool{
 
 	private float field_150934_a;
 	private final Item.ToolMaterial field_150933_b;
