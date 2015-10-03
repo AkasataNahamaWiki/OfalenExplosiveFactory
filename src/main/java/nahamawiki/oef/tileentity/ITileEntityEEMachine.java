@@ -18,7 +18,7 @@ public interface ITileEntityEEMachine {
 	 *            受け取る面
 	 * @return あまり
 	 */
-	public int reciveEE(int amount, int side);
+	public int recieveEE(int amount, int side);
 
 	/** 機械の情報を返す。 */
 	public String[] getState();

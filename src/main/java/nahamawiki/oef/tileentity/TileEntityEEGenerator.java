@@ -19,7 +19,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public int reciveEE(int amount, int side) {
+	public int recieveEE(int amount, int side) {
 		return amount;
 	}
 
@@ -105,7 +105,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 			ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
 			if (machine == null)
 				continue;
-			int surplus = machine.reciveEE(sendingEE, oppositeSide[side]);
+			int surplus = machine.recieveEE(sendingEE, oppositeSide[side]);
 			if (surplus < 1 || reciverNum < 1)
 				continue;
 			sendingEE += surplus / reciverNum;

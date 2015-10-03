@@ -23,7 +23,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	}
 
 	@Override
-	public int reciveEE(int amount, int side) {
+	public int recieveEE(int amount, int side) {
 		if (capacity == 0)
 			setCapacity();
 		holdingEE += amount;

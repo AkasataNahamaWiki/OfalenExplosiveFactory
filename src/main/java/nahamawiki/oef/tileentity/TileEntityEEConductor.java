@@ -4,6 +4,7 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
+import nahamawiki.oef.OEFCore;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
@@ -11,6 +12,8 @@ import net.minecraft.world.World;
 
 public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
+	protected int capacity = 8000;
+	protected int loss = -1;
 	protected int[] holdingEEArray = new int[6];
 	protected ArrayList<Integer> provider = new ArrayList<Integer>();
 	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
@@ -25,24 +28,33 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public int reciveEE(int amount, int side) {
+	public int recieveEE(int amount, int side) {
 		holdingEEArray[side] += amount;
-		holdingEE += amount;
+		if (holdingEEArray[side] > capacity) {
+			int surplus = holdingEEArray[side] - capacity;
+			holdingEEArray[side] = capacity;
+			return surplus;
+		}
 		return 0;
 	}
 
 	@Override
 	public String[] getState() {
+		holdingEE = 0;
+		for (int i = 0; i < 6; i++) {
+			holdingEE += holdingEEArray[i];
+		}
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
-				StatCollector.translateToLocal("info.EEMachineState.holding") + this.holdingEE + " EE"
+				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
+				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
 	}
 
 	@Override
 	public int getLevel(int meta) {
-		return 0;
+		return meta & 3;
 	}
 
 	@Override
@@ -93,6 +105,32 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void updateEntity() {
 		if (worldObj.isRemote)
 			return;
+		if (loss < 0) {
+			switch (this.getLevel(this.getBlockMetadata())) {
+			case 0:
+				loss = 8;
+				break;
+			case 1:
+				loss = 4;
+				break;
+			case 2:
+				loss = 2;
+				break;
+			case 3:
+				loss = 0;
+				break;
+			}
+		}
+		if (loss > 0) {
+			for (int i = 0; i < 6; i++) {
+				if (holdingEEArray[i] < 1)
+					continue;
+				holdingEEArray[i] -= loss;
+				if (holdingEEArray[i] < 0)
+					holdingEEArray[i] = 0;
+				OEFCore.logger.info("Delete " + loss + " EE, Side : " + i);
+			}
+		}
 		if (reciver.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {
@@ -115,8 +153,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				if (reciver.contains(j) && j != i) {
 					reciverNum--;
 					ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[j], yCoord + offsetsYForSide[j], zCoord + offsetsZForSide[j]);
-					int surplus = machine.reciveEE(sendingEE, oppositeSide[j]);
-					holdingEE -= (sendingEE - surplus);
+					int surplus = machine.recieveEE(sendingEE, oppositeSide[j]);
 					if (surplus < 1)
 						continue;
 					if (reciverNum < 1) {

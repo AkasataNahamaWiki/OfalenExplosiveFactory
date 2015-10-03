@@ -51,8 +51,8 @@ public class OEFBlockCore {
 
 		EEConductor = new BlockEEConductor()
 				.setBlockName("EEConductor")
-				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
-		GameRegistry.registerBlock(EEConductor, "EEConductor");
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEConductor");
+		GameRegistry.registerBlock(EEConductor, ItemBlockOEF.class, "EEConductor");
 		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
 
 		EESwordWall = new CreeperWall_B(Material.rock)
