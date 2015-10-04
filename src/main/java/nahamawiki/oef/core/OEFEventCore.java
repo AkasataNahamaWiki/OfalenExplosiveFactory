@@ -20,7 +20,7 @@ public class OEFEventCore {
 	public void EEItemBroken(PlayerDestroyItemEvent e) {
 		if (e.original.getItem() instanceof IItemEEBatteryTool) {
 			e.entity.worldObj.createExplosion(null, e.entity.posX, e.entity.posY, e.entity.posZ, 5, true);
-			e.entity.attackEntityFrom(DamageSource.setExplosionSource(null), 100);
+			e.entity.attackEntityFrom(DamageSource.outOfWorld, 100);
 		}
 	}
 
@@ -78,7 +78,6 @@ public class OEFEventCore {
     			if(((EntityPlayer) e.entityLiving).getCurrentArmor(i).getItem() instanceof EEArmor)
     			{
     				flg[i] = true;
-    				break;
     			}
     		}
 
@@ -89,7 +88,16 @@ public class OEFEventCore {
     			{
     				int i = e.entityLiving.getRNG().nextInt(4);
     				((EntityPlayer) e.entityLiving).getCurrentArmor(i).damageItem(1, e.entityLiving);
+    				if(((EntityPlayer) e.entityLiving).getCurrentArmor(i).getItemDamage() == 0 &&! e.entityLiving.worldObj.isRemote)
+    						{
+    							e.entity.worldObj.createExplosion(null, e.entity.posX, e.entity.posY, e.entity.posZ, 5, true);
+    							e.entity.attackEntityFrom(DamageSource.outOfWorld, 100);
+
+    						}
+    				else
+    				{
     				e.setCanceled(true);
+    				}
     			}
     		}
     	}

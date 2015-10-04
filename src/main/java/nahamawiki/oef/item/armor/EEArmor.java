@@ -2,7 +2,6 @@ package nahamawiki.oef.item.armor;
 
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
-import nahamawiki.oef.item.IItemEEBatteryTool;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
@@ -16,7 +15,7 @@ import takumicraft.Takumi.enchantment.TEnchantment;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class EEArmor extends ItemArmor implements IItemEEBatteryTool{
+public class EEArmor extends ItemArmor{
 
 	private IIcon overlayIcon;
 	private int slotNo;
@@ -57,15 +56,15 @@ public class EEArmor extends ItemArmor implements IItemEEBatteryTool{
 			 	itemStack.addEnchantment(TEnchantment.enchantmentPE, 10);
 			}
 
-		player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 1200, 0));
+		player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 400, 0));
 		// ヘルメット
 		if (player.getCurrentArmor(3) != null) {
 			player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 10, 0));
 		}
 
 		// チェストプレート
-		if (player.getCurrentArmor(2) != null) {
-			player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 20, 2));
+		if (player.getCurrentArmor(2) != null && !player.isPotionActive(23)) {
+			player.addPotionEffect(new PotionEffect(23, 1200, 0));
 		}
 
 		// レギンス
