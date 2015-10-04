@@ -18,7 +18,7 @@ public class OEFEventCore {
 	/**アイテム耐久値ゼロの時にフック**/
 	@SubscribeEvent
 	public void EEItemBroken(PlayerDestroyItemEvent e) {
-		if (e.original.getItem() instanceof IItemEEBatteryTool) {
+		if (e.original.getItem() instanceof IItemEEBatteryTool && !e.entity.worldObj.isRemote) {
 			e.entity.worldObj.createExplosion(null, e.entity.posX, e.entity.posY, e.entity.posZ, 5, true);
 			e.entity.attackEntityFrom(DamageSource.outOfWorld, 100);
 		}
