@@ -40,7 +40,6 @@ info.EEMachineState.capacity=容量 :
 info.EEMachineState.holding=貯蓄 : 
 info.EETool.message=インベントリ
 info.message.update=OEFの最新バージョンが存在します。
-info.message.update.link=§n ダウンロードはこちら
- §r
+info.message.update.link=§n ダウンロードはこちら §r
 info.message.update.link.2= タスクトレイのアイコンより「ダウンロード」をクリック
 info.message.dl=OEFをダウンロード

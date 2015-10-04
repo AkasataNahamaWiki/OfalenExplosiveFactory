@@ -69,7 +69,7 @@ public class OEFEventCore {
 	@SubscribeEvent
     public void onHurt(LivingHurtEvent e)
     {
-		boolean flg = false;
+		boolean flg[] = new boolean[4];
 		if(e.entityLiving != null && e.entityLiving instanceof EntityPlayer)
     	{
     		for(int i = 0; i < 4; i++)
@@ -77,13 +77,13 @@ public class OEFEventCore {
     			if(((EntityPlayer) e.entityLiving).getCurrentArmor(i) != null)
     			if(((EntityPlayer) e.entityLiving).getCurrentArmor(i).getItem() instanceof EEArmor)
     			{
-    				flg = true;
+    				flg[i] = true;
     				break;
     			}
     		}
 
 
-    		if(flg)
+    		if(flg[0] && flg[1] && flg[2] && flg[3])
     		{
     			if(e.source != null && e.source != DamageSource.outOfWorld)
     			{

@@ -20,8 +20,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class OEFItemCore {
 
 	public static final ToolMaterial TMEESWORD = EnumHelper.addToolMaterial("EES_0", 0, 250, 0, 21F, 0);
-	public static ToolMaterial EET = EnumHelper.addToolMaterial("EET", 1, 1000 , OfalenModConfigCore.efficiencyPerfectTool, 0, 100);
-	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 50, new int[] { 0, 0, 0, 0 }, 100);
+	public static ToolMaterial EET = EnumHelper.addToolMaterial("EET", 1, 500 , OfalenModConfigCore.efficiencyPerfectTool, 0, 100);
+	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 30, new int[] { 0, 0, 0, 0 }, 100);
 
 	public static Item EEMater;
 	public static Item EEBattery;

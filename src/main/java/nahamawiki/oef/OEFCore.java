@@ -1,5 +1,22 @@
 package nahamawiki.oef;
 
+import nahamawiki.oef.core.OEFBlockCore;
+import nahamawiki.oef.core.OEFConfigCore;
+import nahamawiki.oef.core.OEFEntityCore;
+import nahamawiki.oef.core.OEFEventCore;
+import nahamawiki.oef.core.OEFGuiHandler;
+import nahamawiki.oef.core.OEFInfoCore;
+import nahamawiki.oef.core.OEFItemCore;
+import nahamawiki.oef.core.OEFOreDicCore;
+import nahamawiki.oef.core.OEFRecipeCore;
+import nahamawiki.oef.core.UpdateCheckCore;
+import nahamawiki.oef.creativetab.OEFCreativeTab;
+import nahamawiki.oef.material.OEFMaterial;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,21 +32,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import nahamawiki.oef.core.OEFBlockCore;
-import nahamawiki.oef.core.OEFConfigCore;
-import nahamawiki.oef.core.OEFEventCore;
-import nahamawiki.oef.core.OEFGuiHandler;
-import nahamawiki.oef.core.OEFInfoCore;
-import nahamawiki.oef.core.OEFItemCore;
-import nahamawiki.oef.core.OEFOreDicCore;
-import nahamawiki.oef.core.OEFRecipeCore;
-import nahamawiki.oef.core.UpdateCheckCore;
-import nahamawiki.oef.creativetab.OEFCreativeTab;
-import nahamawiki.oef.material.OEFMaterial;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * @author Tom Kate & Akasata Nahama
@@ -72,6 +74,7 @@ public class OEFCore {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		OEFRecipeCore.registerRecipes();
+		OEFEntityCore.register(this);
 	}
 
 	@EventHandler
