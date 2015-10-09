@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -16,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class BlockEEConductor extends BlockEEMachineBase implements ITileEntityProvider {
+public class BlockEEConductor extends BlockEEMachineBase {
 
 	protected Random random = new Random();
 	private IIcon[] iicon = new IIcon[4];

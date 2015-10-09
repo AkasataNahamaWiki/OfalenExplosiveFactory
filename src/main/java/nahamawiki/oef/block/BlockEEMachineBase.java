@@ -1,6 +1,8 @@
 package nahamawiki.oef.block;
 
-public abstract class BlockEEMachineBase extends BlockOEFBase {
+import net.minecraft.block.ITileEntityProvider;
+
+public abstract class BlockEEMachineBase extends BlockOEFBase implements ITileEntityProvider {
 
 	public BlockEEMachineBase() {
 		super();

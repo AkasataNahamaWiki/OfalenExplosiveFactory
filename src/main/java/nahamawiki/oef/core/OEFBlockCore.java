@@ -5,7 +5,7 @@ import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
-import nahamawiki.oef.block.BlockEEMachineBase;
+import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
@@ -19,10 +19,8 @@ public class OEFBlockCore {
 	public static Block EEGenerator;
 	public static Block EECharger;
 	public static Block EEConductor;
+	public static Block EELamp;
 	public static Block EESwordWall;
-
-	public static BlockEEMachineBase EELamp;
-	public static BlockEEMachineBase EELamp_on;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
@@ -38,22 +36,16 @@ public class OEFBlockCore {
 		GameRegistry.registerBlock(EECharger, ItemBlockOEF.class, "EECharger");
 		GameRegistry.registerTileEntity(TileEntityEECharger.class, "TileEntityEECharger");
 
-		// EELamp = new BlockEELamp(false);
-		// EELamp.setBlockName("EELamp");
-		// EELamp.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp");
-		// GameRegistry.registerBlock(EELamp, EELamp.getUnlocalizedName());
-		//
-		// EELamp_on = new BlockEELamp(true);
-		// EELamp_on.setCreativeTab(null);
-		// EELamp_on.setBlockName("EELamp_on");
-		// EELamp_on.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp_on");
-		// GameRegistry.registerBlock(EELamp_on, EELamp_on.getUnlocalizedName());
-
 		EEConductor = new BlockEEConductor()
 				.setBlockName("EEConductor")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEConductor");
 		GameRegistry.registerBlock(EEConductor, ItemBlockOEF.class, "EEConductor");
 		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
+
+		EELamp = new BlockEELamp()
+				.setBlockName("EELamp")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp");
+		GameRegistry.registerBlock(EELamp, EELamp.getUnlocalizedName());
 
 		EESwordWall = new CreeperWall_B(Material.rock)
 				.setBlockName("EESwordWall")

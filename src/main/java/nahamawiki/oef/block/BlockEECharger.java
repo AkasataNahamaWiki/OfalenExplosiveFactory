@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -20,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class BlockEECharger extends BlockEEMachineBase implements ITileEntityProvider {
+public class BlockEECharger extends BlockEEMachineBase {
 
 	protected Random random = new Random();
 	private IIcon[] iicon = new IIcon[4];

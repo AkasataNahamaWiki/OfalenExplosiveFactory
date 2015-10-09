@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,7 +17,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class BlockEEGenerator extends BlockEEMachineBase implements ITileEntityProvider {
+public class BlockEEGenerator extends BlockEEMachineBase {
 
 	private IIcon[] iicon = new IIcon[8];
 
