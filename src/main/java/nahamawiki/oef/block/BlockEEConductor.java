@@ -67,4 +67,19 @@ public class BlockEEConductor extends BlockEEMachineBase implements ITileEntityP
 		return meta & 3;
 	}
 
+	@Override
+	public int getRenderType() {
+		return -1;
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+
 }

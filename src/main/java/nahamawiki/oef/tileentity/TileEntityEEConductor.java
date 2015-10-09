@@ -4,8 +4,10 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
-import nahamawiki.oef.OEFCore;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -16,7 +18,9 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	protected int loss = -1;
 	protected int[] holdingEEArray = new int[6];
 	protected ArrayList<Integer> provider = new ArrayList<Integer>();
-	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
+	protected ArrayList<Integer> reciever = new ArrayList<Integer>();
+	protected boolean[] isConnecting = new boolean[6];
+	protected boolean isHoldingEE;
 
 	public TileEntityEEConductor() {
 		super();
@@ -73,11 +77,18 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		nbt.setTag("provider", localnbt);
 
 		localnbt = new NBTTagCompound();
-		for (int i = 0; i < reciver.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), reciver.get(i));
+		for (int i = 0; i < reciever.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), reciever.get(i));
 		}
-		nbt.setInteger("reciverSize", reciver.size());
+		nbt.setInteger("reciverSize", reciever.size());
 		nbt.setTag("reciver", localnbt);
+
+		byte connectingList = 0;
+		for (int i = 0; i < 6; i++) {
+			if (isConnecting[i])
+				connectingList |= (1 << i);
+		}
+		nbt.setByte("connectingList", connectingList);
 	}
 
 	@Override
@@ -94,10 +105,15 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 			provider.add(localnbt.getInteger(String.valueOf(i)));
 		}
 
-		reciver.clear();
+		reciever.clear();
 		localnbt = nbt.getCompoundTag("reciver");
 		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
-			reciver.add(localnbt.getInteger(String.valueOf(i)));
+			reciever.add(localnbt.getInteger(String.valueOf(i)));
+		}
+
+		byte connectingList = nbt.getByte("connectingList");
+		for (byte i = 0; i < 6; i++) {
+			isConnecting[i] = ((connectingList >> i) & 1) == 1;
 		}
 	}
 
@@ -105,6 +121,16 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void updateEntity() {
 		if (worldObj.isRemote)
 			return;
+		if (isHoldingEE != (holdingEE > 0)) {
+			if (holdingEE > 0) {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | 4, 2);
+				isHoldingEE = true;
+			} else {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & 3, 2);
+				isHoldingEE = false;
+			}
+			this.markDirty();
+		}
 		if (loss < 0) {
 			switch (this.getLevel(this.getBlockMetadata())) {
 			case 0:
@@ -128,17 +154,16 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				holdingEEArray[i] -= loss;
 				if (holdingEEArray[i] < 0)
 					holdingEEArray[i] = 0;
-				OEFCore.logger.info("Delete " + loss + " EE, Side : " + i);
 			}
 		}
-		if (reciver.size() < 1)
+		if (reciever.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {
 			if (holdingEEArray[i] < 1)
 				continue;
 			int sendingEE;
-			int reciverNum = reciver.size();
-			if (reciver.contains(i)) {
+			int reciverNum = reciever.size();
+			if (reciever.contains(i)) {
 				if (reciverNum < 2)
 					continue;
 				sendingEE = holdingEEArray[i] / (reciverNum - 1);
@@ -150,7 +175,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 			if (sendingEE < 1)
 				continue;
 			for (int j = 0; j < 6; j++) {
-				if (reciver.contains(j) && j != i) {
+				if (reciever.contains(j) && j != i) {
 					reciverNum--;
 					ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[j], yCoord + offsetsYForSide[j], zCoord + offsetsZForSide[j]);
 					int surplus = machine.recieveEE(sendingEE, oppositeSide[j]);
@@ -167,10 +192,31 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		}
 	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		byte connectingList = 0;
+		for (int i = 0; i < 6; i++) {
+			if (isConnecting[i])
+				connectingList |= (1 << i);
+		}
+		nbt.setByte("connectingList", connectingList);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.func_148857_g();
+		byte connectingList = nbt.getByte("connectingList");
+		for (byte i = 0; i < 6; i++) {
+			isConnecting[i] = ((connectingList >> i) & 1) == 1;
+		}
+	}
+
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
 		provider.clear();
-		reciver.clear();
+		reciever.clear();
 		for (int i = 0; i < 6; i++) {
 			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
 			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
@@ -180,10 +226,22 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 					provider.add(i);
 				}
 				if ((type & 2) == 2) {
-					reciver.add(i);
+					reciever.add(i);
 				}
+				isConnecting[i] = (type != 0);
+			} else {
+				isConnecting[i] = false;
 			}
 		}
+		world.markBlockForUpdate(x, y, z);
+	}
+
+	public boolean[] getConnectingArray() {
+		return isConnecting;
+	}
+
+	public boolean isHoldingEE() {
+		return (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 4) != 0;
 	}
 
 }

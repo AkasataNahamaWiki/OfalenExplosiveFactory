@@ -2,7 +2,6 @@ package nahamawiki.oef.tileentity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -58,7 +57,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		nbt.setInteger("coolTime", coolTime);
 		if (battery != null)
 			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
-		OEFCore.logger.info("Complete writeToNBT");
 	}
 
 	@Override

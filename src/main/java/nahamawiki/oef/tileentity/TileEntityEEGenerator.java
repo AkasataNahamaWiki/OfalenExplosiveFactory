@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
-	protected ArrayList<Integer> reciver = new ArrayList<Integer>();
+	protected ArrayList<Integer> reciever = new ArrayList<Integer>();
 
 	@Override
 	public int getMachineType(int side) {
@@ -58,10 +58,10 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		super.writeToNBT(nbt);
 
 		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < reciver.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), reciver.get(i));
+		for (int i = 0; i < reciever.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), reciever.get(i));
 		}
-		nbt.setInteger("reciverSize", reciver.size());
+		nbt.setInteger("reciverSize", reciever.size());
 		nbt.setTag("reciver", localnbt);
 	}
 
@@ -69,16 +69,16 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		reciver.clear();
+		reciever.clear();
 		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
 		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
-			reciver.add(localnbt.getInteger(String.valueOf(i)));
+			reciever.add(localnbt.getInteger(String.valueOf(i)));
 		}
 	}
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote || reciver.size() < 1)
+		if (worldObj.isRemote || reciever.size() < 1)
 			return;
 		int sendingEE = 0;
 		switch (worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) {
@@ -97,11 +97,11 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		}
 		if (sendingEE < 1)
 			return;
-		sendingEE /= reciver.size();
-		int reciverNum = reciver.size();
-		for (int i = 0; i < reciver.size(); i++) {
+		sendingEE /= reciever.size();
+		int reciverNum = reciever.size();
+		for (int i = 0; i < reciever.size(); i++) {
 			reciverNum--;
-			int side = reciver.get(i);
+			int side = reciever.get(i);
 			ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
 			if (machine == null)
 				continue;
@@ -114,14 +114,14 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
-		reciver.clear();
+		reciever.clear();
 		for (int i = 0; i < 6; i++) {
 			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
 			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
 				ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
 				int type = machine.getMachineType(oppositeSide[i]);
 				if ((type & 2) == 2) {
-					reciver.add(i);
+					reciever.add(i);
 				}
 			}
 		}
