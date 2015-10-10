@@ -1,5 +1,6 @@
 package nahamawiki.oef.tileentity;
 
+
 import net.minecraft.util.StatCollector;
 
 public class TileEntityEELamp extends TileEntityEEMachineBase {
