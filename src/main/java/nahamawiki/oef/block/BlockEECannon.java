@@ -24,29 +24,28 @@ public class BlockEECannon extends BlockEEMachineBase {
 			TileEntityEECannon tile = (TileEntityEECannon) world.getTileEntity(x, y, z);
 			tile.setOwnPlayer(player.getDisplayName());
 			ItemStack item = player.getHeldItem();
-			if (item != null) {
-				String color = "";
+			String color = "";
 
-				if (item.getItem() == OfalenModItemCore.magazineLaserRed) {
-					color = "Red";
-				} else if (item.getItem() == OfalenModItemCore.magazineLaserGreen) {
-					color = "Green";
-				} else if (item.getItem() == OfalenModItemCore.magazineLaserBlue) {
-					color = "Blue";
-				} else if (item.getItem() == OfalenModItemCore.magazineLaserWhite) {
-					color = "White";
-				}
+			if (item.getItem() == OfalenModItemCore.magazineLaserRed) {
+				color = "Red";
+			} else if (item.getItem() == OfalenModItemCore.magazineLaserGreen) {
+				color = "Green";
+			} else if (item.getItem() == OfalenModItemCore.magazineLaserBlue) {
+				color = "Blue";
+			} else if (item.getItem() == OfalenModItemCore.magazineLaserWhite) {
+				color = "White";
+			}
 
-				if (color != "" && tile.getColor() == "") {
-					tile.setColor(color);
-					tile.setStack(32);
-					if (!player.capabilities.isCreativeMode) {
-						--player.getHeldItem().stackSize;
-					}
+			if (color != "" && (tile.getColor() == "" || tile.getColor() == color)) {
+				tile.setColor(color);
+				tile.size += 32;
+				if (!player.capabilities.isCreativeMode) {
+					--player.getHeldItem().stackSize;
 				}
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
