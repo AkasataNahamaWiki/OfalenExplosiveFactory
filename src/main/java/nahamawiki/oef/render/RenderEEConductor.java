@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class RendererEEConductor extends TileEntitySpecialRenderer {
+public class RenderEEConductor extends TileEntitySpecialRenderer {
 
 	private final ModelEEConductor model = new ModelEEConductor();
 
