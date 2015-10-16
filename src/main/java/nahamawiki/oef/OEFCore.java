@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -17,12 +16,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import nahama.ofalenmod.entity.EntityBlueLaser;
-import nahama.ofalenmod.entity.EntityGreenLaser;
-import nahama.ofalenmod.entity.EntityRedLaser;
-import nahama.ofalenmod.entity.EntityWhiteLaser;
-import nahama.ofalenmod.model.ModelLaser;
-import nahama.ofalenmod.renderer.RenderLaser;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.core.OEFEntityCore;
@@ -89,10 +82,6 @@ public class OEFCore {
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECannon.class, new RenderEECannon());
-			RenderingRegistry.registerEntityRenderingHandler(EntityRedLaser.class, new RenderLaser(new ModelLaser(), "red"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityGreenLaser.class, new RenderLaser(new ModelLaser(), "green"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityBlueLaser.class, new RenderLaser(new ModelLaser(), "blue"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityWhiteLaser.class, new RenderLaser(new ModelLaser(), "white"));
 		}
 	}
 

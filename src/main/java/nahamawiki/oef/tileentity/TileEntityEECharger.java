@@ -11,9 +11,8 @@ import net.minecraft.util.StatCollector;
 
 public class TileEntityEECharger extends TileEntityEEMachineBase implements ISidedInventory {
 
-	public int holdingEE;
 	public int coolTime;
-	protected int capacity;
+	private int capacity = -1;
 	protected ItemStack battery;
 
 	@Override
@@ -23,8 +22,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public int recieveEE(int amount, int side) {
-		if (capacity == 0)
-			setCapacity();
 		holdingEE += amount;
 		if (holdingEE > capacity) {
 			int surplus = holdingEE - capacity;
@@ -38,22 +35,20 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	public String[] getState() {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
-				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
+				StatCollector.translateToLocal("info.EEMachineState.level") + level,
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
 	}
 
 	@Override
-	public int getLevel(int meta) {
-		return meta & 3;
+	public byte getLevel(int meta) {
+		return (byte) (meta & 3);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("holdingEE", holdingEE);
-		nbt.setInteger("capacity", capacity);
 		nbt.setInteger("coolTime", coolTime);
 		if (battery != null)
 			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
@@ -62,19 +57,16 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		holdingEE = nbt.getInteger("holdingEE");
-		capacity = nbt.getInteger("capacity");
 		coolTime = nbt.getInteger("coolTime");
 		if (nbt.getTag("battery") != null && nbt.getTag("battery") instanceof NBTTagCompound)
 			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("battery"));
 	}
 
-	protected int setCapacity() {
-		return capacity = EEUtil.getBaseCapacity(this.getLevel(worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord)));
-	}
-
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
+		if (capacity < 0)
+			EEUtil.getBaseCapacity(level);
 		if (worldObj.isRemote)
 			return;
 		if (coolTime > 0)
@@ -83,7 +75,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 			return;
 		battery.getTagCompound().setInteger("holdingEE", battery.getTagCompound().getInteger("holdingEE") + 1);
 		holdingEE--;
-		switch (this.getLevel(this.getBlockMetadata())) {
+		switch (level) {
 		case 0:
 			coolTime = 16;
 			break;
@@ -96,7 +88,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		case 3:
 			coolTime = 2;
 		}
-		markDirty();
 	}
 
 	public boolean isCharging() {
@@ -105,9 +96,15 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 
 	@SideOnly(Side.CLIENT)
 	public int getHoldingEEScaled(int par1) {
-		if (capacity < 1)
-			setCapacity();
 		return holdingEE * par1 / capacity;
+	}
+
+	public int getHoldingEE() {
+		return holdingEE;
+	}
+
+	public void setHoldingEE(int holdingEE) {
+		this.holdingEE = holdingEE;
 	}
 
 	@Override

@@ -1,13 +1,20 @@
 package nahamawiki.oef.block;
 
+import java.util.Random;
+
 import nahama.ofalenmod.core.OfalenModItemCore;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
+import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class BlockEECannon extends BlockEEMachineBase {
+
+	private Random random = new Random();
 
 	public BlockEECannon() {
 		super();
@@ -46,6 +53,54 @@ public class BlockEECannon extends BlockEEMachineBase {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		TileEntityEECannon machine = (TileEntityEECannon) world.getTileEntity(x, y, z);
+		if (machine != null) {
+			ItemStack itemStack = null;
+			if (machine.getColor() == "Red") {
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserRed, machine.size);
+			} else if (machine.getColor() == "Green") {
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserGreen, machine.size);
+			} else if (machine.getColor() == "Blue") {
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserBlue, machine.size);
+			} else if (machine.getColor() == "White") {
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserWhite, machine.size);
+			}
+			if (itemStack != null) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setBoolean("CanRepair", false);
+				itemStack.setTagCompound(nbt);
+				float f = this.random.nextFloat() * 0.6F + 0.1F;
+				float f1 = this.random.nextFloat() * 0.6F + 0.1F;
+				float f2 = this.random.nextFloat() * 0.6F + 0.1F;
+
+				while (itemStack.stackSize > 0) {
+					int j = this.random.nextInt(21) + 10;
+
+					if (j > itemStack.stackSize) {
+						j = itemStack.stackSize;
+					}
+
+					itemStack.stackSize -= j;
+					EntityItem entityitem = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemStack.getItem(), j, itemStack.getItemDamage()));
+
+					if (itemStack.hasTagCompound()) {
+						entityitem.getEntityItem().setTagCompound(((NBTTagCompound) itemStack.getTagCompound().copy()));
+					}
+
+					float f3 = 0.025F;
+					entityitem.motionX = (float) this.random.nextGaussian() * f3;
+					entityitem.motionY = (float) this.random.nextGaussian() * f3 + 0.1F;
+					entityitem.motionZ = (float) this.random.nextGaussian() * f3;
+					world.spawnEntityInWorld(entityitem);
+				}
+			}
+			world.func_147453_f(x, y, z, block);
+		}
+		super.breakBlock(world, x, y, z, block, meta);
 	}
 
 	@Override

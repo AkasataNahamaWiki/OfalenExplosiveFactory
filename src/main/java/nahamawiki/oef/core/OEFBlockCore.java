@@ -7,12 +7,15 @@ import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
 import nahamawiki.oef.block.BlockEELamp;
+import nahamawiki.oef.block.BlockEEMiner;
+import nahamawiki.oef.block.BlockEESurveyor;
 import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import nahamawiki.oef.tileentity.TileEntityEELamp;
+import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import takumicraft.Takumi.Block.CreeperWall_B;
@@ -25,6 +28,8 @@ public class OEFBlockCore {
 	public static Block EELamp;
 	public static Block EESwordWall;
 	public static Block EECannon;
+	public static Block EEMiner;
+	public static Block EESurveyor;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
@@ -62,6 +67,17 @@ public class OEFBlockCore {
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EECannon");
 		GameRegistry.registerBlock(EECannon, "EECannon");
 		GameRegistry.registerTileEntity(TileEntityEECannon.class, "TileEntityEECannon");
+
+		EEMiner = new BlockEEMiner()
+				.setBlockName("EEMiner")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEMiner");
+		GameRegistry.registerBlock(EEMiner, ItemBlockOEF.class, "EEMiner");
+		GameRegistry.registerTileEntity(TileEntityEEMiner.class, "TileEntityEEMiner");
+
+		EESurveyor = new BlockEESurveyor()
+				.setBlockName("EESurveyor")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EESurveyor");
+		GameRegistry.registerBlock(EESurveyor, "EESurveyor");
 	}
 
 }

@@ -22,10 +22,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	protected boolean[] isConnecting = new boolean[6];
 	protected boolean isHoldingEE;
 
-	public TileEntityEEConductor() {
-		super();
-	}
-
 	@Override
 	public int getMachineType(int side) {
 		return 3;
@@ -50,24 +46,24 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		}
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
-				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
+				StatCollector.translateToLocal("info.EEMachineState.level") + level,
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
 	}
 
 	@Override
-	public int getLevel(int meta) {
-		return meta & 3;
+	public byte getLevel(int meta) {
+		if (level < 0)
+			return (byte) (meta & 3);
+		return level;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		for (int i = 0; i < 6; i++) {
-			nbt.setInteger("holdingEEArray-" + i, holdingEEArray[i]);
-		}
+		nbt.setIntArray("holdingEEArray", holdingEEArray);
 
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < provider.size(); i++) {
@@ -83,21 +79,17 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		nbt.setInteger("reciverSize", reciever.size());
 		nbt.setTag("reciver", localnbt);
 
-		byte connectingList = 0;
 		for (int i = 0; i < 6; i++) {
-			if (isConnecting[i])
-				connectingList |= (1 << i);
+			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
 		}
-		nbt.setByte("connectingList", connectingList);
+		// OEFCore.logger.info("Complete writeToNBT");
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		for (int i = 0; i < 6; i++) {
-			holdingEEArray[i] = nbt.getInteger("holdingEEArray-" + i);
-		}
+		holdingEEArray = nbt.getIntArray("holdingEEArray");
 
 		provider.clear();
 		NBTTagCompound localnbt = nbt.getCompoundTag("provider");
@@ -111,28 +103,30 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 			reciever.add(localnbt.getInteger(String.valueOf(i)));
 		}
 
-		byte connectingList = nbt.getByte("connectingList");
-		for (byte i = 0; i < 6; i++) {
-			isConnecting[i] = ((connectingList >> i) & 1) == 1;
+		for (int i = 0; i < 6; i++) {
+			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			// OEFCore.logger.info("isConnecting[" + i + "] : " + isConnecting[i] + " by readFromNBT");
 		}
+		// OEFCore.logger.info("Complete readFromNBT");
 	}
 
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
 		if (isHoldingEE != (holdingEE > 0)) {
 			if (holdingEE > 0) {
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | 4, 2);
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level | 4, 2);
 				isHoldingEE = true;
 			} else {
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & 3, 2);
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level & 3, 2);
 				isHoldingEE = false;
 			}
 			this.markDirty();
 		}
 		if (loss < 0) {
-			switch (this.getLevel(this.getBlockMetadata())) {
+			switch (level) {
 			case 0:
 				loss = 8;
 				break;
@@ -164,14 +158,12 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 			int sendingEE;
 			int reciverNum = reciever.size();
 			if (reciever.contains(i)) {
-				if (reciverNum < 2)
+				reciverNum--;
+				if (reciverNum < 1)
 					continue;
-				sendingEE = holdingEEArray[i] / (reciverNum - 1);
-				holdingEEArray[i] %= (reciverNum - 1);
-			} else {
-				sendingEE = holdingEEArray[i] / reciverNum;
-				holdingEEArray[i] %= reciverNum;
 			}
+			sendingEE = holdingEEArray[i] / reciverNum;
+			holdingEEArray[i] %= reciverNum;
 			if (sendingEE < 1)
 				continue;
 			for (int j = 0; j < 6; j++) {
@@ -195,22 +187,21 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		byte connectingList = 0;
 		for (int i = 0; i < 6; i++) {
-			if (isConnecting[i])
-				connectingList |= (1 << i);
+			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
 		}
-		nbt.setByte("connectingList", connectingList);
+		// OEFCore.logger.info("Finish getDescriptionPacket");
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
-		byte connectingList = nbt.getByte("connectingList");
-		for (byte i = 0; i < 6; i++) {
-			isConnecting[i] = ((connectingList >> i) & 1) == 1;
+		for (int i = 0; i < 6; i++) {
+			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			// OEFCore.logger.info("isConnecting[" + i + "] : " + isConnecting[i] + " by onDataPacket");
 		}
+		// OEFCore.logger.info("Finish onDataPacket");
 	}
 
 	/** 周囲のブロックを確認する */

@@ -23,6 +23,6 @@ public interface ITileEntityEEMachine {
 	/** 機械の情報を返す。 */
 	public String[] getState();
 
-	public int getLevel(int meta);
+	public byte getLevel(int meta);
 
 }

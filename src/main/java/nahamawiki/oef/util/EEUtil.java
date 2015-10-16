@@ -13,7 +13,7 @@ public class EEUtil {
 		case 3:
 			return 32000;
 		}
-		return 0;
+		return -1;
 	}
 
 }

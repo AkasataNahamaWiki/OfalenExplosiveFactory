@@ -43,14 +43,14 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		}
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
-				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
+				StatCollector.translateToLocal("info.EEMachineState.level") + level,
 				StatCollector.translateToLocal("info.EEMachineState.providing") + sendingEE + " EE"
 		};
 	}
 
 	@Override
-	public int getLevel(int meta) {
-		return meta & 3;
+	public byte getLevel(int meta) {
+		return (byte) (meta & 3);
 	}
 
 	@Override
@@ -78,6 +78,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
 		if (worldObj.isRemote || reciever.size() < 1)
 			return;
 		int sendingEE = 0;

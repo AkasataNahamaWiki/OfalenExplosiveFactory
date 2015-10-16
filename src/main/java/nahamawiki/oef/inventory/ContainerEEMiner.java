@@ -2,41 +2,46 @@ package nahamawiki.oef.inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import nahamawiki.oef.tileentity.TileEntityEECharger;
+import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerEECharger extends Container {
+public class ContainerEEMiner extends Container {
 
-	private TileEntityEECharger tileEntity;
+	private TileEntityEEMiner tileEntity;
 	private int lastHoldingEE;
 	private int lastCoolTime;
 
-	public ContainerEECharger(EntityPlayer player, TileEntityEECharger tileEntity) {
+	public ContainerEEMiner(EntityPlayer player, TileEntityEEMiner tileEntity) {
 		this.tileEntity = tileEntity;
 
-		this.addSlotToContainer(new SlotEECharger(this.tileEntity, 0, 78, 38));
-		int i;
+		int i = 2 * 18 + 1;
 
-		for (i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+		for (int j = 0; j < 6; ++j) {
+			for (int k = 0; k < 9; ++k) {
+				this.addSlotToContainer(new SlotEEMiner(this.tileEntity, k + j * 9, 8 + k * 18, 18 + j * 18));
 			}
 		}
 
-		for (i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
+		for (int j = 0; j < 3; ++j) {
+			for (int k = 0; k < 9; ++k) {
+				this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 + i));
+			}
 		}
+
+		for (int j = 0; j < 9; ++j) {
+			this.addSlotToContainer(new Slot(player.inventory, j, 8 + j * 18, 161 + i));
+		}
+
 	}
 
 	@Override
 	public void addCraftingToCrafters(ICrafting iCrafting) {
 		super.addCraftingToCrafters(iCrafting);
 		iCrafting.sendProgressBarUpdate(this, 0, this.tileEntity.getHoldingEE());
-		iCrafting.sendProgressBarUpdate(this, 1, this.tileEntity.coolTime);
 	}
 
 	@Override
@@ -49,12 +54,7 @@ public class ContainerEECharger extends Container {
 			if (this.lastHoldingEE != this.tileEntity.getHoldingEE()) {
 				iCrafting.sendProgressBarUpdate(this, 0, this.tileEntity.getHoldingEE());
 			}
-			if (this.lastCoolTime != this.tileEntity.coolTime) {
-				iCrafting.sendProgressBarUpdate(this, 1, this.tileEntity.coolTime);
-			}
-
 			this.lastHoldingEE = this.tileEntity.getHoldingEE();
-			this.lastCoolTime = this.tileEntity.coolTime;
 		}
 	}
 
@@ -63,8 +63,6 @@ public class ContainerEECharger extends Container {
 	public void updateProgressBar(int par1, int par2) {
 		if (par1 == 0) {
 			this.tileEntity.setHoldingEE(par2);
-		} else if (par1 == 1) {
-			this.tileEntity.coolTime = par2;
 		}
 	}
 
@@ -82,21 +80,17 @@ public class ContainerEECharger extends Container {
 			ItemStack itemStack1 = slot.getStack();
 			itemStack = itemStack1.copy();
 
-			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemStack1, 1, 37, true)) {
+			if (slotNumber < 54) {
+				if (!this.mergeItemStack(itemStack1, 54, 90, true)) {
 					return null;
 				}
 				slot.onSlotChange(itemStack1, itemStack);
 			} else {
-				if (itemStack1.stackSize < 2 && itemStack1.hasTagCompound() && itemStack1.getTagCompound().getBoolean("canChargeEE")) {
-					if (!this.mergeItemStack(itemStack1, 0, 1, false)) {
+				if (slotNumber >= 54 && slotNumber < 81) {
+					if (!this.mergeItemStack(itemStack1, 81, 90, false)) {
 						return null;
 					}
-				} else if (slotNumber >= 1 && slotNumber < 28) {
-					if (!this.mergeItemStack(itemStack1, 28, 37, false)) {
-						return null;
-					}
-				} else if (slotNumber >= 28 && slotNumber < 37 && !this.mergeItemStack(itemStack1, 1, 28, false)) {
+				} else if (slotNumber >= 81 && slotNumber < 90 && !this.mergeItemStack(itemStack1, 54, 81, false)) {
 					return null;
 				}
 			}

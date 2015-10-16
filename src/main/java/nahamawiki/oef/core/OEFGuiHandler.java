@@ -1,43 +1,48 @@
 package nahamawiki.oef.core;
 
+import cpw.mods.fml.common.network.IGuiHandler;
 import nahamawiki.oef.gui.GuiEECharger;
+import nahamawiki.oef.gui.GuiEEMiner;
 import nahamawiki.oef.gui.GuiEETool;
 import nahamawiki.oef.inventory.ContainerEECharger;
+import nahamawiki.oef.inventory.ContainerEEMiner;
 import nahamawiki.oef.inventory.ContainerEETool;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
+import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 public class OEFGuiHandler implements IGuiHandler {
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		if (!world.blockExists(x, y, z))
-			return null;
-		if(ID == 99)
-		{
+		if (ID == 99) {
 			return new ContainerEETool(player.inventory);
 		}
+		if (!world.blockExists(x, y, z))
+			return null;
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 		if (tileentity instanceof TileEntityEECharger) {
 			return new ContainerEECharger(player, (TileEntityEECharger) tileentity);
+		} else if (tileentity instanceof TileEntityEEMiner) {
+			return new ContainerEEMiner(player, (TileEntityEEMiner) tileentity);
 		}
 		return null;
 	}
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		if (!world.blockExists(x, y, z))
-			return null;
-		if(ID == 99)
-		{
+		if (ID == 99) {
 			return new GuiEETool(player.inventory);
 		}
+		if (!world.blockExists(x, y, z))
+			return null;
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 		if (tileentity instanceof TileEntityEECharger) {
 			return new GuiEECharger(player, (TileEntityEECharger) tileentity);
+		} else if (tileentity instanceof TileEntityEEMiner) {
+			return new GuiEEMiner(player, (TileEntityEEMiner) tileentity);
 		}
 		return null;
 	}

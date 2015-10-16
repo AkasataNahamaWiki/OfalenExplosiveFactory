@@ -11,11 +11,11 @@ public class ItemEEMater extends ItemOEFBase {
 
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		if (world.isRemote) {
-			return true;
-		}
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity instanceof ITileEntityEEMachine) {
+			if (world.isRemote) {
+				return true;
+			}
 			String[] state = ((ITileEntityEEMachine) tileEntity).getState();
 			if (state == null) {
 				player.addChatMessage(new ChatComponentText("Error on reciving packet"));
@@ -26,7 +26,7 @@ public class ItemEEMater extends ItemOEFBase {
 			}
 			return true;
 		}
-		return true;
+		return false;
 	}
 
 }

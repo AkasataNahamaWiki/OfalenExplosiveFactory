@@ -9,6 +9,7 @@ import nahama.ofalenmod.entity.EntityGreenLaser;
 import nahama.ofalenmod.entity.EntityRedLaser;
 import nahama.ofalenmod.entity.EntityWhiteLaser;
 import nahamawiki.oef.OEFCore;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -31,6 +32,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	private float rotationYaw = 0;
 	/** 上下角 */
 	private float rotationPitch = 0;
+	private boolean isSpawning;
 
 	@Override
 	public int getMachineType(int side) {
@@ -68,7 +70,6 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public String[] getState() {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
-				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.color") + color,
@@ -77,12 +78,13 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public int getLevel(int meta) {
+	public byte getLevel(int meta) {
 		return 0;
 	}
 
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
 		if (duration > 0)
@@ -111,28 +113,31 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			}
 		}
 		this.angleUpdate();
-		EntityPlayer dummy = player;
-		dummy.setLocationAndAngles(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
-		String color = this.getColor();
-		if (duration < 1 && color != null && size > 0 && holdingEE >= 400) {
+		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null) {
 			duration = 10;
+			NBTTagCompound localnbt = new NBTTagCompound();
+			player.writeToNBT(localnbt);
+			player.setLocationAndAngles(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityRedLaser laser = new EntityRedLaser(worldObj, dummy, i);
+					EntityRedLaser laser = new EntityRedLaser(worldObj, player, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityGreenLaser laser = new EntityGreenLaser(worldObj, dummy);
+				EntityGreenLaser laser = new EntityGreenLaser(worldObj, player);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityBlueLaser laser = new EntityBlueLaser(worldObj, dummy);
+				EntityBlueLaser laser = new EntityBlueLaser(worldObj, player);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityWhiteLaser laser = new EntityWhiteLaser(worldObj, dummy, i);
+					EntityWhiteLaser laser = new EntityWhiteLaser(worldObj, player, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
+			player.readFromNBT(localnbt);
+			isSpawning = true;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			this.size--;
 			holdingEE -= 400;
 			if (size < 1) {
@@ -170,6 +175,13 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
+		if (isSpawning) {
+			nbt.setBoolean("isSpawning", true);
+			nbt.setString("color", color);
+			isSpawning = false;
+		} else {
+			nbt.setBoolean("isSpawning", false);
+		}
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
@@ -180,6 +192,31 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		NBTTagCompound nbt = pkt.func_148857_g();
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
+		if (nbt.getBoolean("isSpawning")) {
+			color = nbt.getString("color");
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			NBTTagCompound localnbt = new NBTTagCompound();
+			player.writeToNBT(localnbt);
+			player.setLocationAndAngles(xCoord + 0.5, yCoord + 0.5 - player.getEyeHeight(), zCoord + 0.5, rotationYaw, rotationPitch);
+			if (color.equals("Red")) {
+				for (int i = -2; i < 3; i++) {
+					EntityRedLaser laser = new EntityRedLaser(worldObj, player, i);
+					worldObj.spawnEntityInWorld(laser);
+				}
+			} else if (color.equals("Green")) {
+				EntityGreenLaser laser = new EntityGreenLaser(worldObj, player);
+				worldObj.spawnEntityInWorld(laser);
+			} else if (color.equals("Blue")) {
+				EntityBlueLaser laser = new EntityBlueLaser(worldObj, player);
+				worldObj.spawnEntityInWorld(laser);
+			} else if (color.equals("White")) {
+				for (int i = -2; i < 3; i++) {
+					EntityWhiteLaser laser = new EntityWhiteLaser(worldObj, player, i);
+					worldObj.spawnEntityInWorld(laser);
+				}
+			}
+			player.readFromNBT(localnbt);
+		}
 	}
 
 	@Override

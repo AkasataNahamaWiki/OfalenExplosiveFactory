@@ -1,6 +1,5 @@
 package nahamawiki.oef.tileentity;
 
-
 import net.minecraft.util.StatCollector;
 
 public class TileEntityEELamp extends TileEntityEEMachineBase {
@@ -25,17 +24,17 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 	public String[] getState() {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
-				StatCollector.translateToLocal("info.EEMachineState.level") + this.getLevel(this.getBlockMetadata()),
 		};
 	}
 
 	@Override
-	public int getLevel(int meta) {
+	public byte getLevel(int meta) {
 		return 0;
 	}
 
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
 		if (remainingTime > 0) {
 			remainingTime--;
 		} else if (isShining) {
