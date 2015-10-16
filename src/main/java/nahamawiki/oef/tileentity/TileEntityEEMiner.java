@@ -229,7 +229,6 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 		}
 		block.breakBlock(worldObj, miningCoord[0], miningCoord[1], miningCoord[2], block, meta);
 		worldObj.setBlockToAir(miningCoord[0], miningCoord[1], miningCoord[2]);
-		worldObj.playSoundEffect(miningCoord[0], miningCoord[1], miningCoord[2], block.stepSound.getBreakSound(), 1.0F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
 
 		List list = worldObj.loadedEntityList;
 		if (list.isEmpty()) {
@@ -278,7 +277,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	/** 引数をこのブロックの真上にEntityItemとしてスポーンさせる。 */
 	private void spawnEntityItem(ItemStack itemStack) {
-		EntityItem entity = new EntityItem(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, itemStack);
+		EntityItem entity = new EntityItem(worldObj, xCoord - 0.5, yCoord + 1, zCoord - 0.5, itemStack);
 		if (itemStack.hasTagCompound()) {
 			entity.getEntityItem().setTagCompound(((NBTTagCompound) itemStack.getTagCompound().copy()));
 		}

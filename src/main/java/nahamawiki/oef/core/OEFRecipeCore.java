@@ -1,11 +1,50 @@
 package nahamawiki.oef.core;
 
+import static nahama.ofalenmod.core.OfalenModRecipeCore.*;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import nahama.ofalenmod.core.OfalenModItemCore;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import takumicraft.Takumi.TakumiCraftCore;
+
 public class OEFRecipeCore {
 
 	private static final OEFItemCore ITEM = new OEFItemCore();
 	private static final OEFBlockCore BLOCK = new OEFBlockCore();
 
 	/** レシピを登録する */
-	public static void registerRecipes() {}
+	public static void registerRecipes() {
+		// EEメーター
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEMater,
+				"GAG", "SBS", "ICI", 'G', Items.gold_ingot, 'S', Blocks.stone_button, 'I', Items.iron_ingot,
+				'A', ITEM.EEControlChipA, 'B', ITEM.EEControlChipB, 'C', ITEM.EEControlChipC));
+		// エメラルドパウダー
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ITEM.materials, 9, 1), Items.emerald));
+		// EEパウダー
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEPowder,
+				"GGG", "GEG", "GGG", 'G', Items.gunpowder, 'E', ITEM.EmeraldPowder));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEPoweredPowder,
+				"PPP", "POP", "PPP", 'P', ITEM.EEPowder, 'O', frag[3]));
+		// EEコントロールチップ
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipA,
+				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[0]));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipB,
+				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[1]));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipC,
+				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[2]));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipS,
+				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[3]));
+		// 硬質機械用カバープレートセット
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ITEM.materials, 2, 10),
+				"PBP", "POP", "PBP", 'P', new ItemStack(OfalenModItemCore.partsOfalen, 1, 0), 'B', TakumiCraftCore.creeperblock, 'O', gem[3]));
+		// EEバッテリー
+		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEBattery,
+				"CAC", "OEO", "GBG", 'C', ITEM.EECrystal, 'O', frag[1], 'E', Items.emerald, 'G', Items.gold_nugget,
+				'A', ITEM.EEControlChipA, 'B', ITEM.EEControlChipB));
+	}
 
 }

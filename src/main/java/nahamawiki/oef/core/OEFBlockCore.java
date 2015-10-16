@@ -23,13 +23,13 @@ import takumicraft.Takumi.Block.CreeperWall_B;
 public class OEFBlockCore {
 
 	public static Block EEGenerator;
-	public static Block EECharger;
-	public static Block EEConductor;
 	public static Block EELamp;
-	public static Block EESwordWall;
+	public static Block EECharger;
 	public static Block EECannon;
+	public static Block EEConductor;
 	public static Block EEMiner;
 	public static Block EESurveyor;
+	public static Block EESwordWall;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
@@ -39,34 +39,29 @@ public class OEFBlockCore {
 		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, "EEGenerator");
 		GameRegistry.registerTileEntity(TileEntityEEGenerator.class, "TileEntityEEGenerator");
 
-		EECharger = new BlockEECharger()
-				.setBlockName("EECharger")
-				.setBlockTextureName(OEFCore.DOMEINNAME + "EECharger");
-		GameRegistry.registerBlock(EECharger, ItemBlockOEF.class, "EECharger");
-		GameRegistry.registerTileEntity(TileEntityEECharger.class, "TileEntityEECharger");
-
-		EEConductor = new BlockEEConductor()
-				.setBlockName("EEConductor")
-				.setBlockTextureName(OEFCore.DOMEINNAME + "EEConductor");
-		GameRegistry.registerBlock(EEConductor, ItemBlockOEF.class, "EEConductor");
-		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
-
 		EELamp = new BlockEELamp()
 				.setBlockName("EELamp")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EELamp");
 		GameRegistry.registerBlock(EELamp, EELamp.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEELamp.class, "TileEntityEELamp");
 
-		EESwordWall = new CreeperWall_B(Material.rock)
-				.setBlockName("EESwordWall")
-				.setBlockTextureName(OEFCore.DOMEINNAME + "EESwordWall");
-		GameRegistry.registerBlock(EESwordWall, "EESwordWall");
+		EECharger = new BlockEECharger()
+				.setBlockName("EECharger")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EECharger");
+		GameRegistry.registerBlock(EECharger, ItemBlockOEF.class, "EECharger");
+		GameRegistry.registerTileEntity(TileEntityEECharger.class, "TileEntityEECharger");
 
 		EECannon = new BlockEECannon()
 				.setBlockName("EECannon")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EECannon");
 		GameRegistry.registerBlock(EECannon, "EECannon");
 		GameRegistry.registerTileEntity(TileEntityEECannon.class, "TileEntityEECannon");
+
+		EEConductor = new BlockEEConductor()
+				.setBlockName("EEConductor")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEConductor");
+		GameRegistry.registerBlock(EEConductor, ItemBlockOEF.class, "EEConductor");
+		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
 
 		EEMiner = new BlockEEMiner()
 				.setBlockName("EEMiner")
@@ -78,6 +73,11 @@ public class OEFBlockCore {
 				.setBlockName("EESurveyor")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EESurveyor");
 		GameRegistry.registerBlock(EESurveyor, "EESurveyor");
+
+		EESwordWall = new CreeperWall_B(Material.rock)
+				.setBlockName("EESwordWall")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EESwordWall");
+		GameRegistry.registerBlock(EESwordWall, "EESwordWall");
 	}
 
 }

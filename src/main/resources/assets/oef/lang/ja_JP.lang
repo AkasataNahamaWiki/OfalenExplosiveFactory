@@ -3,7 +3,17 @@
 itemGroup.OEFTab=OEF
 
 //アイテム
-item.EEMater.name=EEメーター
+item.materials.0.name=EEメーター
+item.materials.1.name=エメラルドパウダー
+item.materials.2.name=EEパウダー
+item.materials.3.name=EEパワードパウダー
+item.materials.4.name=EEクリスタル
+item.materials.5.name=EEパワードクリスタル
+item.materials.6.name=EEコントロールチップ [A]
+item.materials.7.name=EEコントロールチップ [B]
+item.materials.8.name=EEコントロールチップ [C]
+item.materials.9.name=EEコントロールチップ [S]
+item.materials.10.name=硬質機械用カバープレートセット
 item.EESword.name=真・匠式宝剣
 item.EESword_RED.name=真・匠式宝剣[深紅]
 item.EESword_GREEN.name=真・匠式宝剣[翠緑]
@@ -27,18 +37,45 @@ tile.EEGenerator.4.name=EE生成機
 tile.EEGenerator.5.name=EE生成機 Lv.1
 tile.EEGenerator.6.name=EE生成機 Lv.2
 tile.EEGenerator.7.name=EE生成機 Lv.3
-tile.EEConductor.name=EE伝導線
 tile.EELamp.name=EEランプ
-tile.EELamp_on.name=EEランプ
+tile.EECharger.0.name=EE充填機
+tile.EECharger.1.name=EE充填機 Lv.1
+tile.EECharger.2.name=EE充填機 Lv.2
+tile.EECharger.3.name=EE充填機 Lv.3
+tile.EECannon.name=EEオファレン砲台
+tile.EEConductor.0.name=EE伝導管
+tile.EEConductor.1.name=EE伝導管 Lv.1
+tile.EEConductor.2.name=EE伝導管 Lv.2
+tile.EEConductor.3.name=EE伝導管 Lv.3
+tile.EEMiner.0.name=EE採掘機
+tile.EEMiner.1.name=EE採掘機 Lv.1
+tile.EEMiner.2.name=EE採掘機 Lv.2
+tile.EEMiner.3.name=EE採掘機 Lv.3
+tile.EEMiner.4.name=EE採掘機
+tile.EEMiner.5.name=EE採掘機 Lv.1
+tile.EEMiner.6.name=EE採掘機 Lv.2
+tile.EEMiner.7.name=EE採掘機 Lv.3
+tile.EESurveyor.name=EE測量機
 tile.EESwordWall.name=EE式簡易防衛壁
 
+//Container
+container.EECharger=EE充填機
+container.EEMiner=EE採掘機
+
 //その他
+info.side-2=北
+info.side-3=南
+info.side-4=西
+info.side-5=東
 info.EEMachineState.name=ブロック名 : 
 info.EEMachineState.level=レベル : 
-info.EEMachineState.providing=生成 : 
 info.EEMachineState.capacity=容量 : 
 info.EEMachineState.holding=貯蓄 : 
-info.EETool.message=インベントリ
+info.EEMachineState.generating=生成 : 
+info.EEMachineState.mining=採掘中 : 
+info.EEMachineState.crystal=クリスタル : 
+info.EEMachineState.charged=装填数 : 
+info.EEMacihneState.direction=方角 : 
 info.message.update=OEFの最新バージョンが存在します。
 info.message.update.link=§n ダウンロードはこちら §r
 info.message.update.link.2= タスクトレイのアイコンより「ダウンロード」をクリック

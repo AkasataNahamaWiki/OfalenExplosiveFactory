@@ -3,7 +3,17 @@
 itemGroup.OEFTab=OEF
 
 //Item
-item.EEMater.name=EE Mater
+item.materials.0.name=EE Mater
+item.materials.1.name=Emerald Powder
+item.materials.2.name=EE Powder
+item.materials.3.name=EE Powered Powder
+item.materials.4.name=EE Crystal
+item.materials.5.name=EE Powered Crystal
+item.materials.6.name=EE Control Chip [A]
+item.materials.7.name=EE Control Chip [B]
+item.materials.8.name=EE Control Chip [C]
+item.materials.9.name=EE Control Chip [S]
+item.materials.10.name=Tempered Machine Cover Plate Set
 item.EESword.name=EE Creeper Sword
 item.EESword_RED.name=EE Creeper Sword [Crimson]
 item.EESword_GREEN.name=EE Creeper Sword [Jade]
@@ -16,6 +26,7 @@ item.EELeggings.name=EE Perfect leggings
 item.EEBoots.name=EE Perfect Boots
 
 item.EETool.name=EE Perfect Tool
+
 //Block
 tile.EEGenerator.name=EE Generator
 tile.EEGenerator.0.name=EE Generator
@@ -26,18 +37,45 @@ tile.EEGenerator.4.name=EE Generator
 tile.EEGenerator.5.name=EE Generator Lv.1
 tile.EEGenerator.6.name=EE Generator Lv.2
 tile.EEGenerator.7.name=EE Generator Lv.3
-tile.EEConductor.name=EE Conductor
-tile.EELamp.name=EELamp
-tile.EELamp_on.name=EELamp
-tile.EESwordWall.name=EESword[Crimson]Wall
+tile.EELamp.name=EE Lamp
+tile.EECharger.0.name=EE Charger
+tile.EECharger.1.name=EE Charger Lv.1
+tile.EECharger.2.name=EE Charger Lv.2
+tile.EECharger.3.name=EE Charger Lv.3
+tile.EECannon.name=EE Ofalen Cannon
+tile.EEConductor.0.name=EE Conductor
+tile.EEConductor.1.name=EE Conductor Lv.1
+tile.EEConductor.2.name=EE Conductor Lv.2
+tile.EEConductor.3.name=EE Conductor Lv.3
+tile.EEMiner.0.name=EE Miner
+tile.EEMiner.1.name=EE Miner Lv.1
+tile.EEMiner.2.name=EE Miner Lv.2
+tile.EEMiner.3.name=EE Miner Lv.3
+tile.EEMiner.4.name=EE Miner
+tile.EEMiner.5.name=EE Miner Lv.1
+tile.EEMiner.6.name=EE Miner Lv.2
+tile.EEMiner.7.name=EE Miner Lv.3
+tile.EESurveyor.name=EE Surveyor
+tile.EESwordWall.name=EE Sword Wall [Crimson]
+
+//Container
+container.EECharger=EE Charger
+container.EEMiner=EE Miner
 
 //Misc
+info.side-2=North
+info.side-3=South
+info.side-4=West
+info.side-5=East
 info.EEMachineState.name=Name : 
 info.EEMachineState.level=Level : 
-info.EEMachineState.generating=Generating : 
 info.EEMachineState.capacity=Capacity : 
 info.EEMachineState.holding=Holding : 
-info.EETool.message=inventory
+info.EEMachineState.generating=Generating : 
+info.EEMachineState.mining=Mining : 
+info.EEMachineState.crystal=Crystal : 
+info.EEMachineState.charged=Charged : 
+info.EEMacihneState.direction=Direction : 
 info.message.update=New OEF available.
 info.message.update.link=Åòn Download here.
  Åòr

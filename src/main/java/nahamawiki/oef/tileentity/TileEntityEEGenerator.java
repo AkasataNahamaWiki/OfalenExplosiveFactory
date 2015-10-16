@@ -44,7 +44,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + level,
-				StatCollector.translateToLocal("info.EEMachineState.providing") + sendingEE + " EE"
+				StatCollector.translateToLocal("info.EEMachineState.generating") + sendingEE + " EE"
 		};
 	}
 

@@ -20,13 +20,13 @@ public class BlockEESurveyor extends BlockOEFBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		if (player.getHeldItem() != null && player.getHeldItem().getItem() == OEFItemCore.EEMater) {
+		if (player.getHeldItem() != null && player.getHeldItem().getItem() == OEFItemCore.materials && player.getHeldItem().getItemDamage() == 0) {
 			if (world.isRemote) {
 				return true;
 			}
 			String[] state = new String[] {
 					StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getLocalizedName()),
-					StatCollector.translateToLocal("info.EEMachineState.meta") + world.getBlockMetadata(x, y, z),
+					StatCollector.translateToLocal("info.EEMachineState.direction") + StatCollector.translateToLocal("info.side-" + world.getBlockMetadata(x, y, z)),
 			};
 			for (int i = 0; i < state.length; i++) {
 				player.addChatMessage(new ChatComponentText(state[i]));
