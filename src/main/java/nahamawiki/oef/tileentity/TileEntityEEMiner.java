@@ -17,6 +17,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.StatCollector;
 
 public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInventory {
@@ -29,6 +32,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	protected int[] miningCoord = new int[3];
 	protected int[] miningRange = new int[2];
 	protected ItemStack[] itemStacks = new ItemStack[54];
+	protected boolean isSpawning;
 
 	@Override
 	public int getMachineType(int side) {
@@ -50,6 +54,8 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	public String[] getState() {
 		if (!isMining && !isFinished)
 			this.setMiningArea();
+		isSpawning = !isSpawning;
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);;
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + level,
@@ -67,8 +73,15 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
+			if (coolTime > 0)
+				coolTime--;
+			if (isSpawning && coolTime < 1) {
+				this.spawnParticles();
+				coolTime = 20;
+			}
 			return;
+		}
 		// 置かれた時に範囲を設定する。
 		if (!isChecked) {
 			this.setMiningArea();
@@ -360,6 +373,50 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	public void setHoldingEE(int holdingEE) {
 		this.holdingEE = holdingEE;
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("isSpawning", isSpawning);
+		nbt.setBoolean("isMining", isMining);
+		nbt.setIntArray("miningRange", miningRange);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.func_148857_g();
+		isSpawning = nbt.getBoolean("isSpawning");
+		isMining = nbt.getBoolean("isMining");
+		miningRange = nbt.getIntArray("miningRange");
+		this.spawnParticles();
+	}
+
+	public void spawnParticles() {
+		// OEFCore.logger.info("Start spawnParticles");
+		if (isMining) {
+			// OEFCore.logger.info("isMining = true");
+			boolean flagx = miningRange[0] < 0;
+			boolean flagz = miningRange[1] < 0;
+			for (int ix = 0; ix <= Math.abs(miningRange[0]); ix++) {
+				int jx = xCoord + (flagx ? -ix : ix);
+				worldObj.spawnParticle("reddust", jx + 0.5, yCoord + 0.5, zCoord + 0.5, 0.125D, 1.0D, 0.25D);
+			}
+			for (int iz = 0; iz <= Math.abs(miningRange[1]); iz++) {
+				int jz = zCoord + (flagz ? -iz : iz);
+				worldObj.spawnParticle("reddust", xCoord + 0.5, yCoord + 0.5, jz + 0.5, 0.125D, 1.0D, 0.25D);
+			}
+		} else {
+			for (int ix = 1; ix < 256; ix++) {
+				worldObj.spawnParticle("reddust", xCoord + ix + 0.5, yCoord + 0.5, zCoord + 0.5, 0.125D, 1.0D, 0.25D);
+				worldObj.spawnParticle("reddust", xCoord - ix + 0.5, yCoord + 0.5, zCoord + 0.5, 0.125D, 1.0D, 0.25D);
+			}
+			for (int iz = 1; iz < 256; iz++) {
+				worldObj.spawnParticle("reddust", xCoord + 0.5, yCoord + 0.5, zCoord + iz + 0.5, 0.125D, 1.0D, 0.25D);
+				worldObj.spawnParticle("reddust", xCoord + 0.5, yCoord + 0.5, zCoord - iz + 0.5, 0.125D, 1.0D, 0.25D);
+			}
+		}
 	}
 
 	@Override
