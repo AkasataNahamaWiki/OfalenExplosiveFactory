@@ -66,7 +66,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	public void updateEntity() {
 		super.updateEntity();
 		if (capacity < 0)
-			EEUtil.getBaseCapacity(level);
+			capacity = EEUtil.getBaseCapacity(level);
 		if (worldObj.isRemote)
 			return;
 		if (coolTime > 0)

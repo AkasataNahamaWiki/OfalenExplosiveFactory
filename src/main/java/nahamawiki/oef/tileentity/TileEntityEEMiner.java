@@ -55,7 +55,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 				StatCollector.translateToLocal("info.EEMachineState.level") + level,
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE",
-				StatCollector.translateToLocal("info.EEMachineState.isMining") + isMining,
+				StatCollector.translateToLocal("info.EEMachineState.mining") + isMining,
 		};
 	}
 
@@ -78,25 +78,25 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 		if (coolTime > 0)
 			coolTime--;
 		// 採掘ができる条件になっていないなら終了。
-		if (coolTime > 0 || holdingEE < 800 || !isMining || !this.canMine())
+		if (coolTime > 0 || holdingEE < 1600 || !isMining || !this.canMine())
 			return;
 		if (this.getNextBlock()) {
 			// 次に採掘するブロックの取得に成功したら、採掘する。
 			this.mineBlock();
 			// EEを消費し、次の採掘までの時間を設定する。
-			holdingEE -= 800;
+			holdingEE -= 1600;
 			switch (level) {
 			case 0:
-				coolTime = 200;
+				coolTime = 80;
 				break;
 			case 1:
-				coolTime = 100;
+				coolTime = 40;
 				break;
 			case 2:
-				coolTime = 50;
+				coolTime = 20;
 				break;
 			case 3:
-				coolTime = 25;
+				coolTime = 10;
 			}
 		} else {
 			// 採掘するブロックがなくなったら、停止する。

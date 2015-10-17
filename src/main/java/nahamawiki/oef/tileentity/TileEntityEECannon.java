@@ -68,11 +68,14 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	@Override
 	public String[] getState() {
+		String color1 = "";
+		if (color.length() > 0)
+			color1 = StatCollector.translateToLocal("info.color:" + new String(color).toLowerCase());
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE",
-				StatCollector.translateToLocal("info.EEMachineState.color") + color,
+				StatCollector.translateToLocal("info.EEMachineState.crystal") + color1,
 				StatCollector.translateToLocal("info.EEMachineState.charged") + size
 		};
 	}
@@ -223,7 +226,8 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.setColor(nbt.getString("Color"));
-		this.setOwnPlayer(nbt.getString("Player"));
+		if (nbt.hasKey("Player"))
+			this.setOwnPlayer(nbt.getString("Player"));
 		size = nbt.getInteger("Size");
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
@@ -233,7 +237,8 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setString("Color", this.getColor());
-		nbt.setString("Player", this.getOwnPlayer());
+		if (this.getOwnPlayer() != null)
+			nbt.setString("Player", this.getOwnPlayer());
 		nbt.setInteger("Size", size);
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);

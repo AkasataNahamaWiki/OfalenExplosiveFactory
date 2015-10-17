@@ -28,7 +28,7 @@ public class RenderEEConductor extends TileEntitySpecialRenderer {
 		}
 		this.model.setConnectingArray(machine.getConnectingArray());
 		String textureName = "EEConductor";
-		// textureName += "-" + machine.getLevel(machine.getBlockMetadata()) + "-" + machine.isHoldingEE();
+		textureName += "-" + machine.getLevel(machine.getBlockMetadata()) + "-" + machine.isHoldingEE();
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/" + textureName + ".png");

@@ -21,6 +21,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	protected ArrayList<Integer> reciever = new ArrayList<Integer>();
 	protected boolean[] isConnecting = new boolean[6];
 	protected boolean isHoldingEE;
+	protected boolean lastIsHoldingEE;
 
 	@Override
 	public int getMachineType(int side) {
@@ -115,13 +116,20 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
-		if (isHoldingEE != (holdingEE > 0)) {
-			if (holdingEE > 0) {
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level | 4, 2);
+		isHoldingEE = false;
+		for (int i = 0; i < 6; i++) {
+			if (holdingEEArray[i] > 0) {
 				isHoldingEE = true;
+				break;
+			}
+		}
+		if (isHoldingEE != lastIsHoldingEE) {
+			if (isHoldingEE) {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level | 4, 2);
+				lastIsHoldingEE = true;
 			} else {
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level & 3, 2);
-				isHoldingEE = false;
+				lastIsHoldingEE = false;
 			}
 			this.markDirty();
 		}
