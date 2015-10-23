@@ -26,17 +26,17 @@ public class OEFItemCore {
 
 	/** 0:EE Mater, 1:Emerald Powder, 2:EE Powder, 3:EE Powered Powder, 4:EE Crystal, 5:EE Powered Crystal, 6:EE Control Chip [A], 7:EECC[B], 8:EECC[C], 9:EECC[S], 10:Tempered Machine Cover Plate Set */
 	public static Item materials;
-	public static ItemStack EEMater = new ItemStack(materials, 1, 0);
-	public static ItemStack EmeraldPowder = new ItemStack(materials, 1, 1);
-	public static ItemStack EEPowder = new ItemStack(materials, 1, 2);
-	public static ItemStack EEPoweredPowder = new ItemStack(materials, 1, 3);
-	public static ItemStack EECrystal = new ItemStack(materials, 1, 4);
-	public static ItemStack EEPoweredCrystal = new ItemStack(materials, 1, 5);
-	public static ItemStack EEControlChipA = new ItemStack(materials, 1, 6);
-	public static ItemStack EEControlChipB = new ItemStack(materials, 1, 7);
-	public static ItemStack EEControlChipC = new ItemStack(materials, 1, 8);
-	public static ItemStack EEControlChipS = new ItemStack(materials, 1, 9);
-	public static ItemStack TemperedMachineCoverPlateSet = new ItemStack(materials, 1, 10);
+	public static ItemStack EEMater;
+	public static ItemStack EmeraldPowder;
+	public static ItemStack EEPowder;
+	public static ItemStack EEPoweredPowder;
+	public static ItemStack EECrystal;
+	public static ItemStack EEPoweredCrystal;
+	public static ItemStack EEControlChipA;
+	public static ItemStack EEControlChipB;
+	public static ItemStack EEControlChipC;
+	public static ItemStack EEControlChipS;
+	public static ItemStack TemperedMachineCoverPlateSet;
 	public static Item EEBattery;
 
 	public static Item EESword;
@@ -58,6 +58,18 @@ public class OEFItemCore {
 				.setUnlocalizedName("materials")
 				.setTextureName(OEFCore.DOMEINNAME + "material");
 		GameRegistry.registerItem(materials, materials.getUnlocalizedName());
+
+		EEMater = new ItemStack(materials, 1, 0);
+		EmeraldPowder = new ItemStack(materials, 1, 1);
+		EEPowder = new ItemStack(materials, 1, 2);
+		EEPoweredPowder = new ItemStack(materials, 1, 3);
+		EECrystal = new ItemStack(materials, 1, 4);
+		EEPoweredCrystal = new ItemStack(materials, 1, 5);
+		EEControlChipA = new ItemStack(materials, 1, 6);
+		EEControlChipB = new ItemStack(materials, 1, 7);
+		EEControlChipC = new ItemStack(materials, 1, 8);
+		EEControlChipS = new ItemStack(materials, 1, 9);
+		TemperedMachineCoverPlateSet = new ItemStack(materials, 1, 10);
 
 		EEBattery = new ItemEEBattery()
 				.setUnlocalizedName("EEBattery")

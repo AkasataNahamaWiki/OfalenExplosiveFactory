@@ -1,5 +1,8 @@
 package nahamawiki.oef.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class EEUtil {
 
 	public static int getBaseCapacity(int level) {
@@ -14,6 +17,15 @@ public class EEUtil {
 			return 32000;
 		}
 		return -1;
+	}
+
+	public static ArrayList<Integer> copyList(ArrayList<Integer> list) {
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			result.add((Integer) iterator.next());
+		}
+		return result;
 	}
 
 }

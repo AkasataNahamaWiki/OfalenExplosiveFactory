@@ -54,6 +54,11 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
+	public int getTier(int side) {
+		return 0;
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 

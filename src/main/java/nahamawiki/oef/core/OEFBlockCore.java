@@ -6,6 +6,8 @@ import nahamawiki.oef.block.BlockEECannon;
 import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
+import nahamawiki.oef.block.BlockEEItemImporter;
+import nahamawiki.oef.block.BlockEEItemTransporter;
 import nahamawiki.oef.block.BlockEELamp;
 import nahamawiki.oef.block.BlockEEMiner;
 import nahamawiki.oef.block.BlockEESurveyor;
@@ -14,6 +16,8 @@ import nahamawiki.oef.tileentity.TileEntityEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
+import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
+import nahamawiki.oef.tileentity.TileEntityEEItemTransporter;
 import nahamawiki.oef.tileentity.TileEntityEELamp;
 import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.block.Block;
@@ -27,6 +31,8 @@ public class OEFBlockCore {
 	public static Block EECharger;
 	public static Block EECannon;
 	public static Block EEConductor;
+	public static Block EEItemTransporter;
+	public static Block EEItemImporter;
 	public static Block EEMiner;
 	public static Block EESurveyor;
 	public static Block EESwordWall;
@@ -62,6 +68,18 @@ public class OEFBlockCore {
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEConductor");
 		GameRegistry.registerBlock(EEConductor, ItemBlockOEF.class, "EEConductor");
 		GameRegistry.registerTileEntity(TileEntityEEConductor.class, "TileEntityEEConductor");
+
+		EEItemTransporter = new BlockEEItemTransporter()
+				.setBlockName("EEItemTransporter")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEItemTransporter");
+		GameRegistry.registerBlock(EEItemTransporter, ItemBlockOEF.class, "EEItemTransporter");
+		GameRegistry.registerTileEntity(TileEntityEEItemTransporter.class, "TileEntityEEItemTransporter");
+
+		EEItemImporter = new BlockEEItemImporter()
+				.setBlockName("EEItemImporter")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEItemImporter");
+		GameRegistry.registerBlock(EEItemImporter, ItemBlockOEF.class, "EEItemImporter");
+		GameRegistry.registerTileEntity(TileEntityEEItemImporter.class, "TileEntityEEItemImporter");
 
 		EEMiner = new BlockEEMiner()
 				.setBlockName("EEMiner")

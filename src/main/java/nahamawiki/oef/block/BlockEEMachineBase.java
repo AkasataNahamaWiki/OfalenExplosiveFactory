@@ -1,6 +1,8 @@
 package nahamawiki.oef.block;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public abstract class BlockEEMachineBase extends BlockOEFBase implements ITileEntityProvider {
 
@@ -11,5 +13,8 @@ public abstract class BlockEEMachineBase extends BlockOEFBase implements ITileEn
 		this.setHarvestLevel("pickaxe", 3);
 		this.setStepSound(soundTypeMetal);
 	}
+
+	@Override
+	public abstract TileEntity createNewTileEntity(World world, int meta);
 
 }

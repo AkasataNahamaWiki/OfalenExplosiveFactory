@@ -29,15 +29,18 @@ public class OEFRecipeCore {
 				"GGG", "GEG", "GGG", 'G', Items.gunpowder, 'E', ITEM.EmeraldPowder));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEPoweredPowder,
 				"PPP", "POP", "PPP", 'P', ITEM.EEPowder, 'O', frag[3]));
+		// EEクリスタル
+		GameRegistry.addSmelting(ITEM.EEPowder, ITEM.EECrystal, 0F);
+		GameRegistry.addSmelting(ITEM.EEPoweredPowder, ITEM.EEPoweredCrystal, 0F);
 		// EEコントロールチップ
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipA,
-				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[0]));
+				"PCP", "COC", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[0]));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipB,
-				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[1]));
+				"PCP", "COC", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[1]));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipC,
-				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[2]));
+				"PCP", "COC", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[2]));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEControlChipS,
-				"PCP", "POP", "PCP", 'P', ITEM.EEPowder, 'C', ITEM.EECrystal, 'O', frag[3]));
+				"PCP", "COC", "PCP", 'P', ITEM.EEPoweredPowder, 'C', ITEM.EEPoweredCrystal, 'O', frag[3]));
 		// 硬質機械用カバープレートセット
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ITEM.materials, 2, 10),
 				"PBP", "POP", "PBP", 'P', new ItemStack(OfalenModItemCore.partsOfalen, 1, 0), 'B', TakumiCraftCore.creeperblock, 'O', gem[3]));

@@ -7,6 +7,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.model.ModelEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
+import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
+import nahamawiki.oef.tileentity.TileEntityEEItemTransporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -28,12 +30,18 @@ public class RenderEEConductor extends TileEntitySpecialRenderer {
 		}
 		this.model.setConnectingArray(machine.getConnectingArray());
 		String textureName = "EEConductor";
+		if (tileEntity instanceof TileEntityEEItemTransporter) {
+			textureName = "EEItemTransporter";
+			if (tileEntity instanceof TileEntityEEItemImporter) {
+				textureName = "EEItemImporter";
+			}
+		}
 		textureName += "-" + machine.getLevel(machine.getBlockMetadata()) + "-" + machine.isHoldingEE();
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
-		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/" + textureName + ".png");
+		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/duct/" + textureName + ".png");
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-		this.model.render((Entity) null, 0, 0, 0, 0, 0, 0.0625F);
+		this.model.render((Entity) null, 0, 0, 0, 0, 0, 0.03125F);
 		GL11.glPopMatrix();
 	}
 

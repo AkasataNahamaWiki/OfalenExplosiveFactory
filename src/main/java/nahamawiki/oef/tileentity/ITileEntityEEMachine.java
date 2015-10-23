@@ -25,4 +25,8 @@ public interface ITileEntityEEMachine {
 
 	public byte getLevel(int meta);
 
+	public int getTier(int side);
+
+	public void setTier(int tier, int side);
+
 }

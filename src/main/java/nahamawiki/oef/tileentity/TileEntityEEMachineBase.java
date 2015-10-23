@@ -9,6 +9,14 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	protected byte level = -1;
 
 	@Override
+	public int getTier(int side) {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public void setTier(int tier, int side) {}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("holdingEE", holdingEE);
