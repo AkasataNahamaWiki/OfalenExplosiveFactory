@@ -4,11 +4,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import nahama.ofalenmod.entity.EntityBlueLaser;
-import nahama.ofalenmod.entity.EntityGreenLaser;
-import nahama.ofalenmod.entity.EntityRedLaser;
-import nahama.ofalenmod.entity.EntityWhiteLaser;
-import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.entity.EntityCannonBlueLaser;
+import nahamawiki.oef.entity.EntityCannonGreenLaser;
+import nahamawiki.oef.entity.EntityCannonRedLaser;
+import nahamawiki.oef.entity.EntityCannonWhiteLaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 
 public class TileEntityEECannon extends TileEntityEEMachineBase {
@@ -30,8 +30,10 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public int size;
 	/** 左右角 */
 	private float rotationYaw = 0;
+	private float prevRotationYaw;
 	/** 上下角 */
 	private float rotationPitch = 0;
+	private float prevRotationPitch;
 	private boolean isSpawning;
 
 	@Override
@@ -88,6 +90,9 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		this.angleUpdate();
+		this.prevRotationYaw = this.rotationYaw;
+		this.prevRotationPitch = this.rotationPitch;
 		if (worldObj.isRemote)
 			return;
 		if (duration > 0)
@@ -102,39 +107,41 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			}
 		}
 		if (player == null) {
-			OEFCore.logger.error("player == null");
 			return;
 		}
-		List list = this.worldObj.loadedEntityList;
-		Collections.sort(list, new TileEntityEECannon.Sorter(player));
-		if (!list.isEmpty()) {
-			for (Object entity : list) {
-				if (entity instanceof EntityMob) {
-					this.targetEntity = (EntityLivingBase) entity;
-					break;
+		if(this.targetEntity == null || this.targetEntity.isDead)
+		{
+			List list = this.worldObj.loadedEntityList;
+			Collections.sort(list, new TileEntityEECannon.Sorter(player));
+			if (!list.isEmpty()) {
+				for (Object entity : list) {
+					if (entity instanceof EntityMob) {
+						this.targetEntity = (EntityLivingBase) entity;
+						break;
+					}
 				}
 			}
 		}
-		this.angleUpdate();
+		
 		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null) {
 			duration = 10;
 			NBTTagCompound localnbt = new NBTTagCompound();
 			player.writeToNBT(localnbt);
-			player.setLocationAndAngles(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
+			player.setLocationAndAngles(xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityRedLaser laser = new EntityRedLaser(worldObj, player, i);
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityGreenLaser laser = new EntityGreenLaser(worldObj, player);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityBlueLaser laser = new EntityBlueLaser(worldObj, player);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityWhiteLaser laser = new EntityWhiteLaser(worldObj, player, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
@@ -151,29 +158,35 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	protected void angleUpdate() {
 		if (this.targetEntity != null) {
-			float eYaw, ePitch;
-			double eX = this.targetEntity.posX;
-			double eY = this.targetEntity.posY;
-			double eZ = this.targetEntity.posZ;
-
-			eYaw = (float) Math.atan2(eX - this.xCoord, eZ - this.zCoord);
-			double distance = Math.sqrt((eX - xCoord) * (eX - xCoord) + (eZ - zCoord) * (eZ - zCoord));
-			ePitch = (float) Math.atan2(distance, eY - this.yCoord);
-
-			if (this.rotationYaw > eYaw) {
-				this.rotationYaw -= 0.01;
-			} else if (this.rotationYaw < eYaw) {
-				this.rotationYaw += 0.01;
-			}
-
-			if (rotationPitch > ePitch) {
-				this.rotationPitch -= 0.01;
-			} else if (rotationPitch < ePitch) {
-				this.rotationPitch += 0.01;
-			}
+            double x = this.targetEntity.posX - this.xCoord;
+            double y = this.targetEntity.posY - this.yCoord;
+            double z = this.targetEntity.posZ - this.zCoord;
+            double distance = MathHelper.sqrt_double(x * x + z * z);
+			float pYaw = (float)(Math.atan2(z, x) * (180.0D / Math.PI)) - 90.0F;
+            float pPitch = (float)(-(Math.atan2(y, distance) * (180.0D / Math.PI)));
+            this.rotationPitch =MathHelper.wrapAngleTo180_float( this.updateRotation(this.rotationPitch, pPitch, 360f));
+            this.rotationYaw = MathHelper.wrapAngleTo180_float( this.updateRotation(this.rotationYaw, pYaw, 360f));
+            
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
+
+	private float updateRotation(float p_75652_1_, float p_75652_2_, float p_75652_3_)
+    {
+        float f3 = MathHelper.wrapAngleTo180_float(p_75652_2_ - p_75652_1_);
+
+        if (f3 > p_75652_3_)
+        {
+            f3 = -p_75652_3_;
+        }
+
+        if (f3 < -p_75652_3_)
+        {
+            f3 = p_75652_3_;
+        }
+
+        return p_75652_1_ + f3;
+    }
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -197,24 +210,25 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		rotationPitch = nbt.getFloat("rotationPitch");
 		if (nbt.getBoolean("isSpawning")) {
 			color = nbt.getString("color");
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			EntityLivingBase player = Minecraft.getMinecraft().thePlayer;
 			NBTTagCompound localnbt = new NBTTagCompound();
 			player.writeToNBT(localnbt);
-			player.setLocationAndAngles(xCoord + 0.5, yCoord + 0.5 - player.getEyeHeight(), zCoord + 0.5, rotationYaw, rotationPitch);
+			player.setLocationAndAngles(xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityRedLaser laser = new EntityRedLaser(worldObj, player, i);
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
+
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityGreenLaser laser = new EntityGreenLaser(worldObj, player);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityBlueLaser laser = new EntityBlueLaser(worldObj, player);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityWhiteLaser laser = new EntityWhiteLaser(worldObj, player, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
@@ -266,9 +280,18 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public float getRotationPitch() {
 		return rotationPitch;
 	}
+	
+	public float getPrevRotationPitch()
+	{
+		return prevRotationPitch;
+	}
 
 	public float getRotationYaw() {
 		return rotationYaw;
+	}
+	
+	public float getPrevRotationYaw(){
+		return prevRotationYaw;
 	}
 
 }

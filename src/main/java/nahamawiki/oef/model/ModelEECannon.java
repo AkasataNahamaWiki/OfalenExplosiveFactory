@@ -3,12 +3,16 @@ package nahamawiki.oef.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 
 public class ModelEECannon extends ModelBase {
 
 	ModelRenderer pole;
 	ModelRenderer barrel;
 	ModelRenderer base;
+	
+	private static final float yawOffset = 0;
+	private static final float pitchOffset = 0;
 
 	public ModelEECannon() {
 		textureWidth = 128;
@@ -32,18 +36,18 @@ public class ModelEECannon extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		setRotation(pole, 0F, f4, 0F);
-		setRotation(barrel, f3, f4, 0F);
-		pole.render(f5);
-		barrel.render(f5);
-		base.render(f5);
+	public void render(Entity entity, float x, float y, float z, float yaw, float pitch, float size) {
+		setRotation(pole, 0F, yaw + this.yawOffset, 0F);
+		setRotation(barrel, pitch + this.pitchOffset, yaw + this.yawOffset, 0F);
+		pole.render(size);
+		barrel.render(size);
+		base.render(size);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
+		model.rotateAngleX =MathHelper.wrapAngleTo180_float( x  / (180F / (float)Math.PI));
+		model.rotateAngleY =MathHelper.wrapAngleTo180_float( y  / (180F / (float)Math.PI));
+		model.rotateAngleZ =MathHelper.wrapAngleTo180_float( z  / (180F / (float)Math.PI));
 	}
 
 }
