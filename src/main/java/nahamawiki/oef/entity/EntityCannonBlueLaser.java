@@ -10,18 +10,17 @@ public class EntityCannonBlueLaser extends EntityCannonLaser {
 
 	private int power = 5;
 
-	public EntityCannonBlueLaser(World world, double x, double y, double z ,float yaw ,float pitch)
-	 {
+	public EntityCannonBlueLaser(World world, double x, double y, double z, float yaw, float pitch) {
 		super(world, x, y, z, yaw, pitch);
 	}
 
 	@Override
 	protected void onImpact(MovingObjectPosition position) {
-		power --;
+		power--;
 
 		if (position.entityHit != null) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			position.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) player), 20.0F);
+			position.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), 20.0F);
 		}
 
 		if (this.power <= 0) {

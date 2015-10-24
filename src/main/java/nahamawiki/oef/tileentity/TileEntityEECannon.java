@@ -109,8 +109,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		if (player == null) {
 			return;
 		}
-		if(this.targetEntity == null || this.targetEntity.isDead)
-		{
+		if (this.targetEntity == null || this.targetEntity.isDead) {
 			List list = this.worldObj.loadedEntityList;
 			Collections.sort(list, new TileEntityEECannon.Sorter(player));
 			if (!list.isEmpty()) {
@@ -122,30 +121,30 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 				}
 			}
 		}
-		
+		if (this.targetEntity != null && this.targetEntity.isDead) {
+			this.targetEntity = null;
+		}
+
 		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null) {
 			duration = 10;
 			NBTTagCompound localnbt = new NBTTagCompound();
-			player.writeToNBT(localnbt);
-			player.setLocationAndAngles(xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
-			player.readFromNBT(localnbt);
 			isSpawning = true;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			this.size--;
@@ -158,35 +157,32 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	protected void angleUpdate() {
 		if (this.targetEntity != null) {
-            double x = this.targetEntity.posX - this.xCoord;
-            double y = this.targetEntity.posY - this.yCoord;
-            double z = this.targetEntity.posZ - this.zCoord;
-            double distance = MathHelper.sqrt_double(x * x + z * z);
-			float pYaw = (float)(Math.atan2(z, x) * (180.0D / Math.PI)) - 90.0F;
-            float pPitch = (float)(-(Math.atan2(y, distance) * (180.0D / Math.PI)));
-            this.rotationPitch =MathHelper.wrapAngleTo180_float( this.updateRotation(this.rotationPitch, pPitch, 360f));
-            this.rotationYaw = MathHelper.wrapAngleTo180_float( this.updateRotation(this.rotationYaw, pYaw, 360f));
-            
+			double x = this.targetEntity.posX - this.xCoord;
+			double y = this.targetEntity.posY - this.yCoord;
+			double z = this.targetEntity.posZ - this.zCoord;
+			double distance = MathHelper.sqrt_double(x * x + z * z);
+			float pYaw = (float) (Math.atan2(z, x) * (180.0D / Math.PI)) - 90.0F;
+			float pPitch = (float) (-(Math.atan2(y, distance) * (180.0D / Math.PI)));
+			this.rotationPitch = MathHelper.wrapAngleTo180_float(this.updateRotation(this.rotationPitch, pPitch, 360f));
+			this.rotationYaw = MathHelper.wrapAngleTo180_float(this.updateRotation(this.rotationYaw, pYaw, 360f));
+
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
-	private float updateRotation(float p_75652_1_, float p_75652_2_, float p_75652_3_)
-    {
-        float f3 = MathHelper.wrapAngleTo180_float(p_75652_2_ - p_75652_1_);
+	private float updateRotation(float par1, float par2, float par3) {
+		float f3 = MathHelper.wrapAngleTo180_float(par2 - par1);
 
-        if (f3 > p_75652_3_)
-        {
-            f3 = -p_75652_3_;
-        }
+		if (f3 > par3) {
+			f3 = -par3;
+		}
 
-        if (f3 < -p_75652_3_)
-        {
-            f3 = p_75652_3_;
-        }
+		if (f3 < -par3) {
+			f3 = par3;
+		}
 
-        return p_75652_1_ + f3;
-    }
+		return par1 + f3;
+	}
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -212,27 +208,23 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			color = nbt.getString("color");
 			EntityLivingBase player = Minecraft.getMinecraft().thePlayer;
 			NBTTagCompound localnbt = new NBTTagCompound();
-			player.writeToNBT(localnbt);
-			player.setLocationAndAngles(xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
-
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
-			player.readFromNBT(localnbt);
 		}
 	}
 
@@ -242,6 +234,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		this.setColor(nbt.getString("Color"));
 		if (nbt.hasKey("Player"))
 			this.setOwnPlayer(nbt.getString("Player"));
+		duration = nbt.getInteger("Duration");
 		size = nbt.getInteger("Size");
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
@@ -253,6 +246,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		nbt.setString("Color", this.getColor());
 		if (this.getOwnPlayer() != null)
 			nbt.setString("Player", this.getOwnPlayer());
+		nbt.setInteger("Duration", duration);
 		nbt.setInteger("Size", size);
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
@@ -280,17 +274,16 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public float getRotationPitch() {
 		return rotationPitch;
 	}
-	
-	public float getPrevRotationPitch()
-	{
+
+	public float getPrevRotationPitch() {
 		return prevRotationPitch;
 	}
 
 	public float getRotationYaw() {
 		return rotationYaw;
 	}
-	
-	public float getPrevRotationYaw(){
+
+	public float getPrevRotationYaw() {
 		return prevRotationYaw;
 	}
 

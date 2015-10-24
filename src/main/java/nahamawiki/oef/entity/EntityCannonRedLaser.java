@@ -10,29 +10,27 @@ public class EntityCannonRedLaser extends EntityCannonLaser {
 
 	private int power = 2;
 
-	public EntityCannonRedLaser(World world, double x, double y, double z ,float yaw ,float pitch, int dif) {
+	public EntityCannonRedLaser(World world, double x, double y, double z, float yaw, float pitch, int dif) {
 		super(world);
 		this.setSize(0.5F, 0.5F);
 		this.setLocationAndAngles(x, y, z, yaw + (dif * 5), pitch);
-		/*
-		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		*/
+		/* this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		 * this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F); */
 		this.posY -= 0.10000000149011612D;
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.startX = this.posX;
 		this.startY = this.posY;
 		this.startZ = this.posZ;
 		this.yOffset = 0.0F;
-		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
 		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.getSpeed(), 1.0F);
 	}
 
 	@Override
 	protected void onImpact(MovingObjectPosition position) {
-		power --;
+		power--;
 
 		if (position.entityHit != null) {
 			position.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(Minecraft.getMinecraft().thePlayer), 10.0F);

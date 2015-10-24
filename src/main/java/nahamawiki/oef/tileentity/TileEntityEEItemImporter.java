@@ -4,7 +4,6 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
-import nahamawiki.oef.OEFCore;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -51,20 +50,16 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	protected void importItems() {
 		if (holdingEE < 4)
 			return;
-		OEFCore.logger.info("Start importItems");
 		for (int i = 0; i < 6; i++) {
-			OEFCore.logger.info("Start for loop. side : " + i);
 			if (itemStacks[i] != null && itemStacks[i].stackSize >= itemStacks[i].getMaxStackSize())
 				continue;
 			IInventory iinventory = super.getIInventory(i);
 			if (iinventory == null)
 				continue;
-			OEFCore.logger.info("Get IInventory");
 			if (iinventory instanceof ISidedInventory) {
 				ISidedInventory isidedinventory = (ISidedInventory) iinventory;
 				int[] aint = isidedinventory.getAccessibleSlotsFromSide(oppositeSide[i]);
 				for (int slot = 0; slot < aint.length; slot++) {
-					OEFCore.logger.info("Start for loop. slot : " + slot);
 					ItemStack itemStack = isidedinventory.getStackInSlot(slot);
 					if (!isidedinventory.canExtractItem(slot, itemStack, oppositeSide[i]))
 						continue;
@@ -74,7 +69,6 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 				}
 			} else {
 				for (int slot = 0; slot < iinventory.getSizeInventory(); slot++) {
-					OEFCore.logger.info("Start for loop. slot : " + slot);
 					this.importSlotContents(iinventory, slot, i);
 					if (holdingEE < 4)
 						return;
@@ -94,24 +88,19 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	}
 
 	protected void importSlotContents(IInventory iinventory, int slot, int side) {
-		OEFCore.logger.info("Start importSlotContents");
 		ItemStack itemStack = iinventory.getStackInSlot(slot);
-		if (itemStack == null) {
-			OEFCore.logger.info("itemStack == null");
+		if (itemStack == null)
 			return;
-		}
 		while (iinventory.getStackInSlot(slot) != null) {
 			ItemStack itemStack1 = iinventory.getStackInSlot(slot).copy();
 			ItemStack itemStack2 = TileEntityHopper.func_145889_a(this, iinventory.decrStackSize(slot, 1), side);
 			if (itemStack2 == null || itemStack2.stackSize < 1) {
 				iinventory.markDirty();
 				holdingEE -= 4;
-				OEFCore.logger.info("Succeed importSlotContents. size : " + this.itemStacks[side].stackSize);
 				if (holdingEE < 4)
 					return;
 			}
 			iinventory.setInventorySlotContents(slot, itemStack1);
-			OEFCore.logger.info("Fail importSlotContents. holdingEE : " + holdingEE);
 			break;
 		}
 	}

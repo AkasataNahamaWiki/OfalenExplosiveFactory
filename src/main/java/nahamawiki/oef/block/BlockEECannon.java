@@ -27,7 +27,7 @@ public class BlockEECannon extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float posX, float posY, float posZ) {
-		if (player.getHeldItem() != null && world.getTileEntity(x, y, z) != null) {
+		if (!world.isRemote && player.getHeldItem() != null && world.getTileEntity(x, y, z) != null) {
 			TileEntityEECannon tile = (TileEntityEECannon) world.getTileEntity(x, y, z);
 			tile.setOwnPlayer(player.getDisplayName());
 			ItemStack item = player.getHeldItem();
@@ -61,13 +61,13 @@ public class BlockEECannon extends BlockEEMachineBase {
 		if (machine != null) {
 			ItemStack itemStack = null;
 			if (machine.getColor() == "Red") {
-				itemStack = new ItemStack(OfalenModItemCore.magazineLaserRed, machine.size);
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserRed, machine.size / 32);
 			} else if (machine.getColor() == "Green") {
-				itemStack = new ItemStack(OfalenModItemCore.magazineLaserGreen, machine.size);
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserGreen, machine.size / 32);
 			} else if (machine.getColor() == "Blue") {
-				itemStack = new ItemStack(OfalenModItemCore.magazineLaserBlue, machine.size);
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserBlue, machine.size / 32);
 			} else if (machine.getColor() == "White") {
-				itemStack = new ItemStack(OfalenModItemCore.magazineLaserWhite, machine.size);
+				itemStack = new ItemStack(OfalenModItemCore.magazineLaserWhite, machine.size / 32);
 			}
 			if (itemStack != null) {
 				NBTTagCompound nbt = new NBTTagCompound();

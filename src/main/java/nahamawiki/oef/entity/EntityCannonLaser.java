@@ -2,9 +2,12 @@ package nahamawiki.oef.entity;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -12,10 +15,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
+public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 
 	protected int xTile = -1;
 	protected int yTile = -1;
@@ -23,20 +24,21 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 	protected Block inBlock;
 	protected boolean inGround;
 	public int throwableShake;
+	protected EntityPlayer thrower;
 	protected String throwerName;
 	protected int ticksInGround;
 	protected int ticksInAir;
 	protected double startX;
 	protected double startY;
 	protected double startZ;
-	
+
 	public float startYaw;
 	public float startPitch;
 
 	@Override
 	protected void entityInit() {}
 
-	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double range) {
 		double d1 = this.boundingBox.getAverageEdgeLength() * 4.0D;
@@ -54,19 +56,17 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 		this.setLocationAndAngles(x, y, z, yaw, pitch);
 		this.startYaw = yaw;
 		this.startPitch = pitch;
-		/*
-		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		*/
-		this.posY -= 0.10000000149011612D;
+		/* this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		 * this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F); */
+		// this.posY -= 0.10000000149011612D;
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.startX = this.posX;
 		this.startY = this.posY;
 		this.startZ = this.posZ;
 		this.yOffset = 0.0F;
-		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
 		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.getSpeed(), 1.0F);
 	}
 
@@ -74,29 +74,29 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 		return 0.15F;
 	}
 
-	/**IProjectileのオーバーライド。ディスペンサーなどで利用される。(?)*/
+	/** IProjectileのオーバーライド。ディスペンサーなどで利用される。(?) */
 	public void setThrowableHeading(double x, double y, double z, float speed, float par5) {
 		float f2 = MathHelper.sqrt_double(x * x + y * y + z * z);
-		x /= (double)f2;
-		y /= (double)f2;
-		z /= (double)f2;
-		//ランダム性をなくす。
-		/*x += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5;
-		y += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5;
-		z += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5;*/
-		x *= (double)speed;
-		y *= (double)speed;
-		z *= (double)speed;
+		x /= f2;
+		y /= f2;
+		z /= f2;
+		// ランダム性をなくす。
+		/* x += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5;
+		 * y += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5;
+		 * z += this.rand.nextGaussian() * 0.007499999832361937D * (double)par5; */
+		x *= speed;
+		y *= speed;
+		z *= speed;
 		this.motionX = x;
 		this.motionY = y;
 		this.motionZ = z;
 		float f3 = MathHelper.sqrt_double(x * x + z * z);
-		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f3) * 180.0D / Math.PI);
+		this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(x, z) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(y, f3) * 180.0D / Math.PI);
 		this.ticksInGround = 0;
 	}
 
-	/**速度の処理*/
+	/** 速度の処理 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void setVelocity(double x, double y, double z) {
@@ -106,19 +106,19 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 
 		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
 			float f = MathHelper.sqrt_double(x * x + z * z);
-			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f) * 180.0D / Math.PI);
+			this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(x, z) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(y, f) * 180.0D / Math.PI);
 		}
 	}
 
-	/**更新時の処理*/
+	/** 更新時の処理 */
 	@Override
 	public void onUpdate() {
 		this.lastTickPosX = this.posX;
 		this.lastTickPosY = this.posY;
 		this.lastTickPosZ = this.posZ;
-		//this.setAngles(startYaw, startPitch);
-		
+		// this.setAngles(startYaw, startPitch);
+
 		super.onUpdate();
 
 		if (this.throwableShake > 0) {
@@ -157,14 +157,14 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 			Entity entity = null;
 			List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double d0 = 0.0D;
-			//EntityLivingBase entitylivingbase = this.getThrower();
+			// EntityLivingBase entitylivingbase = this.getThrower();
 
 			for (int j = 0; j < list.size(); ++j) {
-				Entity entity1 = (Entity)list.get(j);
+				Entity entity1 = (Entity) list.get(j);
 
-				if (entity1.canBeCollidedWith() && (/*entity1 != entitylivingbase || */this.ticksInAir >= 5)) {
+				if (entity1.canBeCollidedWith() && (/* entity1 != entitylivingbase || */this.ticksInAir >= 5)) {
 					float f = 0.3F;
-					AxisAlignedBB axisalignedbb = entity1.boundingBox.expand((double)f, (double)f, (double)f);
+					AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
 					MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3, vec31);
 
 					if (movingobjectposition1 != null) {
@@ -183,7 +183,7 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 			}
 		}
 
-		if (movingobjectposition != null && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ)!=OEFBlockCore.EECannon ) {
+		if (movingobjectposition != null && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) != OEFBlockCore.EECannon) {
 			if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) == Blocks.portal) {
 				this.setInPortal();
 			} else {
@@ -195,9 +195,9 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 		this.posY += this.motionY;
 		this.posZ += this.motionZ;
 		float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-		this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+		this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
-		for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f1) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
+		for (this.rotationPitch = (float) (Math.atan2(this.motionY, f1) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
 			;
 		}
 
@@ -220,7 +220,7 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 		if (this.isInWater()) {
 			for (int i = 0; i < 4; ++i) {
 				float f4 = 0.25F;
-				this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
+				this.worldObj.spawnParticle("bubble", this.posX - this.motionX * f4, this.posY - this.motionY * f4, this.posZ - this.motionZ * f4, this.motionX, this.motionY, this.motionZ);
 			}
 
 			f2 = 0.8F;
@@ -247,16 +247,16 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
-		nbt.setShort("xTile", (short)this.xTile);
-		nbt.setShort("yTile", (short)this.yTile);
-		nbt.setShort("zTile", (short)this.zTile);
-		nbt.setByte("inTile", (byte)Block.getIdFromBlock(this.inBlock));
-		nbt.setByte("shake", (byte)this.throwableShake);
-		nbt.setByte("inGround", (byte)(this.inGround ? 1 : 0));
+		nbt.setShort("xTile", (short) this.xTile);
+		nbt.setShort("yTile", (short) this.yTile);
+		nbt.setShort("zTile", (short) this.zTile);
+		nbt.setByte("inTile", (byte) Block.getIdFromBlock(this.inBlock));
+		nbt.setByte("shake", (byte) this.throwableShake);
+		nbt.setByte("inGround", (byte) (this.inGround ? 1 : 0));
 
-/*		if ((this.throwerName == null || this.throwerName.length() == 0) && this.thrower != null && this.thrower instanceof EntityPlayer) {
+		if ((this.throwerName == null || this.throwerName.length() == 0) && this.thrower != null && this.thrower instanceof EntityPlayer) {
 			this.throwerName = this.thrower.getCommandSenderName();
-		}*/
+		}
 
 		nbt.setString("ownerName", this.throwerName == null ? "" : this.throwerName);
 	}
@@ -282,12 +282,11 @@ public class EntityCannonLaser extends Entity /*implements IProjectile*/ {
 		return 0.0F;
 	}
 
-	/*public EntityLivingBase getThrower() {
-		if (this.thrower == null && this.throwerName != null && this.throwerName.length() > 0) {
-			this.thrower = this.worldObj.getPlayerEntityByName(this.throwerName);
-		}
-
-		return this.thrower;
-	}*/
+	/* public EntityLivingBase getThrower() {
+	 * if (this.thrower == null && this.throwerName != null && this.throwerName.length() > 0) {
+	 * this.thrower = this.worldObj.getPlayerEntityByName(this.throwerName);
+	 * }
+	 * return this.thrower;
+	 * } */
 
 }
