@@ -1,6 +1,7 @@
 ﻿package nahamawiki.oef.core;
 
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.entity.EntityRoboCreeper;
 import nahamawiki.oef.item.IItemEEBatteryTool;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.entity.Entity;
@@ -47,6 +48,35 @@ public class OEFEventCore {
 
 									hit.getDataWatcher().updateObject(17, (byte)0);
 									hit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity), 30);
+									hit.worldObj.createExplosion(null,hit.posX, hit.posY, hit.posZ, 0, false);
+
+								}
+							}
+							catch (Throwable throwable)
+							{}
+							finally
+							{
+
+							}
+						}
+					}
+				}
+			}
+			else if(entity instanceof EntityRoboCreeper)
+			{
+				if(((EntityRoboCreeper) entity).getType() == 1 || ((EntityRoboCreeper) entity).getType() == 3)
+				{
+					for(Entity hit : e.getAffectedEntities())
+					{
+						if(hit instanceof EntityMob)
+						{
+							try
+							{
+								if (
+										hit.getDataWatcher().getWatchableObjectByte(17) == 1)
+								{
+
+									hit.getDataWatcher().updateObject(17, (byte)0);
 									hit.worldObj.createExplosion(null,hit.posX, hit.posY, hit.posZ, 0, false);
 
 								}

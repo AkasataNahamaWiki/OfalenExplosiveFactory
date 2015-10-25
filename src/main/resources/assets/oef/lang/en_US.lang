@@ -31,6 +31,8 @@ item.EEBoots.name=EE Perfect Boots
 
 item.EETool.name=EE Perfect Tool
 
+item.EERoboEgg.name=EE Creeper Robot Egg
+
 //Block
 tile.EEGenerator.name=EE Generator
 tile.EEGenerator.0.name=EE Generator
@@ -64,6 +66,10 @@ tile.EEMiner.6.name=EE Miner Lv.2
 tile.EEMiner.7.name=EE Miner Lv.3
 tile.EESurveyor.name=EE Surveyor
 tile.EESwordWall.name=EE Sword Wall [Crimson]
+tile.EERobo.name=EE Creeeper Robot Base
+
+//Entity
+entity.EERobo.name=EE Creeper Robot
 
 //Container
 container.EECharger=EE Charger

@@ -1,6 +1,5 @@
 ﻿package nahamawiki.oef.core;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import nahama.ofalenmod.core.OfalenModConfigCore;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.item.ItemEEBattery;
@@ -11,12 +10,14 @@ import nahamawiki.oef.item.ItemEESword_R;
 import nahamawiki.oef.item.ItemEESword_W;
 import nahamawiki.oef.item.ItemEETool;
 import nahamawiki.oef.item.ItemOEFMaterial;
+import nahamawiki.oef.item.ItemRoboCreeperEgg;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFItemCore {
 
@@ -49,6 +50,8 @@ public class OEFItemCore {
 	public static Item EEChestPlate;
 	public static Item EELeggings;
 	public static Item EEBoots;
+	
+	public static Item EERoboEgg;
 
 	public static Item EETool;
 
@@ -125,6 +128,11 @@ public class OEFItemCore {
 				.setUnlocalizedName("EETool")
 				.setTextureName(OEFCore.DOMEINNAME + "EETool");
 		GameRegistry.registerItem(EETool, "EETool");
+		
+		EERoboEgg = new ItemRoboCreeperEgg()
+				.setUnlocalizedName("EERoboEgg")
+				.setTextureName(OEFCore.DOMEINNAME + "EERoboEgg");
+		GameRegistry.registerItem(EERoboEgg, "EERoboEgg");
 
 	}
 

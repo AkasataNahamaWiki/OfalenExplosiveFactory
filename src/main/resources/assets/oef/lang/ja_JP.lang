@@ -31,6 +31,8 @@ item.EEBoots.name=EEの万能ブーツ
 
 item.EETool.name=EE万能ツール
 
+item.EERoboEgg.name=スポーン EE匠ロボ
+
 //ブロック
 tile.EEGenerator.name=EE生成機
 tile.EEGenerator.0.name=EE生成機
@@ -64,6 +66,10 @@ tile.EEMiner.6.name=EE採掘機 Lv.2
 tile.EEMiner.7.name=EE採掘機 Lv.3
 tile.EESurveyor.name=EE測量機
 tile.EESwordWall.name=EE式簡易防衛壁
+tile.EERobo.name=EE匠ロボパーツ
+
+//Entity
+entity.EERobo.name=EE匠ロボ
 
 //Container
 container.EECharger=EE充填機
