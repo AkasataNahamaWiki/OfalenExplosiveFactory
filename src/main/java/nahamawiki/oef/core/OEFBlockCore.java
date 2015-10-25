@@ -1,6 +1,7 @@
 package nahamawiki.oef.core;
 
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.block.BlockEEBomb;
 import nahamawiki.oef.block.BlockEECannon;
 import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
@@ -38,6 +39,7 @@ public class OEFBlockCore {
 	public static Block EESurveyor;
 	public static Block EESwordWall;
 	public static Block EERobo;
+	public static Block EEBomb;
 
 	/** ブロックを追加・登録する */
 	public static void registerBlocks() {
@@ -103,6 +105,11 @@ public class OEFBlockCore {
 				.setBlockName("EERobo")
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EERobo");
 		GameRegistry.registerBlock(EERobo, "EERobo");
+
+		EEBomb = new BlockEEBomb()
+				.setBlockName("EEBomb")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EEBomb");
+		GameRegistry.registerBlock(EEBomb, "EEBomb");
 	}
 
 }

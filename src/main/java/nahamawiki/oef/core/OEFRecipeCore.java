@@ -1,8 +1,6 @@
 package nahamawiki.oef.core;
 
 import static nahama.ofalenmod.core.OfalenModRecipeCore.*;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 import nahama.ofalenmod.core.OfalenModItemCore;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -10,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import takumicraft.Takumi.TakumiCraftCore;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFRecipeCore {
 
@@ -48,6 +47,14 @@ public class OEFRecipeCore {
 		GameRegistry.addRecipe(new ShapedOreRecipe(ITEM.EEBattery,
 				"CAC", "OEO", "GBG", 'C', ITEM.EECrystal, 'O', frag[1], 'E', Items.emerald, 'G', Items.gold_nugget,
 				'A', ITEM.EEControlChipA, 'B', ITEM.EEControlChipB));
+		
+		//EE匠ロボパーツ
+		GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK.EERobo,
+				"EEE", "EBE", "CCC" , 'E' , ITEM.EEPoweredPowder , 'B' , ITEM.EEBattery , 'C' , TakumiCraftCore.creeperblock));
+		
+		//EE式高性能爆弾
+		GameRegistry.addRecipe(new ShapedOreRecipe(BLOCK.EEBomb,
+				"BBB", "BCB", "BBB" , 'B' , ITEM.EEBattery , 'C' , TakumiCraftCore.creeperblock));
 	}
 
 }

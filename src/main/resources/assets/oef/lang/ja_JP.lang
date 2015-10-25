@@ -67,6 +67,7 @@ tile.EEMiner.7.name=EE採掘機 Lv.3
 tile.EESurveyor.name=EE測量機
 tile.EESwordWall.name=EE式簡易防衛壁
 tile.EERobo.name=EE匠ロボパーツ
+tile.EEBomb.name=EE式高性能爆弾
 
 //Entity
 entity.EERobo.name=EE匠ロボ

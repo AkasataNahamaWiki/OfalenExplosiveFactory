@@ -67,6 +67,7 @@ tile.EEMiner.7.name=EE Miner Lv.3
 tile.EESurveyor.name=EE Surveyor
 tile.EESwordWall.name=EE Sword Wall [Crimson]
 tile.EERobo.name=EE Creeeper Robot Base
+tile.EEBomb.name=EE Bomb
 
 //Entity
 entity.EERobo.name=EE Creeper Robot
