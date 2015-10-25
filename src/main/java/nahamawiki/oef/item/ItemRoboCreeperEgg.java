@@ -1,4 +1,4 @@
-package nahamawiki.oef.item;
+﻿package nahamawiki.oef.item;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -24,8 +24,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemRoboCreeperEgg extends Item {
 
-
-
     // このスポーンエッグから生成されるエンティティのリスト
     public static Class[] spawnableEntities = {
             EntityRoboCreeper.class,
@@ -36,10 +34,6 @@ public class ItemRoboCreeperEgg extends Item {
         this.setHasSubtypes(true);
         this.setCreativeTab(OEFCore.tabOEF);
     }
-
-
-
-
 
     // ItemMonsterPlacerのspawnCreatureがstaticでオーバーライドできないので呼び出し側をコピペ
     @Override
