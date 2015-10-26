@@ -27,7 +27,9 @@ public class BlockEECannon extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float posX, float posY, float posZ) {
-		if (!world.isRemote && player.getHeldItem() != null && world.getTileEntity(x, y, z) != null) {
+		if (player.getHeldItem() != null && world.getTileEntity(x, y, z) != null) {
+			if (world.isRemote)
+				return true;
 			TileEntityEECannon tile = (TileEntityEECannon) world.getTileEntity(x, y, z);
 			tile.setOwnPlayer(player.getDisplayName());
 			ItemStack item = player.getHeldItem();

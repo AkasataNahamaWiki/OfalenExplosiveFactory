@@ -1,6 +1,6 @@
 package nahamawiki.oef.entity;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -10,8 +10,9 @@ public class EntityCannonRedLaser extends EntityCannonLaser {
 
 	private int power = 2;
 
-	public EntityCannonRedLaser(World world, double x, double y, double z, float yaw, float pitch, int dif) {
+	public EntityCannonRedLaser(EntityPlayer player, World world, double x, double y, double z, float yaw, float pitch, int dif) {
 		super(world);
+		thrower = player;
 		this.setSize(0.5F, 0.5F);
 		this.setLocationAndAngles(x, y, z, yaw + (dif * 5), pitch);
 		/* this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
@@ -30,10 +31,9 @@ public class EntityCannonRedLaser extends EntityCannonLaser {
 
 	@Override
 	protected void onImpact(MovingObjectPosition position) {
-		power--;
-
-		if (position.entityHit != null) {
-			position.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(Minecraft.getMinecraft().thePlayer), 10.0F);
+		if (position.entityHit != null && position.entityHit != thrower) {
+			power--;
+			position.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(thrower), 10.0F);
 		}
 
 		if (this.power <= 0) {

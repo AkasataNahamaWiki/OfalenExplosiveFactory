@@ -161,7 +161,7 @@ public class UpdateCheckCore {
 		menu.add(item);
 
 		try {
-			creeper = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(OEFCore.DOMEINNAME + "textures/blocks/EELamp_on.png")).getInputStream());
+			creeper = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(OEFCore.DOMEINNAME + "textures/blocks/EELamp-1.png")).getInputStream());
 
 			icon = new TrayIcon(creeper, "OEF", menu);
 			icon.addActionListener(new ActionListener() {

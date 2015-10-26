@@ -130,18 +130,18 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			NBTTagCompound localnbt = new NBTTagCompound();
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.6, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
@@ -206,22 +206,21 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		rotationPitch = nbt.getFloat("rotationPitch");
 		if (nbt.getBoolean("isSpawning")) {
 			color = nbt.getString("color");
-			EntityLivingBase player = Minecraft.getMinecraft().thePlayer;
-			NBTTagCompound localnbt = new NBTTagCompound();
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			if (color.equals("Red")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonRedLaser laser = new EntityCannonRedLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else if (color.equals("White")) {
 				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, rotationYaw, rotationPitch, i);
+					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}

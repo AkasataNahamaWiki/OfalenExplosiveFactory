@@ -14,6 +14,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	public int coolTime;
 	private int capacity = -1;
 	protected ItemStack battery;
+	protected boolean isCharging;
 
 	@Override
 	public int getMachineType(int side) {
@@ -69,6 +70,16 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 			capacity = EEUtil.getBaseCapacity(level);
 		if (worldObj.isRemote)
 			return;
+		if (isCharging != coolTime > 0) {
+			if (coolTime > 0) {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level | 4, 2);
+				isCharging = true;
+			} else {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level & 3, 2);
+				isCharging = false;
+			}
+			this.markDirty();
+		}
 		if (coolTime > 0)
 			coolTime--;
 		if (battery == null || holdingEE <= 0 || coolTime > 0 || battery.getTagCompound().getInteger("holdingEE") > EEUtil.getBaseCapacity(battery.getItemDamage()))

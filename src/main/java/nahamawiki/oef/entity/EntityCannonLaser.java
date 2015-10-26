@@ -50,8 +50,9 @@ public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 		super(world);
 	}
 
-	public EntityCannonLaser(World world, double x, double y, double z, float yaw, float pitch) {
+	public EntityCannonLaser(EntityPlayer player, World world, double x, double y, double z, float yaw, float pitch) {
 		super(world);
+		this.thrower = player;
 		this.setSize(0.5F, 0.5F);
 		this.setLocationAndAngles(x, y, z, yaw, pitch);
 		this.startYaw = yaw;

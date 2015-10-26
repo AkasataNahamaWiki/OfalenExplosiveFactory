@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public class BlockEECharger extends BlockEEMachineBase {
 
 	protected Random random = new Random();
-	private IIcon[] iicon = new IIcon[4];
+	private IIcon[] iicon = new IIcon[8];
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
@@ -74,7 +74,7 @@ public class BlockEECharger extends BlockEEMachineBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister register) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 8; i++) {
 			this.iicon[i] = register.registerIcon(this.getTextureName() + "-" + i);
 		}
 	}
@@ -82,7 +82,7 @@ public class BlockEECharger extends BlockEEMachineBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
-		return iicon[meta & 3];
+		return iicon[meta & 7];
 	}
 
 	@Override

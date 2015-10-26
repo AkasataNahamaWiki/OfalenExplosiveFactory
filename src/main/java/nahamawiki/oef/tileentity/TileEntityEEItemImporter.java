@@ -95,14 +95,15 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 			ItemStack itemStack1 = iinventory.getStackInSlot(slot).copy();
 			ItemStack itemStack2 = TileEntityHopper.func_145889_a(this, iinventory.decrStackSize(slot, 1), side);
 			if (itemStack2 == null || itemStack2.stackSize < 1) {
-				iinventory.markDirty();
 				holdingEE -= 4;
 				if (holdingEE < 4)
-					return;
+					break;
+			} else {
+				iinventory.setInventorySlotContents(slot, itemStack1);
+				break;
 			}
-			iinventory.setInventorySlotContents(slot, itemStack1);
-			break;
 		}
+		iinventory.markDirty();
 	}
 
 	@Override
