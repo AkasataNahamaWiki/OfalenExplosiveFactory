@@ -5,10 +5,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.model.ModelEEConductor;
-import nahamawiki.oef.tileentity.TileEntityEEConductor;
-import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
-import nahamawiki.oef.tileentity.TileEntityEEItemTransporter;
+import nahamawiki.oef.model.ModelEECapacitor;
+import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -16,26 +14,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class RenderEEConductor extends TileEntitySpecialRenderer {
+public class RenderEECapacitor extends TileEntitySpecialRenderer {
 
-	private final ModelEEConductor model = new ModelEEConductor();
+	private final ModelEECapacitor model = new ModelEECapacitor();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEEConductor machine;
-		if (tileEntity instanceof TileEntityEEConductor) {
-			machine = (TileEntityEEConductor) tileEntity;
+		TileEntityEECapacitor machine;
+		if (tileEntity instanceof TileEntityEECapacitor) {
+			machine = (TileEntityEECapacitor) tileEntity;
 		} else {
 			return;
 		}
-		this.model.setConnectingArray(machine.getConnectingArray());
-		String textureName = "EEConductor";
-		if (tileEntity instanceof TileEntityEEItemTransporter) {
-			textureName = "EETransporter";
-			if (tileEntity instanceof TileEntityEEItemImporter) {
-				textureName = "EEImporter";
-			}
-		}
+		model.setConnectingArray(machine.getConnectingArray());
+		model.setSideTypes(machine.getSideTypes());
+		String textureName = "EECapacitor";
 		textureName += "-" + machine.getLevel(machine.getBlockMetadata()) + "-" + machine.isHoldingEE();
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);

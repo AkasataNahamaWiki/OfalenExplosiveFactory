@@ -6,6 +6,7 @@ import java.util.Random;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -31,6 +32,13 @@ public class BlockEEMiner extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if (player.getHeldItem() != null && player.getHeldItem().isItemEqual(OEFItemCore.EEPliers)) {
+			if (world.isRemote)
+				return true;
+			TileEntityEEMiner miner = (TileEntityEEMiner) world.getTileEntity(x, y, z);
+			miner.onAdjusted(player);
+			return true;
+		}
 		player.openGui(OEFCore.instance, 1, world, x, y, z);
 		return true;
 	}

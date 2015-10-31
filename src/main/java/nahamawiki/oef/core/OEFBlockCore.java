@@ -1,8 +1,10 @@
 package nahamawiki.oef.core;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.block.BlockEEBomb;
 import nahamawiki.oef.block.BlockEECannon;
+import nahamawiki.oef.block.BlockEECapacitor;
 import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
 import nahamawiki.oef.block.BlockEEGenerator;
@@ -14,6 +16,7 @@ import nahamawiki.oef.block.BlockEERobo;
 import nahamawiki.oef.block.BlockEESurveyor;
 import nahamawiki.oef.itemblock.ItemBlockOEF;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
+import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
@@ -24,11 +27,11 @@ import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import takumicraft.Takumi.Block.CreeperWall_B;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFBlockCore {
 
 	public static Block EEGenerator;
+	public static Block EECapacitor;
 	public static Block EELamp;
 	public static Block EECharger;
 	public static Block EECannon;
@@ -48,6 +51,12 @@ public class OEFBlockCore {
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEGenerator");
 		GameRegistry.registerBlock(EEGenerator, ItemBlockOEF.class, "EEGenerator");
 		GameRegistry.registerTileEntity(TileEntityEEGenerator.class, "TileEntityEEGenerator");
+
+		EECapacitor = new BlockEECapacitor()
+				.setBlockName("EECapacitor")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EECapacitor");
+		GameRegistry.registerBlock(EECapacitor, ItemBlockOEF.class, "EECapacitor");
+		GameRegistry.registerTileEntity(TileEntityEECapacitor.class, "TileEntityEECapacitor");
 
 		EELamp = new BlockEELamp()
 				.setBlockName("EELamp")

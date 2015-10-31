@@ -1,5 +1,6 @@
 package nahamawiki.oef.tileentity;
 
+import nahamawiki.oef.core.OEFConfigCore;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -10,7 +11,7 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 
 	@Override
 	public int getTier(int side) {
-		return Integer.MAX_VALUE;
+		return OEFConfigCore.maxTier;
 	}
 
 	@Override

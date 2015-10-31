@@ -1,7 +1,22 @@
 package nahamawiki.oef;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import nahama.ofalenmod.model.ModelLaser;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.core.OEFConfigCore;
@@ -21,31 +36,15 @@ import nahamawiki.oef.entity.EntityCannonWhiteLaser;
 import nahamawiki.oef.material.OEFMaterial;
 import nahamawiki.oef.render.RenderCannonLaser;
 import nahamawiki.oef.render.RenderEECannon;
+import nahamawiki.oef.render.RenderEECapacitor;
 import nahamawiki.oef.render.RenderEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
+import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Tom Kate & Akasata Nahama
@@ -91,6 +90,7 @@ public class OEFCore {
 		OEFEntityCore.register(this);
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECapacitor.class, new RenderEECapacitor());
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECannon.class, new RenderEECannon());
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonRedLaser.class, new RenderCannonLaser(new ModelLaser(), "red"));
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonGreenLaser.class, new RenderCannonLaser(new ModelLaser(), "green"));

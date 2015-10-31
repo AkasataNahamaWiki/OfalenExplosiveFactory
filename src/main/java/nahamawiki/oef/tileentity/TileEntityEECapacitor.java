@@ -4,6 +4,8 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,31 +16,30 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class TileEntityEEConductor extends TileEntityEEMachineBase {
+public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 
 	/** 蓄えられるEEの上限。 */
-	protected int capacity = 8000;
+	protected int capacity = -1;
 	/** 毎tick発生するロスの量。 */
 	protected int loss = -1;
-	/** EEの供給元からの距離。 */
-	protected int tier = OEFConfigCore.maxTier;
 	/** EEを受け取れる方向のリスト。 */
 	protected ArrayList<Integer> reciever = new ArrayList<Integer>();
 	/** その方向が接続されているか。 */
 	protected boolean[] isConnecting = new boolean[6];
 	/** 前のtickでEEを蓄えていたか。 */
 	protected boolean isHoldingEE;
-	/** そのtickでupdateDirectionを行ったかどうか */
-	protected boolean isUpdated;
+	/** その方向で送受信が可能か。 */
+	protected byte[] sideType = new byte[6];
 
 	@Override
 	public int getMachineType(int side) {
-		// 入出力可能。
-		return 3;
+		return sideType[side];
 	}
 
 	@Override
 	public int recieveEE(int amount, int side) {
+		if (sideType[side] != 2)
+			return amount;
 		holdingEE += amount;
 		if (holdingEE > capacity) {
 			int surplus = holdingEE - capacity;
@@ -55,7 +56,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				StatCollector.translateToLocal("info.EEMachineState.level") + level,
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE",
-				StatCollector.translateToLocal("info.EEMachineState.tier") + tier,
 		};
 	}
 
@@ -68,21 +68,14 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public int getTier(int side) {
-		return tier;
-	}
-
-	@Override
-	public void setTier(int tier, int side) {
-		// 引数のtierが現時点でのtierより小さかったら代入。
-		if (this.getTier(side) > tier)
-			this.tier = tier;
+		if (sideType[side] == 1)
+			return 0;
+		return OEFConfigCore.maxTier;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("tier", tier);
-
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < reciever.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), reciever.get(i));
@@ -93,13 +86,13 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		for (int i = 0; i < 6; i++) {
 			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
 		}
+
+		nbt.setByteArray("sideType", sideType);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		tier = nbt.getInteger("tier");
-
 		reciever.clear();
 		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
 		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
@@ -109,18 +102,19 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		for (int i = 0; i < 6; i++) {
 			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
 		}
+
+		sideType = nbt.getByteArray("sideType");
 	}
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		if (capacity < 0) {
+			capacity = EEUtil.getBaseCapacity(level) * 4;
+		}
 		if (worldObj.isRemote)
 			return;
-		isUpdated = false;
-		if (tier > OEFConfigCore.maxTier)
-			tier = OEFConfigCore.maxTier;
 		this.updateIsHoldingEE();
-		this.decreaseEE();
 		this.sendEE();
 	}
 
@@ -139,28 +133,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		}
 	}
 
-	/** EEをロスの分減らす。 */
-	protected void decreaseEE() {
-		if (loss < 0) {
-			switch (level) {
-			case 0:
-				loss = 8;
-				break;
-			case 1:
-				loss = 4;
-				break;
-			case 2:
-				loss = 2;
-				break;
-			case 3:
-				loss = 0;
-				break;
-			}
-		}
-		holdingEE -= loss;
-	}
-
-	/** 隣接する機械にEEを送信する。 */
 	protected void sendEE() {
 		// 送信先がないなら終了。
 		if (reciever.size() < 1)
@@ -178,8 +150,8 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				if (!list.contains(i))
 					continue;
 				ITileEntityEEMachine machine = this.getNeighborMachine(i);
-				if (machine == null || machine.getTier(oppositeSide[i]) < tier) {
-					// 機械が存在しないか、tierがこの伝導管より小さいならリストから削除。
+				if (sideType[i] != 1 || machine == null) {
+					// 送信不可能な方向か、機械が存在しないならリストから削除。
 					list.remove(list.indexOf(i));
 					holdingEE += sendingEE;
 					continue;
@@ -204,6 +176,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		for (int i = 0; i < 6; i++) {
 			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
 		}
+		nbt.setByteArray("sideType", sideType);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
@@ -214,59 +187,29 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		for (int i = 0; i < 6; i++) {
 			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
 		}
+		sideType = nbt.getByteArray("sideType");
 	}
 
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
-		if (!isUpdated) {
-			// リストをリセット。
-			reciever.clear();
-			for (int i = 0; i < 6; i++) {
-				// isConnectingもリセット。
-				isConnecting[i] = false;
-				ITileEntityEEMachine machine = this.getNeighborMachine(i);
-				if (machine != null) {
-					int type = machine.getMachineType(oppositeSide[i]);
-					if ((type & 2) == 2) {
-						// EE機械があり、受信可能なら登録。
-						reciever.add(i);
-					}
-					// 送信/受信が可能ならisConnectingに登録。
-					isConnecting[i] = (type != 0);
+		// リストをリセット。
+		reciever.clear();
+		for (int i = 0; i < 6; i++) {
+			// isConnectingもリセット。
+			isConnecting[i] = false;
+			ITileEntityEEMachine machine = this.getNeighborMachine(i);
+			if (sideType[i] != 0 && machine != null) {
+				// 接続可能で機械が存在するなら、機械のtypeを取得。
+				int type = machine.getMachineType(oppositeSide[i]);
+				if ((type & 2) == 2) {
+					// 受信可能なら登録。
+					reciever.add(i);
 				}
-			}
-			isUpdated = true;
-			world.markBlockForUpdate(x, y, z);
-		}
-		this.updateTier();
-	}
-
-	protected void updateTier() {
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		// もとのtierを保存。
-		int lastTier = tier;
-		// tierをリセット。
-		tier = OEFConfigCore.maxTier;
-		for (int i = 0; i < 6; i++) {
-			ITileEntityEEMachine machine = this.getNeighborMachine(i);
-			if (machine != null) {
-				// EE機械があれば、tierを更新。
-				this.setTier(machine.getTier(oppositeSide[i]) + 1, i);
+				// 送信/受信が可能ならisConnectingに登録。
+				isConnecting[i] = (type != 0);
 			}
 		}
-		// tierが更新されていれば、周囲のブロックを更新。
-		if (tier != lastTier) {
-			this.notifyUpdateTier();
-		}
-	}
-
-	protected void notifyUpdateTier() {
-		for (int i = 0; i < 6; i++) {
-			ITileEntityEEMachine machine = this.getNeighborMachine(i);
-			if (machine != null && machine instanceof TileEntityEEConductor) {
-				((TileEntityEEConductor) machine).updateTier();
-			}
-		}
+		world.markBlockForUpdate(x, y, z);
 	}
 
 	/** 指定された方向の機械を取得する。 */
@@ -283,6 +226,33 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	public boolean isHoldingEE() {
 		return (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 4) != 0;
+	}
+
+	public byte[] getSideTypes() {
+		return sideType;
+	}
+
+	public void setSideType(int side, int type) {
+		sideType[side] = (byte) type;
+		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
+		this.updateDirection(worldObj, xCoord, yCoord, zCoord);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getHoldingEEScaled(int par1) {
+		return holdingEE * par1 / capacity;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public int getHoldingEE() {
+		return holdingEE;
+	}
+
+	public void setHoldingEE(int holdingEE) {
+		this.holdingEE = holdingEE;
 	}
 
 }

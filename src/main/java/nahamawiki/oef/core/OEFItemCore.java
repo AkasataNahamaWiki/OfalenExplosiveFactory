@@ -1,5 +1,6 @@
 ﻿package nahamawiki.oef.core;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import nahama.ofalenmod.core.OfalenModConfigCore;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.item.ItemEEBattery;
@@ -17,7 +18,6 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OEFItemCore {
 
@@ -25,7 +25,7 @@ public class OEFItemCore {
 	public static ToolMaterial EET = EnumHelper.addToolMaterial("EET", 1, 500, OfalenModConfigCore.efficiencyPerfectTool, 0, 100);
 	public static ArmorMaterial AMEE = EnumHelper.addArmorMaterial("EEA", 30, new int[] { 0, 0, 0, 0 }, 100);
 
-	/** 0:EE Mater, 1:Emerald Powder, 2:EE Powder, 3:EE Powered Powder, 4:EE Crystal, 5:EE Powered Crystal, 6:EE Control Chip [A], 7:EECC[B], 8:EECC[C], 9:EECC[S], 10:Tempered Machine Cover Plate Set */
+	/** 0:EE Mater, 1:Emerald Powder, 2:EE Powder, 3:EE Powered Powder, 4:EE Crystal, 5:EE Powered Crystal, 6:EE Control Chip [A], 7:EECC[B], 8:EECC[C], 9:EECC[S], 10:Tempered Machine Cover Plate Set, 11:EE Pliers */
 	public static Item materials;
 	public static ItemStack EEMater;
 	public static ItemStack EmeraldPowder;
@@ -38,6 +38,7 @@ public class OEFItemCore {
 	public static ItemStack EEControlChipC;
 	public static ItemStack EEControlChipS;
 	public static ItemStack TemperedMachineCoverPlateSet;
+	public static ItemStack EEPliers;
 	public static Item EEBattery;
 
 	public static Item EESword;
@@ -50,14 +51,14 @@ public class OEFItemCore {
 	public static Item EEChestPlate;
 	public static Item EELeggings;
 	public static Item EEBoots;
-	
+
 	public static Item EERoboEgg;
 
 	public static Item EETool;
 
 	/** アイテムを追加・登録する */
 	public static void registerItems() {
-		materials = new ItemOEFMaterial(11)
+		materials = new ItemOEFMaterial(12)
 				.setUnlocalizedName("materials")
 				.setTextureName(OEFCore.DOMEINNAME + "material");
 		GameRegistry.registerItem(materials, materials.getUnlocalizedName());
@@ -73,6 +74,7 @@ public class OEFItemCore {
 		EEControlChipC = new ItemStack(materials, 1, 8);
 		EEControlChipS = new ItemStack(materials, 1, 9);
 		TemperedMachineCoverPlateSet = new ItemStack(materials, 1, 10);
+		EEPliers = new ItemStack(materials, 1, 11);
 
 		EEBattery = new ItemEEBattery()
 				.setUnlocalizedName("EEBattery")
@@ -128,7 +130,7 @@ public class OEFItemCore {
 				.setUnlocalizedName("EETool")
 				.setTextureName(OEFCore.DOMEINNAME + "EETool");
 		GameRegistry.registerItem(EETool, "EETool");
-		
+
 		EERoboEgg = new ItemRoboCreeperEgg()
 				.setUnlocalizedName("EERoboEgg")
 				.setTextureName(OEFCore.DOMEINNAME + "EERoboEgg");

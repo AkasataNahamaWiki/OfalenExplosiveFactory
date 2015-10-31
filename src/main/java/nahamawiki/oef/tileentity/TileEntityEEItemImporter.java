@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 
 public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 
+	/** インベントリもちのTileEntityがある方向のリスト。(伝導管以外) */
 	protected ArrayList<Integer> inventory = new ArrayList<Integer>();
 
 	@Override
@@ -47,38 +48,9 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 		this.importItems();
 	}
 
-	protected void importItems() {
-		if (holdingEE < 4)
-			return;
-		for (int i = 0; i < 6; i++) {
-			if (itemStacks[i] != null && itemStacks[i].stackSize >= itemStacks[i].getMaxStackSize())
-				continue;
-			IInventory iinventory = super.getIInventory(i);
-			if (iinventory == null)
-				continue;
-			if (iinventory instanceof ISidedInventory) {
-				ISidedInventory isidedinventory = (ISidedInventory) iinventory;
-				int[] aint = isidedinventory.getAccessibleSlotsFromSide(oppositeSide[i]);
-				for (int slot = 0; slot < aint.length; slot++) {
-					ItemStack itemStack = isidedinventory.getStackInSlot(slot);
-					if (!isidedinventory.canExtractItem(slot, itemStack, oppositeSide[i]))
-						continue;
-					this.importSlotContents(iinventory, slot, i);
-					if (holdingEE < 4)
-						return;
-				}
-			} else {
-				for (int slot = 0; slot < iinventory.getSizeInventory(); slot++) {
-					this.importSlotContents(iinventory, slot, i);
-					if (holdingEE < 4)
-						return;
-				}
-			}
-		}
-	}
-
 	@Override
 	protected IInventory getIInventory(int side) {
+		// 逆流防止のためアイテム伝導管でなければnullを返すように上書き。伝導管の搬出処理で使用される。
 		IInventory iinventory = null;
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
 		if (tileEntity != null && tileEntity instanceof TileEntityEEItemTransporter) {
@@ -87,18 +59,63 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 		return iinventory;
 	}
 
+	/** アイテムを隣接インベントリから搬入する。 */
+	protected void importItems() {
+		// EEが足りないなら終了。
+		if (holdingEE < 4)
+			return;
+		for (int i = 0; i < 6; i++) {
+			// 搬入するスロットがいっぱいなら次の方向へ。
+			if (itemStacks[i] != null && itemStacks[i].stackSize >= itemStacks[i].getMaxStackSize())
+				continue;
+			// 上書きしているから伝導管のものを呼び出し。
+			IInventory iinventory = super.getIInventory(i);
+			if (iinventory == null)
+				continue;
+			if (iinventory instanceof ISidedInventory) {
+				// ISidedInventoryなら取り出し可能なスロットを絞る。
+				ISidedInventory isidedinventory = (ISidedInventory) iinventory;
+				int[] aint = isidedinventory.getAccessibleSlotsFromSide(oppositeSide[i]);
+				for (int slot = 0; slot < aint.length; slot++) {
+					ItemStack itemStack = isidedinventory.getStackInSlot(slot);
+					if (!isidedinventory.canExtractItem(slot, itemStack, oppositeSide[i]))
+						continue;
+					this.importSlotContents(iinventory, slot, i);
+					// EEが足りなくなったら終了。
+					if (holdingEE < 4)
+						return;
+				}
+			} else {
+				for (int slot = 0; slot < iinventory.getSizeInventory(); slot++) {
+					this.importSlotContents(iinventory, slot, i);
+					// EEが足りなくなったら終了。
+					if (holdingEE < 4)
+						return;
+				}
+			}
+		}
+	}
+
+	/** 指定されたスロットのアイテムを搬入する。 */
 	protected void importSlotContents(IInventory iinventory, int slot, int side) {
+		// 空なら終了。
 		ItemStack itemStack = iinventory.getStackInSlot(slot);
 		if (itemStack == null)
 			return;
+		// 空でない限り続ける。
 		while (iinventory.getStackInSlot(slot) != null) {
+			// もとの状態をコピーしておく。
 			ItemStack itemStack1 = iinventory.getStackInSlot(slot).copy();
+			// ホッパーのメソッドを利用してアイテムを移動する。あまりが代入される。
 			ItemStack itemStack2 = TileEntityHopper.func_145889_a(this, iinventory.decrStackSize(slot, 1), side);
 			if (itemStack2 == null || itemStack2.stackSize < 1) {
+				// 移動に成功したなら、EEを消費する。
 				holdingEE -= 4;
+				// EEが足りなくなったら終了。
 				if (holdingEE < 4)
 					break;
 			} else {
+				// 移動に失敗したら、搬入元のスロットをもとの状態に戻して終了。
 				iinventory.setInventorySlotContents(slot, itemStack1);
 				break;
 			}
@@ -108,29 +125,34 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 
 	@Override
 	public void updateDirection(World world, int x, int y, int z) {
-		reciever.clear();
-		recieverI.clear();
-		inventory.clear();
-		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = false;
-			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
-			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
-				ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
-				int type = machine.getMachineType(oppositeSide[i]);
-				if ((type & 2) == 2) {
-					reciever.add(i);
+		if (!isUpdated) {
+			reciever.clear();
+			recieverI.clear();
+			inventory.clear();
+			for (int i = 0; i < 6; i++) {
+				isConnecting[i] = false;
+				ITileEntityEEMachine machine = this.getNeighborMachine(i);
+				if (machine != null) {
+					int type = machine.getMachineType(oppositeSide[i]);
+					if ((type & 2) == 2) {
+						reciever.add(i);
+					}
+					isConnecting[i] = (type != 0);
 				}
-				isConnecting[i] = (type != 0);
-			}
-			if (tileEntity != null && tileEntity instanceof IInventory) {
-				if (!(tileEntity instanceof TileEntityEEItemTransporter)) {
-					inventory.add(i);
+				TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
+				if (tileEntity != null && tileEntity instanceof IInventory) {
+					// インベントリもちで、伝導管以外なら搬入元リストに登録。
+					if (!(tileEntity instanceof TileEntityEEItemTransporter)) {
+						inventory.add(i);
+					}
+					recieverI.add(i);
+					isConnecting[i] = true;
 				}
-				recieverI.add(i);
-				isConnecting[i] = true;
 			}
+			isUpdated = true;
+			world.markBlockForUpdate(x, y, z);
 		}
-		world.markBlockForUpdate(x, y, z);
+		this.updateTier();
 	}
 
 	@Override

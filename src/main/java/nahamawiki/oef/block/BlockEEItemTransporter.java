@@ -9,31 +9,15 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockEEItemTransporter extends BlockEEDuctBase {
+public class BlockEEItemTransporter extends BlockEEConductor {
 
 	protected Random random = new Random();
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityEEItemTransporter();
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity instanceof TileEntityEEItemTransporter)
-			((TileEntityEEItemTransporter) tileEntity).updateDirection(world, x, y, z);
-	}
-
-	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity instanceof TileEntityEEItemTransporter)
-			((TileEntityEEItemTransporter) tileEntity).updateDirection(world, x, y, z);
 	}
 
 	@Override
@@ -73,39 +57,6 @@ public class BlockEEItemTransporter extends BlockEEDuctBase {
 			world.func_147453_f(x, y, z, block);
 		}
 		super.breakBlock(world, x, y, z, block, meta);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		float[] size = new float[6];
-		TileEntityEEItemTransporter conductor = (TileEntityEEItemTransporter) world.getTileEntity(x, y, z);
-		if (conductor != null && conductor.getConnectingArray() != null) {
-			for (int i = 0; i < 6; i++) {
-				if (conductor.getConnectingArray()[i]) {
-					size[i] = 0.5F;
-				} else {
-					size[i] = 0.15F;
-				}
-			}
-			this.setBlockBounds(0.5F - size[4], 0.5F - size[0], 0.5F - size[2], 0.5F + size[5], 0.5F + size[1], 0.5F + size[3]);
-		}
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-		float[] size = new float[6];
-		TileEntityEEItemTransporter conductor = (TileEntityEEItemTransporter) world.getTileEntity(x, y, z);
-		if (conductor != null && conductor.getConnectingArray() != null) {
-			for (int i = 0; i < 6; i++) {
-				if (conductor.getConnectingArray()[i]) {
-					size[i] = 0.5F;
-				} else {
-					size[i] = 0.15F;
-				}
-			}
-			return AxisAlignedBB.getBoundingBox(x + 0.5 - size[4], y + 0.5 - size[0], z + 0.5 - size[2], x + 0.5 + size[5], y + 0.5 + size[1], z + 0.5 + size[3]);
-		}
-		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
 	}
 
 }

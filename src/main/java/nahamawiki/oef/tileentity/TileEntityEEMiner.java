@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 
 public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInventory {
@@ -52,8 +53,6 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	@Override
 	public String[] getState() {
-		if (!isMining && !isFinished)
-			this.setMiningArea();
 		isSpawning = !isSpawning;
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);;
 		return new String[] {
@@ -390,7 +389,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 		isSpawning = nbt.getBoolean("isSpawning");
 		isMining = nbt.getBoolean("isMining");
 		miningRange = nbt.getIntArray("miningRange");
-		this.spawnParticles();
+		// this.spawnParticles();
 	}
 
 	public void spawnParticles() {
@@ -416,6 +415,14 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 				worldObj.spawnParticle("reddust", xCoord + 0.5, yCoord + 0.5, zCoord + iz + 0.5, 0.125D, 1.0D, 0.25D);
 				worldObj.spawnParticle("reddust", xCoord + 0.5, yCoord + 0.5, zCoord - iz + 0.5, 0.125D, 1.0D, 0.25D);
 			}
+		}
+	}
+
+	public void onAdjusted(EntityPlayer player) {
+		if (!isMining && isFinished) {
+			this.setMiningArea();
+			isFinished = false;
+			player.addChatMessage(new ChatComponentText("Restart EE Miner"));
 		}
 	}
 

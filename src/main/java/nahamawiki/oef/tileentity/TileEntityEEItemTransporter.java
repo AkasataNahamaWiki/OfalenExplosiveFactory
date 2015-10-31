@@ -20,13 +20,18 @@ import net.minecraft.world.World;
 
 public class TileEntityEEItemTransporter extends TileEntityEEConductor implements ISidedInventory {
 
+	/** 対応したスロットのアイテムを次に搬出する方向。 */
 	protected byte[] nextSide = new byte[6];
+	/** 対応したスロットのアイテムを次に搬出するまでの時間。 */
 	protected int[] coolTime = new int[6];
+	/** インベントリもちのTileEntityがある方向のリスト。 */
 	protected ArrayList<Integer> recieverI = new ArrayList<Integer>();
+	/** インベントリ内のアイテム。 */
 	protected ItemStack[] itemStacks = new ItemStack[6];
 
 	public TileEntityEEItemTransporter() {
 		super();
+		// capacityを上書き。
 		capacity = 8256;
 	}
 
@@ -86,7 +91,9 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		this.sendItems();
 	}
 
+	/** アイテムを隣接インベントリへ搬出する。 */
 	protected void sendItems() {
+		// EEが足りないなら終了。
 		if (holdingEE < 4)
 			return;
 		boolean flag;
@@ -96,28 +103,41 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 			if (coolTime[i] > 0)
 				continue;
 			flag = false;
+			// recieverIをコピー。
 			ArrayList<Integer> list = EEUtil.copyList(recieverI);
+			// 搬出先リストから受け取った方向を除外。
 			if (list.contains(i))
 				list.remove(list.indexOf(i));
 			while (itemStacks[i] != null && list.size() > 0 && holdingEE > 3) {
+				// 該当スロットが空でなく、搬出先があり、EEが足りているならループする。
 				for (int j = 0; j < 6; j++) {
+					// 該当スロットが空になっていたら終了。
 					if (itemStacks[i] == null)
 						break;
+					// 搬出先リストに登録されていないか、次に搬出する方向でないなら、
 					if (!list.contains(j) || j < nextSide[i]) {
+						// 次に搬出する方向に搬出できなかったらリセットし、
 						if (j >= 5)
 							nextSide[i] = 0;
+						// 次の方向へ。
 						continue;
 					}
+					// 搬出先のインベントリを取得。
 					IInventory iinventory = this.getIInventory(j);
 					if (iinventory == null || this.isFullInventoryFromSide(iinventory, oppositeSide[j])) {
+						// インベントリが存在しないか、いっぱいならリストから除外し、次の方向へ。
 						list.remove(list.indexOf(j));
 						continue;
 					}
+					// もとの状態をコピーしておく。
 					ItemStack itemStack = itemStacks[i].copy();
+					// ホッパーのメソッドを利用してアイテムを移動する。あまりが代入される。
 					ItemStack itemStack1 = TileEntityHopper.func_145889_a(iinventory, itemStacks[i].splitStack(1), oppositeSide[j]);
+					// スタック数が1未満になったらnullにする。
 					if (itemStacks[i].stackSize < 1)
 						itemStacks[i] = null;
 					if (itemStack1 == null || itemStack1.stackSize == 0) {
+						// 移動に成功したら、次の方向を設定し、EEを消費する。
 						iinventory.markDirty();
 						flag = true;
 						nextSide[i] = (byte) (j + 1);
@@ -128,12 +148,14 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 							break;
 						continue;
 					}
+					// 失敗したら、スロットをもとに戻し、リストから除外する。
 					itemStacks[i] = itemStack;
 					list.remove(list.indexOf(j));
 					if (j >= 5)
 						nextSide[i] = 0;
 				}
 			}
+			// 搬出に成功したら、レベルに応じて間隔を設定する。
 			if (flag) {
 				switch (level) {
 				case 0:
@@ -150,6 +172,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		}
 	}
 
+	/** 指定された方向のインベントリを取得する。 */
 	protected IInventory getIInventory(int side) {
 		IInventory iinventory = null;
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
@@ -166,6 +189,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		return iinventory;
 	}
 
+	/** インベントリがいっぱいかどうか。 */
 	protected boolean isFullInventoryFromSide(IInventory iinventory, int side) {
 		if (iinventory instanceof ISidedInventory && side > -1) {
 			ISidedInventory isidedinventory = (ISidedInventory) iinventory;
@@ -206,6 +230,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 				break;
 			}
 		}
+		// ロスで256未満にならないようにする。
 		if (loss > 0) {
 			if (holdingEE >= 256 + loss)
 				holdingEE -= loss;
@@ -214,6 +239,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 
 	@Override
 	protected void sendEE() {
+		// 256 EEを残すようにオーバーライドする。
 		if (reciever.size() < 1)
 			return;
 		ArrayList<Integer> list = EEUtil.copyList(reciever);
@@ -241,44 +267,45 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 
 	@Override
 	public void updateDirection(World world, int x, int y, int z) {
-		reciever.clear();
-		recieverI.clear();
-		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = false;
-			ITileEntityEEMachine machine = this.getNeighborMachine(i);
-			if (machine != null) {
-				int type = machine.getMachineType(oppositeSide[i]);
-				if ((type & 2) == 2) {
-					reciever.add(i);
+		if (!isUpdated) {
+			reciever.clear();
+			recieverI.clear();
+			for (int i = 0; i < 6; i++) {
+				isConnecting[i] = false;
+				ITileEntityEEMachine machine = this.getNeighborMachine(i);
+				if (machine != null) {
+					int type = machine.getMachineType(oppositeSide[i]);
+					if ((type & 2) == 2) {
+						reciever.add(i);
+					}
+					isConnecting[i] = (type != 0);
 				}
-				isConnecting[i] = (type != 0);
-				if (tier > machine.getTier(oppositeSide[i]))
-					this.setTier(machine.getTier(oppositeSide[i]) + 1, i);
+				TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
+				if (tileEntity != null && tileEntity instanceof IInventory) {
+					// インベントリもちならリストに登録。
+					recieverI.add(i);
+					isConnecting[i] = true;
+				}
 			}
-			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
-			if (tileEntity != null && tileEntity instanceof IInventory) {
-				recieverI.add(i);
-				isConnecting[i] = true;
-			}
+			isUpdated = true;
+			world.markBlockForUpdate(x, y, z);
 		}
-		for (int i = 0; i < 6; i++) {
-			ITileEntityEEMachine machine = this.getNeighborMachine(i);
-			if (machine != null && machine.getTier(oppositeSide[i]) > tier)
-				machine.setTier(tier + 1, oppositeSide[i]);
-		}
-		world.markBlockForUpdate(x, y, z);
+		this.updateTier();
 	}
 
+	/** インベントリのスロット数を返す。 */
 	@Override
 	public int getSizeInventory() {
 		return 6;
 	}
 
+	/** 引数のスロットに入っているアイテムを返す。 */
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		return itemStacks[slot];
 	}
 
+	/** 第一引数のスロットのアイテムを第二引数の数だけ減らす。 */
 	@Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		if (this.itemStacks[slot] != null) {
@@ -302,6 +329,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		}
 	}
 
+	/** 引数のスロットのアイテムを空にして返す。 */
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
 		if (this.itemStacks[slot] != null) {
@@ -312,6 +340,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		return null;
 	}
 
+	/** 第一引数のスロットを第二引数のアイテムに設定する。 */
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack) {
 		this.itemStacks[slot] = itemStack;
@@ -321,16 +350,19 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		}
 	}
 
+	/** インベントリ名を返す。 */
 	@Override
 	public String getInventoryName() {
 		return "container.EEItemTransporter";
 	}
 
+	/** 名づけされた名前を持つかどうか。 */
 	@Override
 	public boolean hasCustomInventoryName() {
 		return false;
 	}
 
+	/** インベントリ内のアイテムのスタック数の上限を返す。 */
 	@Override
 	public int getInventoryStackLimit() {
 		return 64;
@@ -347,21 +379,25 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	@Override
 	public void closeInventory() {}
 
+	/** 第一引数のスロットに第二引数のアイテムが有効かどうか。 */
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
 		return true;
 	}
 
+	/** 引数の方向から関与できるスロットの配列を返す。 */
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
 		return new int[] { side };
 	}
 
+	/** 搬入できるか。 */
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemStack, int side) {
 		return true;
 	}
 
+	/** 搬出できるか。 */
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
 		return false;
