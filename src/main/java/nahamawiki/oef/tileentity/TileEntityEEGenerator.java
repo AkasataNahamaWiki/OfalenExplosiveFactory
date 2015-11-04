@@ -4,6 +4,7 @@ import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
 
+import nahamawiki.oef.util.EEUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
@@ -49,11 +50,6 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public byte getLevel(int meta) {
-		return (byte) (meta & 3);
-	}
-
-	@Override
 	public int getTier(int side) {
 		return 0;
 	}
@@ -84,49 +80,82 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if (worldObj.isRemote || reciever.size() < 1)
+		if (worldObj.isRemote)
 			return;
-		int sendingEE = 0;
+		this.sendEE();
+	}
+
+	/** 隣接する機械にEEを送信する。 */
+	protected void sendEE() {
+		// 送信先がないなら終了。
+		if (reciever.size() < 1)
+			return;
+		// 送信先リストをコピー。
+		ArrayList<Integer> list = EEUtil.copyList(reciever);
+		// メタデータに応じてEEを生成する。
 		switch (worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) {
 		case 4:
-			sendingEE = 100;
+			holdingEE = 100;
 			break;
 		case 5:
-			sendingEE = 200;
+			holdingEE = 200;
 			break;
 		case 6:
-			sendingEE = 400;
+			holdingEE = 400;
 			break;
 		case 7:
-			sendingEE = 800;
+			holdingEE = 800;
 			break;
+		default:
+			holdingEE = 0;
 		}
-		if (sendingEE < 1)
-			return;
-		sendingEE /= reciever.size();
-		int reciverNum = reciever.size();
-		for (int i = 0; i < reciever.size(); i++) {
-			reciverNum--;
-			int side = reciever.get(i);
-			ITileEntityEEMachine machine = (ITileEntityEEMachine) worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
-			if (machine == null)
-				continue;
-			int surplus = machine.recieveEE(sendingEE, oppositeSide[side]);
-			if (surplus < 1 || reciverNum < 1)
-				continue;
-			sendingEE += surplus / reciverNum;
+		// 送信先があるなら、EEが足りる限りループする。
+		while (list.size() > 0 && holdingEE / list.size() > 0) {
+			// 蓄えているEEを送信先の数で割って代入。
+			int sendingEE = holdingEE / list.size();
+			// holdingEEをあまりの量にする。
+			holdingEE %= list.size();
+			for (int i = 0; i < 6; i++) {
+				// 送信先リストに登録されていないなら次へ。
+				if (!list.contains(i))
+					continue;
+				ITileEntityEEMachine machine = this.getNeighborMachine(i);
+				if (machine == null) {
+					// 機械が存在しないか、tierがこの伝導管より小さいならリストから削除。
+					list.remove(list.indexOf(i));
+					holdingEE += sendingEE;
+					continue;
+				}
+				// EEを渡して、あまりを取得。
+				int surplus = machine.recieveEE(sendingEE, oppositeSide[i]);
+				// あまりがないなら次へ。
+				if (surplus < 1)
+					continue;
+				// 余ったなら回収して、リストから削除。
+				holdingEE += surplus;
+				list.remove(list.indexOf(i));
+			}
 		}
+	}
+
+	/** 指定された方向の機械を取得する。 */
+	protected ITileEntityEEMachine getNeighborMachine(int side) {
+		TileEntity tileEntity = worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
+		if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine)
+			return (ITileEntityEEMachine) tileEntity;
+		return null;
 	}
 
 	/** 周囲のブロックを確認する */
 	public void updateDirection(World world, int x, int y, int z) {
+		// リストをリセット。
 		reciever.clear();
 		for (int i = 0; i < 6; i++) {
-			TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
-			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
-				ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
+			ITileEntityEEMachine machine = this.getNeighborMachine(i);
+			if (machine != null) {
 				int type = machine.getMachineType(oppositeSide[i]);
 				if ((type & 2) == 2) {
+					// EE機械があり、受信可能なら登録。
 					reciever.add(i);
 				}
 			}

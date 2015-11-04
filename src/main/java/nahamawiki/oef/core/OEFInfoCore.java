@@ -1,8 +1,8 @@
 package nahamawiki.oef.core;
 
+import cpw.mods.fml.common.ModMetadata;
 import nahamawiki.oef.OEFCore;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.common.ModMetadata;
 
 public class OEFInfoCore {
 
@@ -10,7 +10,7 @@ public class OEFInfoCore {
 	public static void registerInfo(ModMetadata meta) {
 		meta.modId = OEFCore.MODID;
 		meta.name = OEFCore.MODNAME;
-		meta.description = StatCollector.translateToLocal("info.metadescription");
+		meta.description = StatCollector.translateToLocal("info.oef.metadescription");
 		meta.version = OEFCore.VERSION;
 		meta.url = "http://www63.atwiki.jp/akasatanahama/";
 		meta.updateUrl = "https://dl.dropboxusercontent.com/s/p1w2kdwh72n7tpd/OEFUpdate.json";

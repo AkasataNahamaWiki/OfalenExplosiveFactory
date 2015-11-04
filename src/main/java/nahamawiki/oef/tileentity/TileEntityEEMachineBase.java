@@ -10,6 +10,16 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	protected byte level = -1;
 
 	@Override
+	public int getMachineType(int side) {
+		return 2;
+	}
+
+	@Override
+	public byte getLevel(int meta) {
+		return (byte) (meta & 3);
+	}
+
+	@Override
 	public int getTier(int side) {
 		return OEFConfigCore.maxTier;
 	}

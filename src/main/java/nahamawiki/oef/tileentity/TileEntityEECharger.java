@@ -17,11 +17,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	protected boolean isCharging;
 
 	@Override
-	public int getMachineType(int side) {
-		return 2;
-	}
-
-	@Override
 	public int recieveEE(int amount, int side) {
 		holdingEE += amount;
 		if (holdingEE > capacity) {
@@ -40,11 +35,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
-	}
-
-	@Override
-	public byte getLevel(int meta) {
-		return (byte) (meta & 3);
 	}
 
 	@Override

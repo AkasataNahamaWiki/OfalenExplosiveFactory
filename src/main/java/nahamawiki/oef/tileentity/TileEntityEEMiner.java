@@ -419,10 +419,14 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	}
 
 	public void onAdjusted(EntityPlayer player) {
-		if (!isMining && isFinished) {
+		if (!isMining) {
 			this.setMiningArea();
-			isFinished = false;
-			player.addChatMessage(new ChatComponentText("Restart EE Miner"));
+			if (isFinished) {
+				player.addChatMessage(new ChatComponentText("Restart EE Miner"));
+				isFinished = false;
+			} else {
+				player.addChatMessage(new ChatComponentText("Start EE Miner"));
+			}
 		}
 	}
 

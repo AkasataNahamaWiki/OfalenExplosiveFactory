@@ -59,7 +59,7 @@ public class OEFItemCore {
 	/** アイテムを追加・登録する */
 	public static void registerItems() {
 		materials = new ItemOEFMaterial(12)
-				.setUnlocalizedName("materials")
+				.setUnlocalizedName("OEFmaterials")
 				.setTextureName(OEFCore.DOMEINNAME + "material");
 		GameRegistry.registerItem(materials, materials.getUnlocalizedName());
 

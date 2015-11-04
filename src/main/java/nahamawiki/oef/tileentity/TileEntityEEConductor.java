@@ -116,7 +116,8 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
-		isUpdated = false;
+		if (isUpdated)
+			isUpdated = false;
 		if (tier > OEFConfigCore.maxTier)
 			tier = OEFConfigCore.maxTier;
 		this.updateIsHoldingEE();

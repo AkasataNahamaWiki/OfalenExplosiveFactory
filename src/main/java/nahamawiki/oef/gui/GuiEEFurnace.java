@@ -3,29 +3,28 @@ package nahamawiki.oef.gui;
 import org.lwjgl.opengl.GL11;
 
 import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.inventory.ContainerEECapacitor;
-import nahamawiki.oef.tileentity.TileEntityEECapacitor;
+import nahamawiki.oef.inventory.ContainerEEFurnace;
+import nahamawiki.oef.tileentity.TileEntityEEFurnace;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-public class GuiEECapacitor extends GuiContainer {
+public class GuiEEFurnace extends GuiContainer {
 
-	private TileEntityEECapacitor tileEntity;
-	private static final ResourceLocation GUITEXTURE = new ResourceLocation(OEFCore.DOMEINNAME + "textures/gui/EECapacitor.png");
+	private TileEntityEEFurnace tileEntity;
+	private static final ResourceLocation GUITEXTURE = new ResourceLocation(OEFCore.DOMEINNAME + "textures/gui/EEFurnace.png");
 
-	public GuiEECapacitor(EntityPlayer player, TileEntityEECapacitor tileEntity) {
-		super(new ContainerEECapacitor(player, tileEntity));
+	public GuiEEFurnace(EntityPlayer player, TileEntityEEFurnace tileEntity) {
+		super(new ContainerEEFurnace(player, tileEntity));
 		this.tileEntity = tileEntity;
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		String s = StatCollector.translateToLocal("container.EECapacitor");
+		String s = this.tileEntity.hasCustomInventoryName() ? this.tileEntity.getInventoryName() : StatCollector.translateToLocal(this.tileEntity.getInventoryName());
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-		this.fontRendererObj.drawString(tileEntity.getHoldingEE() + " / " + tileEntity.getCapacity(), 8, 29, 4210752);
 	}
 
 	@Override
@@ -38,8 +37,10 @@ public class GuiEECapacitor extends GuiContainer {
 		int y = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 
-		int i = this.tileEntity.getHoldingEEScaled(160);
-		this.drawTexturedModalRect(x + 8, y + 39, 0, 166, i, 20);
+		int i = this.tileEntity.getHoldingEEScaled(60);
+		this.drawTexturedModalRect(x + 148, y + 12 + 60 - i, 176, 16, 15, i);
+		i = this.tileEntity.getCookProgressScaled(24);
+		this.drawTexturedModalRect(x + 74, y + 34, 176, 0, i + 1, 16);
 	}
 
 }
