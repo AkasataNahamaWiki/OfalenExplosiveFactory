@@ -13,6 +13,9 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	/** 機械のレベル。 */
 	protected byte level = -1;
 
+	/**匠化しているか否か。*/
+	private boolean isCreeper;
+
 	@Override
 	public int getMachineType(int side) {
 		return 2;
@@ -20,11 +23,14 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 
 	@Override
 	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
+		if(!this.getCreeper())
+		{
+			holdingEE += amount;
+			if (holdingEE > capacity) {
+				int surplus = holdingEE - capacity;
+				holdingEE = capacity;
+				return surplus;
+			}
 		}
 		return 0;
 	}
@@ -43,22 +49,12 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	public void setTier(int tier, int side) {}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("holdingEE", holdingEE);
-		nbt.setByte("level", level);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		holdingEE = nbt.getInteger("holdingEE");
-		level = nbt.getByte("level");
-	}
-
-	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		if(this.getCreeper())
+		{
+			this.updateCreepered();
+		}
 		if (level < 0)
 			level = this.getLevel(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		if (capacity < 0)
@@ -67,4 +63,32 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 
 	public abstract int getCapacity(int level);
 
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("holdingEE", holdingEE);
+		nbt.setByte("level", level);
+		nbt.setBoolean("isCreeper", isCreeper);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		holdingEE = nbt.getInteger("holdingEE");
+		level = nbt.getByte("level");
+		isCreeper = nbt.getBoolean("isCreeper");
+	}
+
+
+	public boolean getCreeper()
+	{
+		return this.isCreeper;
+	}
+
+	public void setCreeper(boolean flg)
+	{
+		this.isCreeper = flg;
+	}
+
+	public abstract void updateCreepered();
 }
