@@ -11,6 +11,7 @@ import nahamawiki.oef.item.ItemEESword_R;
 import nahamawiki.oef.item.ItemEESword_W;
 import nahamawiki.oef.item.ItemEETool;
 import nahamawiki.oef.item.ItemOEFMaterial;
+import nahamawiki.oef.item.ItemRecipeSheet;
 import nahamawiki.oef.item.ItemRoboCreeperEgg;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.item.Item;
@@ -46,15 +47,14 @@ public class OEFItemCore {
 	public static Item EESword_BLUE;
 	public static Item EESword_GREEN;
 	public static Item EESword_WHITE;
-
 	public static Item EEHelmet;
 	public static Item EEChestPlate;
 	public static Item EELeggings;
 	public static Item EEBoots;
-
+	public static Item EETool;
 	public static Item EERoboEgg;
 
-	public static Item EETool;
+	public static Item recipeSheet;
 
 	/** アイテムを追加・登録する */
 	public static void registerItems() {
@@ -136,6 +136,10 @@ public class OEFItemCore {
 				.setTextureName(OEFCore.DOMEINNAME + "EERoboEgg");
 		GameRegistry.registerItem(EERoboEgg, "EERoboEgg");
 
+		recipeSheet = new ItemRecipeSheet()
+				.setUnlocalizedName("recipeSheet")
+				.setTextureName(OEFCore.DOMEINNAME + "RecipeSheet");
+		GameRegistry.registerItem(recipeSheet, "recipeSheet");
 	}
 
 }

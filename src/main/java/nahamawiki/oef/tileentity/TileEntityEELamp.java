@@ -8,11 +8,6 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 	protected int remainingTime;
 
 	@Override
-	public int getMachineType(int side) {
-		return 2;
-	}
-
-	@Override
 	public int recieveEE(int amount, int side) {
 		isShining = true;
 		remainingTime = 5;
@@ -29,6 +24,11 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 
 	@Override
 	public byte getLevel(int meta) {
+		return 0;
+	}
+
+	@Override
+	public int getCapacity(int level) {
 		return 0;
 	}
 

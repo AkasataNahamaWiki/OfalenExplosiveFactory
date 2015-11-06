@@ -12,25 +12,12 @@ import net.minecraft.util.StatCollector;
 
 public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISidedInventory {
 
-	/** 蓄えられるEEの上限。 */
-	protected int capacity = 800;
 	/** 製錬前のアイテムと製錬後のアイテム。 */
 	protected ItemStack[] itemStacks = new ItemStack[2];
 	/** 製錬した時間。 */
 	public short cookTime;
 	/** 前のtickで製錬していたか。 */
 	protected boolean isCooking;
-
-	@Override
-	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
-		}
-		return 0;
-	}
 
 	@Override
 	public String[] getState() {
@@ -40,6 +27,11 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
+	}
+
+	@Override
+	public int getCapacity(int level) {
+		return 800;
 	}
 
 	@Override

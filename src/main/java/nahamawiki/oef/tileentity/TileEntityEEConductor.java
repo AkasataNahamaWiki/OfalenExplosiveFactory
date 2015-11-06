@@ -16,8 +16,6 @@ import net.minecraft.world.World;
 
 public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
-	/** 蓄えられるEEの上限。 */
-	protected int capacity = 8000;
 	/** 毎tick発生するロスの量。 */
 	protected int loss = -1;
 	/** EEの供給元からの距離。 */
@@ -38,17 +36,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
-		}
-		return 0;
-	}
-
-	@Override
 	public String[] getState() {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
@@ -57,13 +44,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.tier") + tier,
 		};
-	}
-
-	@Override
-	public byte getLevel(int meta) {
-		if (level < 0)
-			return (byte) (meta & 3);
-		return level;
 	}
 
 	@Override
@@ -76,6 +56,11 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		// 引数のtierが現時点でのtierより小さかったら代入。
 		if (this.getTier(side) > tier)
 			this.tier = tier;
+	}
+
+	@Override
+	public int getCapacity(int level) {
+		return 8000;
 	}
 
 	@Override

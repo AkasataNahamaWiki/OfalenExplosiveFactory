@@ -25,7 +25,6 @@ import net.minecraft.util.StatCollector;
 
 public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInventory {
 
-	private final int capacity = 8000;
 	protected boolean isChecked;
 	protected boolean isMining;
 	protected boolean isFinished;
@@ -34,22 +33,6 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	protected int[] miningRange = new int[2];
 	protected ItemStack[] itemStacks = new ItemStack[54];
 	protected boolean isSpawning;
-
-	@Override
-	public int getMachineType(int side) {
-		return 2;
-	}
-
-	@Override
-	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
-		}
-		return 0;
-	}
 
 	@Override
 	public String[] getState() {
@@ -65,8 +48,8 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	}
 
 	@Override
-	public byte getLevel(int meta) {
-		return (byte) (meta & 3);
+	public int getCapacity(int level) {
+		return 8000;
 	}
 
 	@Override
@@ -289,10 +272,11 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	/** 引数をこのブロックの真上にEntityItemとしてスポーンさせる。 */
 	private void spawnEntityItem(ItemStack itemStack) {
-		EntityItem entity = new EntityItem(worldObj, xCoord - 0.5, yCoord + 1, zCoord - 0.5, itemStack);
+		EntityItem entity = new EntityItem(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, itemStack);
 		if (itemStack.hasTagCompound()) {
 			entity.getEntityItem().setTagCompound(((NBTTagCompound) itemStack.getTagCompound().copy()));
 		}
+		worldObj.spawnEntityInWorld(entity);
 	}
 
 	/** miningCoordが採掘範囲に含まれているか。 */

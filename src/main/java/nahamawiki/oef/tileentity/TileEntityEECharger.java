@@ -17,17 +17,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	protected boolean isCharging;
 
 	@Override
-	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
-		}
-		return 0;
-	}
-
-	@Override
 	public String[] getState() {
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
@@ -35,6 +24,11 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 				StatCollector.translateToLocal("info.EEMachineState.capacity") + capacity + " EE",
 				StatCollector.translateToLocal("info.EEMachineState.holding") + holdingEE + " EE"
 		};
+	}
+
+	@Override
+	public int getCapacity(int level) {
+		return EEUtil.getBaseCapacity(level);
 	}
 
 	@Override
@@ -56,8 +50,6 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if (capacity < 0)
-			capacity = EEUtil.getBaseCapacity(level);
 		if (worldObj.isRemote)
 			return;
 		if (isCharging != coolTime > 0) {

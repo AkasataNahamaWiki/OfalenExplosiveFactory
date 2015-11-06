@@ -19,20 +19,20 @@ item.EEBattery.0.name=EE Battery
 item.EEBattery.1.name=EE Battery Lv.1
 item.EEBattery.2.name=EE Battery Lv.2
 item.EEBattery.3.name=EE Battery Lv.3
+
 item.EESword.name=EE Creeper Sword
 item.EESword_RED.name=EE Creeper Sword [Crimson]
 item.EESword_GREEN.name=EE Creeper Sword [Jade]
 item.EESword_BLUE.name=EE Creeper Sword [Ultramarine]
 item.EESword_WHITE.name=EE Creeper Sword [Pure]
-
 item.EEHelmet.name=EE Perfect Helmet
 item.EEChestPlate.name=EE Perfect ChestPlate
 item.EELeggings.name=EE Perfect leggings
 item.EEBoots.name=EE Perfect Boots
-
 item.EETool.name=EE Perfect Tool
-
 item.EERoboEgg.name=EE Creeper Robot Egg
+
+item.recipeSheet.name=Recipe Sheet
 
 //Block
 tile.EEGenerator.name=EE Generator
@@ -73,6 +73,11 @@ tile.EEFurnace.4.name=EE Furnace
 tile.EEFurnace.5.name=EE Furnace Lv.1
 tile.EEFurnace.6.name=EE Furnace Lv.2
 tile.EEFurnace.7.name=EE Furnace Lv.3
+tile.EECraftingTable.name=EE Crafting Table
+tile.EECraftingTable.0.name=EE Crafting Table
+tile.EECraftingTable.1.name=EE Crafting Table Lv.1
+tile.EECraftingTable.2.name=EE Crafting Table Lv.2
+tile.EECraftingTable.3.name=EE Crafting Table Lv.3
 tile.EEConductor.name=EE Conductor
 tile.EEConductor.0.name=EE Conductor
 tile.EEConductor.1.name=EE Conductor Lv.1
@@ -118,10 +123,11 @@ tile.EEBomb.name=EE Bomb
 entity.EERobo.name=EE Creeper Robot
 
 //Container
-container.EECharger=EE Charger
-container.EEMiner=EE Miner
 container.EECapacitor=EE Capacitor
+container.EECharger=EE Charger
 container.EEFurnace=EE Furnace
+container.EECraftingTable=EE Crafting Table
+container.EEMiner=EE Miner
 
 //Misc
 info.oef.metadescription=This is addon for Ofalen Mod and Takumi Craft.

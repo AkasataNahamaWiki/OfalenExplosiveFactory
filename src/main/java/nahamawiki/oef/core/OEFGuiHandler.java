@@ -3,16 +3,19 @@ package nahamawiki.oef.core;
 import cpw.mods.fml.common.network.IGuiHandler;
 import nahamawiki.oef.gui.GuiEECapacitor;
 import nahamawiki.oef.gui.GuiEECharger;
+import nahamawiki.oef.gui.GuiEECraftingTable;
 import nahamawiki.oef.gui.GuiEEFurnace;
 import nahamawiki.oef.gui.GuiEEMiner;
 import nahamawiki.oef.gui.GuiEETool;
 import nahamawiki.oef.inventory.ContainerEECapacitor;
 import nahamawiki.oef.inventory.ContainerEECharger;
+import nahamawiki.oef.inventory.ContainerEECraftingTable;
 import nahamawiki.oef.inventory.ContainerEEFurnace;
 import nahamawiki.oef.inventory.ContainerEEMiner;
 import nahamawiki.oef.inventory.ContainerEETool;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
+import nahamawiki.oef.tileentity.TileEntityEECraftingTable;
 import nahamawiki.oef.tileentity.TileEntityEEFurnace;
 import nahamawiki.oef.tileentity.TileEntityEEMiner;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +40,8 @@ public class OEFGuiHandler implements IGuiHandler {
 			return new ContainerEECapacitor(player, (TileEntityEECapacitor) tileentity);
 		} else if (tileentity instanceof TileEntityEEFurnace) {
 			return new ContainerEEFurnace(player, (TileEntityEEFurnace) tileentity);
+		} else if (tileentity instanceof TileEntityEECraftingTable) {
+			return new ContainerEECraftingTable(player, (TileEntityEECraftingTable) tileentity);
 		}
 		return null;
 	}
@@ -57,6 +62,8 @@ public class OEFGuiHandler implements IGuiHandler {
 			return new GuiEECapacitor(player, (TileEntityEECapacitor) tileentity);
 		} else if (tileentity instanceof TileEntityEEFurnace) {
 			return new GuiEEFurnace(player, (TileEntityEEFurnace) tileentity);
+		} else if (tileentity instanceof TileEntityEECraftingTable) {
+			return new GuiEECraftingTable(player, (TileEntityEECraftingTable) tileentity);
 		}
 		return null;
 	}

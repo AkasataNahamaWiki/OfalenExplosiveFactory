@@ -22,7 +22,7 @@ public class ContainerEEMiner extends Container {
 
 		for (int j = 0; j < 6; ++j) {
 			for (int k = 0; k < 9; ++k) {
-				this.addSlotToContainer(new SlotEEMiner(this.tileEntity, k + j * 9, 8 + k * 18, 18 + j * 18));
+				this.addSlotToContainer(new SlotUnputable(this.tileEntity, k + j * 9, 8 + k * 18, 18 + j * 18));
 			}
 		}
 
@@ -35,7 +35,6 @@ public class ContainerEEMiner extends Container {
 		for (int j = 0; j < 9; ++j) {
 			this.addSlotToContainer(new Slot(player.inventory, j, 8 + j * 18, 161 + i));
 		}
-
 	}
 
 	@Override

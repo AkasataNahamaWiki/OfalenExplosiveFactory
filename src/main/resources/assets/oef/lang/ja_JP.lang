@@ -19,20 +19,20 @@ item.EEBattery.0.name=EEバッテリー
 item.EEBattery.1.name=EEバッテリー Lv.1
 item.EEBattery.2.name=EEバッテリー Lv.2
 item.EEBattery.3.name=EEバッテリー Lv.3
+
 item.EESword.name=真・匠式宝剣
 item.EESword_RED.name=真・匠式宝剣[深紅]
 item.EESword_GREEN.name=真・匠式宝剣[翠緑]
 item.EESword_BLUE.name=	真・匠式宝剣[群青]
 item.EESword_WHITE.name=真・匠式宝剣[純白]
-
 item.EEHelmet.name=EEの万能ヘルメット
 item.EEChestPlate.name=EEの万能チェストプレート
 item.EELeggings.name=EEの万能レギンス
 item.EEBoots.name=EEの万能ブーツ
-
 item.EETool.name=EE万能ツール
-
 item.EERoboEgg.name=スポーン EE匠ロボ
+
+item.recipeSheet.name=レシピシート
 
 //ブロック
 tile.EEGenerator.name=EE生成機
@@ -73,6 +73,11 @@ tile.EEFurnace.4.name=EEかまど
 tile.EEFurnace.5.name=EEかまど Lv.1
 tile.EEFurnace.6.name=EEかまど Lv.2
 tile.EEFurnace.7.name=EEかまど Lv.3
+tile.EECraftingTable.name=EE作業台
+tile.EECraftingTable.0.name=EE作業台
+tile.EECraftingTable.1.name=EE作業台 Lv.1
+tile.EECraftingTable.2.name=EE作業台 Lv.2
+tile.EECraftingTable.3.name=EE作業台 Lv.3
 tile.EEConductor.name=EE伝導管
 tile.EEConductor.0.name=EE伝導管
 tile.EEConductor.1.name=EE伝導管 Lv.1
@@ -118,10 +123,11 @@ tile.EEBomb.name=EE式高性能爆弾
 entity.EERobo.name=EE匠ロボ
 
 //Container
-container.EECharger=EE充填機
-container.EEMiner=EE採掘機
 container.EECapacitor=EE貯蓄機
+container.EECharger=EE充填機
 container.EEFurnace=EEかまど
+container.EECraftingTable=EE作業台
+container.EEMiner=EE採掘機
 
 //その他
 info.oef.metadescription=このMODは、オファレンMOD・匠Craftのアドオンです。

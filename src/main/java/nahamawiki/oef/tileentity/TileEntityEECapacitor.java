@@ -18,8 +18,6 @@ import net.minecraft.world.World;
 
 public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 
-	/** 蓄えられるEEの上限。 */
-	protected int capacity = -1;
 	/** 毎tick発生するロスの量。 */
 	protected int loss = -1;
 	/** EEを受け取れる方向のリスト。 */
@@ -60,17 +58,15 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public byte getLevel(int meta) {
-		if (level < 0)
-			return (byte) (meta & 3);
-		return level;
-	}
-
-	@Override
 	public int getTier(int side) {
 		if (sideType[side] == 1)
 			return 0;
 		return OEFConfigCore.maxTier;
+	}
+
+	@Override
+	public int getCapacity(int level) {
+		return EEUtil.getBaseCapacity(level) * 4;
 	}
 
 	@Override
@@ -109,9 +105,6 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if (capacity < 0) {
-			capacity = EEUtil.getBaseCapacity(level) * 4;
-		}
 		if (worldObj.isRemote)
 			return;
 		this.updateIsHoldingEE();

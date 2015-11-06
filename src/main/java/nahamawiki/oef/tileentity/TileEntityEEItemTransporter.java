@@ -29,10 +29,9 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	/** インベントリ内のアイテム。 */
 	protected ItemStack[] itemStacks = new ItemStack[6];
 
-	public TileEntityEEItemTransporter() {
-		super();
-		// capacityを上書き。
-		capacity = 8256;
+	@Override
+	public int getCapacity(int level) {
+		return 8256;
 	}
 
 	@Override

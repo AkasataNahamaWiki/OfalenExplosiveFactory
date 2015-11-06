@@ -22,7 +22,6 @@ import net.minecraft.util.StatCollector;
 
 public class TileEntityEECannon extends TileEntityEEMachineBase {
 
-	private final int capacity = 800;
 	private int duration;
 	public String color = "";
 	private String ownName;
@@ -35,22 +34,6 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	private float rotationPitch = 0;
 	private float prevRotationPitch;
 	private boolean isSpawning;
-
-	@Override
-	public int getMachineType(int side) {
-		return 2;
-	}
-
-	@Override
-	public int recieveEE(int amount, int side) {
-		holdingEE += amount;
-		if (holdingEE > capacity) {
-			int surplus = holdingEE - capacity;
-			holdingEE = capacity;
-			return surplus;
-		}
-		return 0;
-	}
 
 	public String getColor() {
 		return this.color;
@@ -85,6 +68,11 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public byte getLevel(int meta) {
 		return 0;
+	}
+
+	@Override
+	public int getCapacity(int level) {
+		return 800;
 	}
 
 	@Override

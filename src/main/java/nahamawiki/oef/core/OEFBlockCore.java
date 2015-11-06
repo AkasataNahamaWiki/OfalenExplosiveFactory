@@ -7,6 +7,7 @@ import nahamawiki.oef.block.BlockEECannon;
 import nahamawiki.oef.block.BlockEECapacitor;
 import nahamawiki.oef.block.BlockEECharger;
 import nahamawiki.oef.block.BlockEEConductor;
+import nahamawiki.oef.block.BlockEECraftingTable;
 import nahamawiki.oef.block.BlockEEFurnace;
 import nahamawiki.oef.block.BlockEEGenerator;
 import nahamawiki.oef.block.BlockEEItemImporter;
@@ -20,6 +21,7 @@ import nahamawiki.oef.tileentity.TileEntityEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
+import nahamawiki.oef.tileentity.TileEntityEECraftingTable;
 import nahamawiki.oef.tileentity.TileEntityEEFurnace;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
@@ -38,6 +40,7 @@ public class OEFBlockCore {
 	public static Block EECharger;
 	public static Block EECannon;
 	public static Block EEFurnace;
+	public static Block EECraftingTable;
 	public static Block EEConductor;
 	public static Block EEItemTransporter;
 	public static Block EEItemImporter;
@@ -84,6 +87,12 @@ public class OEFBlockCore {
 				.setBlockTextureName(OEFCore.DOMEINNAME + "EEFurnace");
 		GameRegistry.registerBlock(EEFurnace, ItemBlockOEF.class, "EEFurnace");
 		GameRegistry.registerTileEntity(TileEntityEEFurnace.class, "TileEntityEEFurnace");
+
+		EECraftingTable = new BlockEECraftingTable()
+				.setBlockName("EECraftingTable")
+				.setBlockTextureName(OEFCore.DOMEINNAME + "EECraftingTable");
+		GameRegistry.registerBlock(EECraftingTable, ItemBlockOEF.class, "EECraftingTable");
+		GameRegistry.registerTileEntity(TileEntityEECraftingTable.class, "TileEntityEECraftingTable");
 
 		EEConductor = new BlockEEConductor()
 				.setBlockName("EEConductor")
