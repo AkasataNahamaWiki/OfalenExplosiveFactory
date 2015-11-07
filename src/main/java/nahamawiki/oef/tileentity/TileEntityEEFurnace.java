@@ -35,38 +35,7 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setShort("cookTime", cookTime);
-		NBTTagList nbttaglist = new NBTTagList();
-		for (int i = 0; i < itemStacks.length; ++i) {
-			if (itemStacks[i] != null) {
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				itemStacks[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		cookTime = nbt.getShort("cookTime");
-		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
-		itemStacks = new ItemStack[this.getSizeInventory()];
-		for (int i = 0; i < nbttaglist.tagCount(); i++) {
-			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-			if (j >= 0 && j < itemStacks.length) {
-				itemStacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-	}
-
-	@Override
-	public void updateEntity() {
+	public void updateMachine() {
 		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
@@ -89,6 +58,11 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 			cookTime = 0;
 			holdingEE -= 400;
 		}
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 	/** 製錬しているかによってメタデータを更新する。 */
@@ -183,6 +157,37 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 		if (itemStacks[0].stackSize < 1) {
 			// スタック数が0になったら空にする。
 			itemStacks[0] = null;
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setShort("cookTime", cookTime);
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int i = 0; i < itemStacks.length; ++i) {
+			if (itemStacks[i] != null) {
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				itemStacks[i].writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+		}
+		nbt.setTag("Items", nbttaglist);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		cookTime = nbt.getShort("cookTime");
+		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
+		itemStacks = new ItemStack[this.getSizeInventory()];
+		for (int i = 0; i < nbttaglist.tagCount(); i++) {
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 255;
+			if (j >= 0 && j < itemStacks.length) {
+				itemStacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+			}
 		}
 	}
 

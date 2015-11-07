@@ -76,13 +76,10 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void updateMachine() {
 		this.angleUpdate();
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
-		if (worldObj.isRemote)
-			return;
 		if (duration > 0)
 			duration--;
 		if (holdingEE < 1)
@@ -143,6 +140,11 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		}
 	}
 
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
+	}
+
 	protected void angleUpdate() {
 		if (this.targetEntity != null) {
 			double x = this.targetEntity.posX - this.xCoord;
@@ -170,6 +172,30 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		}
 
 		return par1 + f3;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.setColor(nbt.getString("Color"));
+		if (nbt.hasKey("Player"))
+			this.setOwnPlayer(nbt.getString("Player"));
+		duration = nbt.getInteger("Duration");
+		size = nbt.getInteger("Size");
+		rotationYaw = nbt.getFloat("rotationYaw");
+		rotationPitch = nbt.getFloat("rotationPitch");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setString("Color", this.getColor());
+		if (this.getOwnPlayer() != null)
+			nbt.setString("Player", this.getOwnPlayer());
+		nbt.setInteger("Duration", duration);
+		nbt.setInteger("Size", size);
+		nbt.setFloat("rotationYaw", rotationYaw);
+		nbt.setFloat("rotationPitch", rotationPitch);
 	}
 
 	@Override
@@ -213,30 +239,6 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		this.setColor(nbt.getString("Color"));
-		if (nbt.hasKey("Player"))
-			this.setOwnPlayer(nbt.getString("Player"));
-		duration = nbt.getInteger("Duration");
-		size = nbt.getInteger("Size");
-		rotationYaw = nbt.getFloat("rotationYaw");
-		rotationPitch = nbt.getFloat("rotationPitch");
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setString("Color", this.getColor());
-		if (this.getOwnPlayer() != null)
-			nbt.setString("Player", this.getOwnPlayer());
-		nbt.setInteger("Duration", duration);
-		nbt.setInteger("Size", size);
-		nbt.setFloat("rotationYaw", rotationYaw);
-		nbt.setFloat("rotationPitch", rotationPitch);
 	}
 
 	public static class Sorter implements Comparator {

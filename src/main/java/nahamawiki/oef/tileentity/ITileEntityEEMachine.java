@@ -29,4 +29,16 @@ public interface ITileEntityEEMachine {
 
 	public void setTier(int tier, int side);
 
+	public int getCapacity(int level);
+
+	/** 通常のアップデート処理 */
+	public void updateMachine();
+
+	/** 匠化時のアップデート処理 */
+	public void updateCreepered();
+
+	public boolean getCreeper();
+
+	public void setCreeper(boolean flag);
+
 }

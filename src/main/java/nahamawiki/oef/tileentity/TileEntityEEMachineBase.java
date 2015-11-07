@@ -12,8 +12,7 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	protected int capacity = -1;
 	/** 機械のレベル。 */
 	protected byte level = -1;
-
-	/**匠化しているか否か。*/
+	/** 匠化しているか否か。 */
 	private boolean isCreeper;
 
 	@Override
@@ -23,14 +22,13 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 
 	@Override
 	public int recieveEE(int amount, int side) {
-		if(!this.getCreeper())
-		{
-			holdingEE += amount;
-			if (holdingEE > capacity) {
-				int surplus = holdingEE - capacity;
-				holdingEE = capacity;
-				return surplus;
-			}
+		if (this.getCreeper())
+			return 0;
+		holdingEE += amount;
+		if (holdingEE > capacity) {
+			int surplus = holdingEE - capacity;
+			holdingEE = capacity;
+			return surplus;
 		}
 		return 0;
 	}
@@ -49,19 +47,30 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	public void setTier(int tier, int side) {}
 
 	@Override
+	public boolean getCreeper() {
+		return this.isCreeper;
+	}
+
+	@Override
+	public void setCreeper(boolean flg) {
+		this.isCreeper = flg;
+	}
+
+	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(this.getCreeper())
-		{
-			this.updateCreepered();
-		}
 		if (level < 0)
 			level = this.getLevel(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		if (capacity < 0)
 			capacity = this.getCapacity(level);
+		if (worldObj.isRemote)
+			return;
+		if (!this.getCreeper()) {
+			this.updateMachine();
+		} else {
+			this.updateCreepered();
+		}
 	}
-
-	public abstract int getCapacity(int level);
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -79,16 +88,4 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 		isCreeper = nbt.getBoolean("isCreeper");
 	}
 
-
-	public boolean getCreeper()
-	{
-		return this.isCreeper;
-	}
-
-	public void setCreeper(boolean flg)
-	{
-		this.isCreeper = flg;
-	}
-
-	public abstract void updateCreepered();
 }

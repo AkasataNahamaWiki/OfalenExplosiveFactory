@@ -32,26 +32,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("coolTime", coolTime);
-		if (battery != null)
-			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		coolTime = nbt.getInteger("coolTime");
-		if (nbt.getTag("battery") != null && nbt.getTag("battery") instanceof NBTTagCompound)
-			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("battery"));
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
 		if (isCharging != coolTime > 0) {
 			if (coolTime > 0) {
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level | 4, 2);
@@ -81,6 +62,27 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		case 3:
 			coolTime = 2;
 		}
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("coolTime", coolTime);
+		if (battery != null)
+			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		coolTime = nbt.getInteger("coolTime");
+		if (nbt.getTag("battery") != null && nbt.getTag("battery") instanceof NBTTagCompound)
+			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("battery"));
 	}
 
 	public boolean isCharging() {

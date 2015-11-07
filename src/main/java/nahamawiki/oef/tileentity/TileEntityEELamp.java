@@ -9,6 +9,8 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 
 	@Override
 	public int recieveEE(int amount, int side) {
+		if (this.getCreeper())
+			return 0;
 		isShining = true;
 		remainingTime = 5;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 2);
@@ -33,14 +35,18 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void updateMachine() {
 		if (remainingTime > 0) {
 			remainingTime--;
 		} else if (isShining) {
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 2);
 			isShining = false;
 		}
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 }

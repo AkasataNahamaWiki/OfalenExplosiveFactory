@@ -35,58 +35,8 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setByteArray("nextSide", nextSide);
-		nbt.setIntArray("coolTime", coolTime);
-
-		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < recieverI.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), recieverI.get(i));
-		}
-		nbt.setByte("recieverISize", (byte) recieverI.size());
-		nbt.setTag("recieverI", localnbt);
-
-		NBTTagList nbttaglist = new NBTTagList();
-		for (int i = 0; i < itemStacks.length; ++i) {
-			if (itemStacks[i] != null) {
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				itemStacks[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		nextSide = nbt.getByteArray("nextSide");
-		coolTime = nbt.getIntArray("coolTime");
-
-		recieverI.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("recieverI");
-		for (int i = 0; i < nbt.getByte("recieverISize"); i++) {
-			recieverI.add(localnbt.getInteger(String.valueOf(i)));
-		}
-
-		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
-		itemStacks = new ItemStack[this.getSizeInventory()];
-		for (int i = 0; i < nbttaglist.tagCount(); i++) {
-			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-			if (j >= 0 && j < itemStacks.length) {
-				itemStacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
+		super.updateMachine();
 		this.sendItems();
 	}
 
@@ -260,6 +210,54 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 					continue;
 				holdingEE += surplus;
 				list.remove(list.indexOf(i));
+			}
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setByteArray("nextSide", nextSide);
+		nbt.setIntArray("coolTime", coolTime);
+
+		NBTTagCompound localnbt = new NBTTagCompound();
+		for (int i = 0; i < recieverI.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), recieverI.get(i));
+		}
+		nbt.setByte("recieverISize", (byte) recieverI.size());
+		nbt.setTag("recieverI", localnbt);
+
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int i = 0; i < itemStacks.length; ++i) {
+			if (itemStacks[i] != null) {
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				itemStacks[i].writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+		}
+		nbt.setTag("Items", nbttaglist);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		nextSide = nbt.getByteArray("nextSide");
+		coolTime = nbt.getIntArray("coolTime");
+
+		recieverI.clear();
+		NBTTagCompound localnbt = nbt.getCompoundTag("recieverI");
+		for (int i = 0; i < nbt.getByte("recieverISize"); i++) {
+			recieverI.add(localnbt.getInteger(String.valueOf(i)));
+		}
+
+		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
+		itemStacks = new ItemStack[this.getSizeInventory()];
+		for (int i = 0; i < nbttaglist.tagCount(); i++) {
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 255;
+			if (j >= 0 && j < itemStacks.length) {
+				itemStacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
 	}

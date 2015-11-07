@@ -70,45 +70,14 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < reciever.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), reciever.get(i));
-		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
-
-		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
-		}
-
-		nbt.setByteArray("sideType", sideType);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
-			reciever.add(localnbt.getInteger(String.valueOf(i)));
-		}
-
-		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
-		}
-
-		sideType = nbt.getByteArray("sideType");
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
 		this.updateIsHoldingEE();
 		this.sendEE();
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 	/** EEを蓄えているかによってメタデータを更新する。 */
@@ -159,6 +128,39 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 				list.remove(list.indexOf(i));
 			}
 		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		NBTTagCompound localnbt = new NBTTagCompound();
+		for (int i = 0; i < reciever.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), reciever.get(i));
+		}
+		nbt.setInteger("reciverSize", reciever.size());
+		nbt.setTag("reciver", localnbt);
+
+		for (int i = 0; i < 6; i++) {
+			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+		}
+
+		nbt.setByteArray("sideType", sideType);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		reciever.clear();
+		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
+		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+			reciever.add(localnbt.getInteger(String.valueOf(i)));
+		}
+
+		for (int i = 0; i < 6; i++) {
+			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+		}
+
+		sideType = nbt.getByteArray("sideType");
 	}
 
 	/** 送信するパケットを返す。 */

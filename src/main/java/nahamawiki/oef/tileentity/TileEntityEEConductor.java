@@ -64,43 +64,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("tier", tier);
-
-		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < reciever.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), reciever.get(i));
-		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
-
-		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
-		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		tier = nbt.getInteger("tier");
-
-		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
-			reciever.add(localnbt.getInteger(String.valueOf(i)));
-		}
-
-		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
-		}
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
 		if (isUpdated)
 			isUpdated = false;
 		if (tier > OEFConfigCore.maxTier)
@@ -108,6 +72,11 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		this.updateIsHoldingEE();
 		this.decreaseEE();
 		this.sendEE();
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 	/** EEを蓄えているかによってメタデータを更新する。 */
@@ -179,6 +148,39 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				holdingEE += surplus;
 				list.remove(list.indexOf(i));
 			}
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("tier", tier);
+
+		NBTTagCompound localnbt = new NBTTagCompound();
+		for (int i = 0; i < reciever.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), reciever.get(i));
+		}
+		nbt.setInteger("reciverSize", reciever.size());
+		nbt.setTag("reciver", localnbt);
+
+		for (int i = 0; i < 6; i++) {
+			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		tier = nbt.getInteger("tier");
+
+		reciever.clear();
+		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
+		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+			reciever.add(localnbt.getInteger(String.valueOf(i)));
+		}
+
+		for (int i = 0; i < 6; i++) {
+			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
 		}
 	}
 

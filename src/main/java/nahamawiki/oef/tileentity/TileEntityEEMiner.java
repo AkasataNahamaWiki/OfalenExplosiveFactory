@@ -62,8 +62,11 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 				this.spawnParticles();
 				coolTime = 20;
 			}
-			return;
 		}
+	}
+
+	@Override
+	public void updateMachine() {
 		// 置かれた時に範囲を設定する。
 		if (!isChecked) {
 			this.setMiningArea();
@@ -99,6 +102,11 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 			isFinished = true;
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level, 2);
 		}
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 	/** 測量機を探して、採掘範囲を設定する。 */

@@ -18,33 +18,8 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	protected ArrayList<Integer> inventory = new ArrayList<Integer>();
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-
-		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < inventory.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), inventory.get(i));
-		}
-		nbt.setByte("inventorySize", (byte) recieverI.size());
-		nbt.setTag("inventory", localnbt);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-
-		inventory.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("inventory");
-		for (int i = 0; i < nbt.getByte("inventorySize"); i++) {
-			inventory.add(localnbt.getInteger(String.valueOf(i)));
-		}
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
+		super.updateMachine();
 		this.importItems();
 	}
 
@@ -121,6 +96,29 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 			}
 		}
 		iinventory.markDirty();
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+
+		NBTTagCompound localnbt = new NBTTagCompound();
+		for (int i = 0; i < inventory.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), inventory.get(i));
+		}
+		nbt.setByte("inventorySize", (byte) recieverI.size());
+		nbt.setTag("inventory", localnbt);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+
+		inventory.clear();
+		NBTTagCompound localnbt = nbt.getCompoundTag("inventory");
+		for (int i = 0; i < nbt.getByte("inventorySize"); i++) {
+			inventory.add(localnbt.getInteger(String.valueOf(i)));
+		}
 	}
 
 	@Override

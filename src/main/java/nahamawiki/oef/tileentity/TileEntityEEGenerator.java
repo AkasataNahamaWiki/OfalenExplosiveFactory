@@ -3,6 +3,7 @@ package nahamawiki.oef.tileentity;
 import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,34 +61,26 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-
-		NBTTagCompound localnbt = new NBTTagCompound();
-		for (int i = 0; i < reciever.size(); i++) {
-			localnbt.setInteger(String.valueOf(i), reciever.get(i));
-		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-
-		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
-			reciever.add(localnbt.getInteger(String.valueOf(i)));
-		}
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
 		this.sendEE();
+	}
+
+	@Override
+	public void updateCreepered() {
+		Random random = new Random();
+		if (random.nextInt(1200) == 0) {
+			worldObj.createExplosion(null, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, random.nextFloat() * 10, true);
+		}
+		if (reciever.size() < 1)
+			return;
+		for (int i = 0; i < 6; i++) {
+			if (!reciever.contains(i))
+				continue;
+			ITileEntityEEMachine machine = this.getNeighborMachine(i);
+			if (machine == null || machine.getCreeper())
+				continue;
+			machine.setCreeper(true);
+		}
 	}
 
 	/** 隣接する機械にEEを送信する。 */
@@ -149,6 +142,29 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine)
 			return (ITileEntityEEMachine) tileEntity;
 		return null;
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+
+		NBTTagCompound localnbt = new NBTTagCompound();
+		for (int i = 0; i < reciever.size(); i++) {
+			localnbt.setInteger(String.valueOf(i), reciever.get(i));
+		}
+		nbt.setInteger("reciverSize", reciever.size());
+		nbt.setTag("reciver", localnbt);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+
+		reciever.clear();
+		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
+		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+			reciever.add(localnbt.getInteger(String.valueOf(i)));
+		}
 	}
 
 	/** 周囲のブロックを確認する */

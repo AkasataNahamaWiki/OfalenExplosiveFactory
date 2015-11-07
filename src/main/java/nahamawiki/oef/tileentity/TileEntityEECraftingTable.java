@@ -47,113 +47,7 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagList nbttaglist = new NBTTagList();
-		for (int i = 0; i < materials.length; ++i) {
-			if (materials[i] != null) {
-				NBTTagCompound nbt1 = new NBTTagCompound();
-				nbt1.setByte("Slot", (byte) i);
-				materials[i].writeToNBT(nbt1);
-				nbttaglist.appendTag(nbt1);
-			}
-		}
-		nbt.setTag("Materials", nbttaglist);
-
-		nbttaglist = new NBTTagList();
-		for (int i = 0; i < results.length; ++i) {
-			if (results[i] != null) {
-				NBTTagCompound nbt1 = new NBTTagCompound();
-				nbt1.setByte("Slot", (byte) i);
-				results[i].writeToNBT(nbt1);
-				nbttaglist.appendTag(nbt1);
-			}
-		}
-		nbt.setTag("Results", nbttaglist);
-
-		nbttaglist = new NBTTagList();
-		for (int i = 0; i < sampleMaterials.length; ++i) {
-			if (sampleMaterials[i] != null) {
-				NBTTagCompound nbt1 = new NBTTagCompound();
-				nbt1.setByte("Slot", (byte) i);
-				sampleMaterials[i].writeToNBT(nbt1);
-				nbttaglist.appendTag(nbt1);
-			}
-		}
-		nbt.setTag("SampleMaterials", nbttaglist);
-
-		if (sampleResult != null) {
-			NBTTagCompound nbt1 = new NBTTagCompound();
-			sampleResult.writeToNBT(nbt1);
-			nbt.setTag("SampleResult", nbt1);
-		}
-
-		if (sheet != null) {
-			NBTTagCompound nbt1 = new NBTTagCompound();
-			sheet.writeToNBT(nbt1);
-			nbt.setTag("Sample", nbt1);
-		}
-
-		if ((this.ownerName == null || this.ownerName.length() == 0) && this.owner != null) {
-			this.ownerName = this.owner.getCommandSenderName();
-		}
-		nbt.setString("ownerName", this.ownerName == null ? "" : this.ownerName);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		NBTTagList nbttaglist = nbt.getTagList("Materials", 10);
-		materials = new ItemStack[9];
-		for (int i = 0; i < nbttaglist.tagCount(); i++) {
-			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
-			int j = nbt1.getByte("Slot") & 255;
-			if (j >= 0 && j < materials.length) {
-				materials[j] = ItemStack.loadItemStackFromNBT(nbt1);
-			}
-		}
-
-		nbttaglist = nbt.getTagList("Results", 10);
-		results = new ItemStack[9];
-		for (int i = 0; i < nbttaglist.tagCount(); i++) {
-			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
-			int j = nbt1.getByte("Slot") & 255;
-			if (j >= 0 && j < results.length) {
-				results[j] = ItemStack.loadItemStackFromNBT(nbt1);
-			}
-		}
-
-		nbttaglist = nbt.getTagList("SampleMaterials", 10);
-		sampleMaterials = new ItemStack[9];
-		for (int i = 0; i < nbttaglist.tagCount(); i++) {
-			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
-			int j = nbt1.getByte("Slot") & 255;
-			if (j >= 0 && j < sampleMaterials.length) {
-				sampleMaterials[j] = ItemStack.loadItemStackFromNBT(nbt1);
-			}
-		}
-
-		if (nbt.hasKey("SampleResult")) {
-			NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("SampleResult");
-			sampleResult = ItemStack.loadItemStackFromNBT(nbt1);
-		}
-
-		if (nbt.hasKey("Sample")) {
-			NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("Sample");
-			sheet = ItemStack.loadItemStackFromNBT(nbt1);
-		}
-
-		this.ownerName = nbt.getString("ownerName");
-		if (this.ownerName != null && this.ownerName.length() == 0) {
-			this.ownerName = null;
-		}
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj.isRemote)
-			return;
+	public void updateMachine() {
 		// EEが足りないなら終了。
 		if (holdingEE < this.getEECost())
 			return;
@@ -163,6 +57,11 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 		// クラフトして、EEを消費する。
 		this.craftItem();
 		holdingEE -= this.getEECost();
+	}
+
+	@Override
+	public void updateCreepered() {
+		// TODO 匠化の実装
 	}
 
 	/** 1回のクラフトで消費するEEの量を返す。 */
@@ -370,6 +269,109 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 			entity.getEntityItem().setTagCompound(((NBTTagCompound) itemStack.getTagCompound().copy()));
 		}
 		worldObj.spawnEntityInWorld(entity);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int i = 0; i < materials.length; ++i) {
+			if (materials[i] != null) {
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setByte("Slot", (byte) i);
+				materials[i].writeToNBT(nbt1);
+				nbttaglist.appendTag(nbt1);
+			}
+		}
+		nbt.setTag("Materials", nbttaglist);
+
+		nbttaglist = new NBTTagList();
+		for (int i = 0; i < results.length; ++i) {
+			if (results[i] != null) {
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setByte("Slot", (byte) i);
+				results[i].writeToNBT(nbt1);
+				nbttaglist.appendTag(nbt1);
+			}
+		}
+		nbt.setTag("Results", nbttaglist);
+
+		nbttaglist = new NBTTagList();
+		for (int i = 0; i < sampleMaterials.length; ++i) {
+			if (sampleMaterials[i] != null) {
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setByte("Slot", (byte) i);
+				sampleMaterials[i].writeToNBT(nbt1);
+				nbttaglist.appendTag(nbt1);
+			}
+		}
+		nbt.setTag("SampleMaterials", nbttaglist);
+
+		if (sampleResult != null) {
+			NBTTagCompound nbt1 = new NBTTagCompound();
+			sampleResult.writeToNBT(nbt1);
+			nbt.setTag("SampleResult", nbt1);
+		}
+
+		if (sheet != null) {
+			NBTTagCompound nbt1 = new NBTTagCompound();
+			sheet.writeToNBT(nbt1);
+			nbt.setTag("Sample", nbt1);
+		}
+
+		if ((this.ownerName == null || this.ownerName.length() == 0) && this.owner != null) {
+			this.ownerName = this.owner.getCommandSenderName();
+		}
+		nbt.setString("ownerName", this.ownerName == null ? "" : this.ownerName);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		NBTTagList nbttaglist = nbt.getTagList("Materials", 10);
+		materials = new ItemStack[9];
+		for (int i = 0; i < nbttaglist.tagCount(); i++) {
+			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbt1.getByte("Slot") & 255;
+			if (j >= 0 && j < materials.length) {
+				materials[j] = ItemStack.loadItemStackFromNBT(nbt1);
+			}
+		}
+
+		nbttaglist = nbt.getTagList("Results", 10);
+		results = new ItemStack[9];
+		for (int i = 0; i < nbttaglist.tagCount(); i++) {
+			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbt1.getByte("Slot") & 255;
+			if (j >= 0 && j < results.length) {
+				results[j] = ItemStack.loadItemStackFromNBT(nbt1);
+			}
+		}
+
+		nbttaglist = nbt.getTagList("SampleMaterials", 10);
+		sampleMaterials = new ItemStack[9];
+		for (int i = 0; i < nbttaglist.tagCount(); i++) {
+			NBTTagCompound nbt1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbt1.getByte("Slot") & 255;
+			if (j >= 0 && j < sampleMaterials.length) {
+				sampleMaterials[j] = ItemStack.loadItemStackFromNBT(nbt1);
+			}
+		}
+
+		if (nbt.hasKey("SampleResult")) {
+			NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("SampleResult");
+			sampleResult = ItemStack.loadItemStackFromNBT(nbt1);
+		}
+
+		if (nbt.hasKey("Sample")) {
+			NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("Sample");
+			sheet = ItemStack.loadItemStackFromNBT(nbt1);
+		}
+
+		this.ownerName = nbt.getString("ownerName");
+		if (this.ownerName != null && this.ownerName.length() == 0) {
+			this.ownerName = null;
+		}
 	}
 
 	/** 最後にGUIを開いたプレイヤーを渡す。 */
