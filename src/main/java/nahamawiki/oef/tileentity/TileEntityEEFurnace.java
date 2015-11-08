@@ -1,7 +1,5 @@
 package nahamawiki.oef.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -9,6 +7,8 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISidedInventory {
 
@@ -36,7 +36,6 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public void updateMachine() {
-		super.updateEntity();
 		if (worldObj.isRemote)
 			return;
 		if (!this.canSmelt()) {

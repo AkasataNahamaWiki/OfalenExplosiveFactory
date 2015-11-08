@@ -23,7 +23,14 @@ public class RenderCannonLaser extends Render {
 		super();
 		this.modelBullet = model;
 		this.shadowSize = 0.0F;
-		this.bulletTextures = new ResourceLocation("ofalenmod:textures/entity/" + color + ".png");
+		if(color == "EP" || color == "BO")
+		{
+			this.bulletTextures = new ResourceLocation("oef:textures/models/" + color + ".png");
+		}
+		else
+		{
+			this.bulletTextures = new ResourceLocation("ofalenmod:textures/entity/" + color + ".png");
+		}
 	}
 
 	public void renderLaser(EntityCannonLaser entity, double x, double y, double z, float par5, float par6) {

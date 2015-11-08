@@ -17,8 +17,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderEECannon extends TileEntitySpecialRenderer {
 
-	private final ModelEECannon model = new ModelEECannon();
-
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
 		TileEntityEECannon machine;
@@ -27,6 +25,9 @@ public class RenderEECannon extends TileEntitySpecialRenderer {
 		} else {
 			return;
 		}
+		
+		ModelEECannon model = new ModelEECannon(0, 0);
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/EECannon.png");
@@ -34,8 +35,37 @@ public class RenderEECannon extends TileEntitySpecialRenderer {
          float pYaw = this.interpolateRotation(machine.getPrevRotationYaw(), machine.getRotationYaw(), 1);
          float pPitch =machine.getPrevRotationPitch() + (machine.getRotationPitch() - machine.getPrevRotationPitch());
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-		this.model.render((Entity) null, 0, 0, 0, -(pYaw - pYawOffset), pPitch, 0.0625F);
+		model.render((Entity) null, 0, 0, 0, -(pYaw - pYawOffset), pPitch, 0.0625F);
 		GL11.glPopMatrix();
+		
+		if(machine.getCreeper())
+		{
+			GL11.glPushMatrix();
+			model = new ModelEECannon(machine.tick,machine.tick);
+			GL11.glDepthMask(true);
+	        GL11.glMatrixMode(GL11.GL_TEXTURE);
+
+	        GL11.glTranslatef(machine.tick, machine.tick, 0.0F);
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	        GL11.glEnable(GL11.GL_BLEND);
+	        float f4 = 0.5F;
+	        GL11.glColor4f(f4, f4, f4, 1.0F);
+	        GL11.glEnable(GL11.GL_LIGHTING);
+	        GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+	        GL11.glMatrixMode(GL11.GL_TEXTURE);
+	        GL11.glLoadIdentity();
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
+			textures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+			pYawOffset = this.interpolateRotation(0, 0, 1);
+	        pYaw = this.interpolateRotation(machine.getPrevRotationYaw(), machine.getRotationYaw(), 1);
+	        pPitch =machine.getPrevRotationPitch() + (machine.getRotationPitch() - machine.getPrevRotationPitch());
+	        
+			Minecraft.getMinecraft().renderEngine.bindTexture(textures);
+			model.render((Entity) null, 0, 0, 0, -(pYaw - pYawOffset), pPitch, 0.0625F);
+			GL11.glPopMatrix();
+		}
 	}
 	
 	private float interpolateRotation(float p_77034_1_, float p_77034_2_, float p_77034_3_)

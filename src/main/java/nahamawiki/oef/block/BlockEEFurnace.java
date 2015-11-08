@@ -3,8 +3,6 @@ package nahamawiki.oef.block;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.tileentity.TileEntityEEFurnace;
 import net.minecraft.block.Block;
@@ -18,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEEFurnace extends BlockEEMachineBase {
 
@@ -31,6 +31,7 @@ public class BlockEEFurnace extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 		player.openGui(OEFCore.instance, 1, world, x, y, z);
 		return true;
 	}

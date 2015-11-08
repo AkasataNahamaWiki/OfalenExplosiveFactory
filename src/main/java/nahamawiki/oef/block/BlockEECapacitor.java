@@ -2,8 +2,6 @@ package nahamawiki.oef.block;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
@@ -17,6 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEECapacitor extends BlockEEMachineBase {
 
@@ -43,6 +43,7 @@ public class BlockEECapacitor extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 		if (player.getHeldItem() != null && player.getHeldItem().isItemEqual(OEFItemCore.EEPliers)) {
 			if (world.isRemote)
 				return true;

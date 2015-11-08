@@ -15,6 +15,8 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	/** 匠化しているか否か。 */
 	private boolean isCreeper;
 
+	public int tick;
+
 	@Override
 	public int getMachineType(int side) {
 		return 2;
@@ -59,6 +61,7 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		tick++;
 		if (level < 0)
 			level = this.getLevel(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		if (capacity < 0)

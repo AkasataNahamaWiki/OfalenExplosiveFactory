@@ -1,14 +1,9 @@
 package nahamawiki.oef.render;
 
-import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.model.ModelEEConductor;
 import nahamawiki.oef.model.ModelPowered;
-import nahamawiki.oef.tileentity.TileEntityEEConductor;
-import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
-import nahamawiki.oef.tileentity.TileEntityEEItemTransporter;
+import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -18,39 +13,35 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderEEConductor extends TileEntitySpecialRenderer {
+public class RenderPowered extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation texture_armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-	private final ModelEEConductor model = new ModelEEConductor();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEEConductor machine;
-		if (tileEntity instanceof TileEntityEEConductor) {
-			machine = (TileEntityEEConductor) tileEntity;
+		TileEntityEEMachineBase machine;
+		if (tileEntity instanceof TileEntityEEMachineBase) {
+			machine = (TileEntityEEMachineBase) tileEntity;
 		} else {
 			return;
 		}
-		this.model.setConnectingArray(machine.getConnectingArray());
-		String textureName = "EEConductor";
-		if (tileEntity instanceof TileEntityEEItemTransporter) {
-			textureName = "EETransporter";
-			if (tileEntity instanceof TileEntityEEItemImporter) {
-				textureName = "EEImporter";
-			}
-		}
-		textureName += "-" + machine.getLevel(machine.getBlockMetadata()) + "-" + machine.isHoldingEE();
+		int f1 = machine.tick;
+		ModelPowered model = new ModelPowered(f1 , f1);
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
-		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/duct/" + textureName + ".png");
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-		this.model.render((Entity) null, 0, 0, 0, 0, 0, 0.03125F);
+		for(int i = 0; i < 6; i++)
+		{
+			String name = tileEntity.getWorldObj().getBlock(machine.xCoord, machine.yCoord, machine.zCoord).getBlockTextureFromSide(i).getIconName().substring(4);
+			ResourceLocation textures = new ResourceLocation("oef:textures/blocks/" + name + ".png");
+			Minecraft.getMinecraft().renderEngine.bindTexture(textures);
+			model.block[i].render(0.0625F);
+		}
+		//model.base2.render(0.0625f);
 		GL11.glPopMatrix();
-		
+
 		if(machine.getCreeper())
 		{
-			int f1 = machine.tick;
-			ModelPowered model = new ModelPowered(f1 , f1);
 			GL11.glPushMatrix();
 			GL11.glDepthMask(true);
 	        this.bindTexture(texture_armor);
@@ -80,5 +71,4 @@ public class RenderEEConductor extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 	}
-
 }

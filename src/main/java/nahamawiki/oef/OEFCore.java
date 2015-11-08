@@ -1,5 +1,38 @@
 package nahamawiki.oef;
 
+import nahama.ofalenmod.model.ModelLaser;
+import nahamawiki.oef.core.OEFBlockCore;
+import nahamawiki.oef.core.OEFConfigCore;
+import nahamawiki.oef.core.OEFEntityCore;
+import nahamawiki.oef.core.OEFEventCore;
+import nahamawiki.oef.core.OEFGuiHandler;
+import nahamawiki.oef.core.OEFInfoCore;
+import nahamawiki.oef.core.OEFItemCore;
+import nahamawiki.oef.core.OEFOreDicCore;
+import nahamawiki.oef.core.OEFRecipeCore;
+import nahamawiki.oef.core.UpdateCheckCore;
+import nahamawiki.oef.creativetab.OEFCreativeTab;
+import nahamawiki.oef.entity.EntityCannonBlueLaser;
+import nahamawiki.oef.entity.EntityCannonBoltLaser;
+import nahamawiki.oef.entity.EntityCannonEPLaser;
+import nahamawiki.oef.entity.EntityCannonGreenLaser;
+import nahamawiki.oef.entity.EntityCannonRedLaser;
+import nahamawiki.oef.entity.EntityCannonWhiteLaser;
+import nahamawiki.oef.material.OEFMaterial;
+import nahamawiki.oef.render.RenderCannonLaser;
+import nahamawiki.oef.render.RenderEECannon;
+import nahamawiki.oef.render.RenderEECapacitor;
+import nahamawiki.oef.render.RenderEEConductor;
+import nahamawiki.oef.render.RenderPowered;
+import nahamawiki.oef.tileentity.TileEntityEECannon;
+import nahamawiki.oef.tileentity.TileEntityEECapacitor;
+import nahamawiki.oef.tileentity.TileEntityEEConductor;
+import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,34 +50,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import nahama.ofalenmod.model.ModelLaser;
-import nahamawiki.oef.core.OEFBlockCore;
-import nahamawiki.oef.core.OEFConfigCore;
-import nahamawiki.oef.core.OEFEntityCore;
-import nahamawiki.oef.core.OEFEventCore;
-import nahamawiki.oef.core.OEFGuiHandler;
-import nahamawiki.oef.core.OEFInfoCore;
-import nahamawiki.oef.core.OEFItemCore;
-import nahamawiki.oef.core.OEFOreDicCore;
-import nahamawiki.oef.core.OEFRecipeCore;
-import nahamawiki.oef.core.UpdateCheckCore;
-import nahamawiki.oef.creativetab.OEFCreativeTab;
-import nahamawiki.oef.entity.EntityCannonBlueLaser;
-import nahamawiki.oef.entity.EntityCannonGreenLaser;
-import nahamawiki.oef.entity.EntityCannonRedLaser;
-import nahamawiki.oef.entity.EntityCannonWhiteLaser;
-import nahamawiki.oef.material.OEFMaterial;
-import nahamawiki.oef.render.RenderCannonLaser;
-import nahamawiki.oef.render.RenderEECannon;
-import nahamawiki.oef.render.RenderEECapacitor;
-import nahamawiki.oef.render.RenderEEConductor;
-import nahamawiki.oef.tileentity.TileEntityEECannon;
-import nahamawiki.oef.tileentity.TileEntityEECapacitor;
-import nahamawiki.oef.tileentity.TileEntityEEConductor;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * @author Tom Kate & Akasata Nahama
@@ -92,10 +97,13 @@ public class OEFCore {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECapacitor.class, new RenderEECapacitor());
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECannon.class, new RenderEECannon());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEMachineBase.class, new RenderPowered());
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonRedLaser.class, new RenderCannonLaser(new ModelLaser(), "red"));
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonGreenLaser.class, new RenderCannonLaser(new ModelLaser(), "green"));
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonBlueLaser.class, new RenderCannonLaser(new ModelLaser(), "blue"));
 			RenderingRegistry.registerEntityRenderingHandler(EntityCannonWhiteLaser.class, new RenderCannonLaser(new ModelLaser(), "white"));
+			RenderingRegistry.registerEntityRenderingHandler(EntityCannonEPLaser.class, new RenderCannonLaser(new ModelLaser(), "EP"));
+			RenderingRegistry.registerEntityRenderingHandler(EntityCannonBoltLaser.class, new RenderCannonLaser(new ModelLaser(), "BO"));
 		}
 	}
 

@@ -141,7 +141,7 @@ public class OEFEventCore {
         {
             OEFCore.update.notifyUpdate(event.player, Side.CLIENT);
         }
-    }
+	}
 
 
 }
