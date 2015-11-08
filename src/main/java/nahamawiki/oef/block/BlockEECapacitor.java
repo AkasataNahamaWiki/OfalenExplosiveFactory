@@ -2,6 +2,8 @@ package nahamawiki.oef.block;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
@@ -15,8 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEECapacitor extends BlockEEMachineBase {
 

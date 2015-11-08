@@ -3,7 +3,9 @@ package nahamawiki.oef.tileentity;
 import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -156,6 +158,27 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	@Override
 	public String getInventoryName() {
 		return "container.EEItemImporter";
+	}
+	
+	@Override
+	public void updateCreepered() {
+		Random rand = new Random();
+		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
+		{
+			try
+			{
+				for(Object entity : this.worldObj.loadedEntityList)
+				{
+					if(entity instanceof EntityMob)
+					{
+						EntityMob mob = (EntityMob)entity;
+						mob.getMoveHelper().setMoveTo(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
+						mob.getNavigator().tryMoveToXYZ(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
+					}
+				}
+			}
+			catch(Exception e){}
+		}
 	}
 
 }

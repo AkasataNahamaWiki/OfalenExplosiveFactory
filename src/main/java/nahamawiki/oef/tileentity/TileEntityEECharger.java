@@ -1,13 +1,16 @@
 package nahamawiki.oef.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Random;
+
 import nahamawiki.oef.util.EEUtil;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEECharger extends TileEntityEEMachineBase implements ISidedInventory {
 
@@ -66,7 +69,24 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public void updateCreepered() {
-		// TODO 匠化の実装
+		Random rand = new Random();
+		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
+		{
+			try
+			{
+				for(Object entity : this.worldObj.loadedEntityList)
+				{
+					if(entity instanceof EntityMob)
+					{
+						if(((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16)
+						{
+							((EntityMob) entity).onStruckByLightning(null);
+						}
+					}
+				}
+			}
+			catch(Exception e){}
+		}
 	}
 
 	@Override

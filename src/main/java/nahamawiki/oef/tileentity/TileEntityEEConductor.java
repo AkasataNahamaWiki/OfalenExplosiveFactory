@@ -76,7 +76,6 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
-		// TODO 匠化の実装
 	}
 
 	/** EEを蓄えているかによってメタデータを更新する。 */

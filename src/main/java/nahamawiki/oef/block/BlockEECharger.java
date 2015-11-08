@@ -3,6 +3,8 @@ package nahamawiki.oef.block;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.tileentity.TileEntityEECharger;
 import net.minecraft.block.Block;
@@ -16,8 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEECharger extends BlockEEMachineBase {
 

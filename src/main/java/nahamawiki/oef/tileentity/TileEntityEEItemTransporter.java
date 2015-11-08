@@ -3,16 +3,20 @@ package nahamawiki.oef.tileentity;
 import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -398,6 +402,31 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
 		return false;
+	}
+	
+	@Override
+	public void updateCreepered() {
+		Random rand = new Random();
+		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
+		{
+			try
+			{
+				for(Object entity : this.worldObj.loadedEntityList)
+				{
+					if(entity instanceof EntityMob)
+					{
+						if(((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16)
+						{
+							if(!((EntityMob) entity).isPotionActive(Potion.moveSpeed))
+							{
+								((EntityMob) entity).addPotionEffect(new PotionEffect(Potion.moveSpeed.id , 600 ,3));
+							}
+						}
+					}
+				}
+			}
+			catch(Exception e){}
+		}
 	}
 
 }
