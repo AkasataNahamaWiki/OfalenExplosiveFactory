@@ -159,9 +159,10 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	public String getInventoryName() {
 		return "container.EEItemImporter";
 	}
-	
+
 	@Override
 	public void updateCreepered() {
+		super.updateCreepered();
 		Random rand = new Random();
 		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
 		{
@@ -179,6 +180,11 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 			}
 			catch(Exception e){}
 		}
+	}
+	
+	protected boolean getCanSpeedUp()
+	{
+		return false;
 	}
 
 }

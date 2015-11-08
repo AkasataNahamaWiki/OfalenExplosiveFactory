@@ -403,11 +403,12 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
 		return false;
 	}
-	
+
 	@Override
 	public void updateCreepered() {
+		super.updateCreepered();
 		Random rand = new Random();
-		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
+		if(this.getCanSpeedUp() && this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
 		{
 			try
 			{
@@ -427,6 +428,11 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 			}
 			catch(Exception e){}
 		}
+	}
+	
+	protected boolean getCanSpeedUp()
+	{
+		return true;
 	}
 
 }

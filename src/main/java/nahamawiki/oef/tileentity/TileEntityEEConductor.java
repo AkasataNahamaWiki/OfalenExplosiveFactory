@@ -76,6 +76,14 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
+		for(int i = 0; i < 6; i++)
+		{
+			if(this.getNeighborMachine(i) != null && this.getNeighborMachine(i) instanceof TileEntityEEMachineBase)
+			{
+				TileEntityEEMachineBase tile = (TileEntityEEMachineBase) this.getNeighborMachine(i);
+				tile.setCreeper(true);
+			}
+		}
 	}
 
 	/** EEを蓄えているかによってメタデータを更新する。 */
