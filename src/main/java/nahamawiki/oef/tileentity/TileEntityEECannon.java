@@ -142,8 +142,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			}
 		}
 
-		if(this.getCreeper() && duration < 1)
-		{
+		if (this.getCreeper() && duration < 1) {
 			List list = this.worldObj.playerEntities;
 			if (!list.isEmpty()) {
 				for (Object entity : list) {
@@ -156,13 +155,10 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 			duration = 10;
 			Random rand = new Random();
-			if(rand.nextBoolean())
-			{
+			if (rand.nextBoolean()) {
 				EntityCannonBoltLaser laser = new EntityCannonBoltLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
-			}
-			else
-			{
+			} else {
 				EntityCannonEPLaser laser = new EntityCannonEPLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			}
@@ -216,8 +212,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		size = nbt.getInteger("Size");
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
-		if(nbt.getBoolean("isCreeper"))
-		{
+		if (nbt.getBoolean("isCreeper")) {
 			this.setCreeper(true);
 		}
 	}
@@ -232,8 +227,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		nbt.setInteger("Size", size);
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
-		if(getCreeper())
-		{
+		if (getCreeper()) {
 			nbt.setBoolean("isCreeper", getCreeper());
 		}
 	}
@@ -250,8 +244,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		}
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
-		if(getCreeper())
-		{
+		if (getCreeper()) {
 			nbt.setBoolean("isCreeper", getCreeper());
 		}
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
@@ -262,8 +255,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		NBTTagCompound nbt = pkt.func_148857_g();
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
-		if(nbt.getBoolean("isCreeper"))
-		{
+		if (nbt.getBoolean("isCreeper")) {
 			this.setCreeper(true);
 		}
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -287,17 +279,13 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
-			
-			if(this.getCreeper())
-			{
+
+			if (this.getCreeper()) {
 				Random rand = new Random();
-				if(rand.nextBoolean())
-				{
+				if (rand.nextBoolean()) {
 					EntityCannonBoltLaser laser = new EntityCannonBoltLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 					worldObj.spawnEntityInWorld(laser);
-				}
-				else
-				{
+				} else {
 					EntityCannonEPLaser laser = new EntityCannonEPLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 					worldObj.spawnEntityInWorld(laser);
 				}
@@ -340,16 +328,4 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		return prevRotationYaw;
 	}
 
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		tick++;
-		if (level < 0)
-			level = this.getLevel(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		if (capacity < 0)
-			capacity = this.getCapacity(level);
-		if (worldObj.isRemote)
-			return;
-		this.updateMachine();
-	}
 }

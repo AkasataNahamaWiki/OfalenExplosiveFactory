@@ -3,14 +3,17 @@ package nahamawiki.oef.tileentity;
 import static net.minecraft.util.Facing.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.util.EEUtil;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -76,12 +79,23 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
-		for(int i = 0; i < 6; i++)
-		{
-			if(this.getNeighborMachine(i) != null && this.getNeighborMachine(i) instanceof TileEntityEEMachineBase)
-			{
-				TileEntityEEMachineBase tile = (TileEntityEEMachineBase) this.getNeighborMachine(i);
-				tile.setCreeper(true);
+		Random random = new Random();
+		if (random.nextInt(1200) == 0) {
+			Random x = new Random();
+			int sx = MathHelper.getRandomIntegerInRange(x, -5, 5);
+			Random y = new Random();
+			int sy = 0;
+			Random z = new Random();
+			int sz = MathHelper.getRandomIntegerInRange(z, -5, 5);
+
+			EntityLightningBolt bolt = new EntityLightningBolt(worldObj, xCoord + sx, yCoord + sy, zCoord + sz);
+			worldObj.addWeatherEffect(bolt);
+			worldObj.spawnEntityInWorld(bolt);
+		}
+		for (int i = 0; i < 6; i++) {
+			ITileEntityEEMachine machine = this.getNeighborMachine(i);
+			if (machine != null && !machine.getCreeper()) {
+				machine.setCreeper(true);
 			}
 		}
 	}

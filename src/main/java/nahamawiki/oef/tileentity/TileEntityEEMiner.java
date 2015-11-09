@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.block.BlockEESurveyor;
 import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.block.Block;
@@ -21,8 +23,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInventory {
 
@@ -107,19 +107,16 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	@Override
 	public void updateCreepered() {
-		
+
 		this.isMining = true;
 		Random rand = new Random();
 		this.miningRange[0] = 10;
 		this.miningRange[1] = 10;
 		// 次の採掘までの残り時間を減らす。
-		if (coolTime > 0)
-		{
+		if (coolTime > 0) {
 			coolTime--;
-		}
-		else
-		{
-			
+		} else {
+
 			if (this.getNextBlock()) {
 				// 次に採掘するブロックの取得に成功したら、採掘する。
 				this.mineBlock();
@@ -137,22 +134,18 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 					coolTime = 10;
 				}
 			}
-			if(this.worldObj.playerEntities != null && rand.nextInt(100) == 0)
-			{
-				for(Object entity : this.worldObj.playerEntities)
-				{
-					if(entity instanceof EntityPlayer)
-					{
+			if (this.worldObj.playerEntities != null && rand.nextInt(100) == 0) {
+				for (Object entity : this.worldObj.playerEntities) {
+					if (entity instanceof EntityPlayer) {
 						EntityPlayer player = (EntityPlayer) entity;
-						if(this.isInArea(player.posX, player.posY, player.posZ))
-						{
+						if (this.isInArea(player.posX, player.posY, player.posZ)) {
 							worldObj.createExplosion(null, player.posX, player.posY, player.posZ, 1.5f, false);
 						}
 					}
 				}
 			}
 		}
-			
+
 	}
 
 	/** 測量機を探して、採掘範囲を設定する。 */
@@ -303,8 +296,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	 * @return 成功したか
 	 */
 	private boolean storeItemStack(ItemStack itemStack) {
-		if(this.getCreeper())
-		{
+		if (this.getCreeper()) {
 			return false;
 		}
 		for (int i = 0; i < 54 && itemStack != null; i++) {
@@ -348,8 +340,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	/** 引数の座標が採掘範囲に含まれているか。 */
 	private boolean isInArea(double x, double y, double z) {
-		if(!this.getCreeper())
-		{
+		if (!this.getCreeper()) {
 			if (!isMining)
 				return false;
 			x -= 0.5;
@@ -362,9 +353,7 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 				}
 			}
 			return false;
-		}
-		else
-		{
+		} else {
 			if ((xCoord < x && x < xCoord + 10) || (xCoord - 10 < x && x < xCoord)) {
 				if ((zCoord < z && z < zCoord + 10) || (zCoord - 10 < z && z < zCoord)) {
 					if (0 < y && y <= yCoord) {

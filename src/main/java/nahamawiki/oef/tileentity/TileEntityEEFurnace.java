@@ -1,5 +1,11 @@
 package nahamawiki.oef.tileentity;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -7,8 +13,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISidedInventory {
 
@@ -36,8 +40,6 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public void updateMachine() {
-		if (worldObj.isRemote)
-			return;
 		if (!this.canSmelt()) {
 			// 製錬ができないならカウントをリセットして終了。
 			if (cookTime > 0)
@@ -61,7 +63,17 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public void updateCreepered() {
-		// TODO 匠化の実装
+		List list = this.worldObj.loadedEntityList;
+		if (list.isEmpty())
+			return;
+		for (Object object : list) {
+			if (!(object instanceof EntityLivingBase) || object instanceof EntityMob)
+				continue;
+			EntityLivingBase entity = (EntityLivingBase) object;
+			if (entity.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 16 * 16 && !entity.isImmuneToFire() && !entity.isBurning()) {
+				entity.setFire(200);
+			}
+		}
 	}
 
 	/** 製錬しているかによってメタデータを更新する。 */

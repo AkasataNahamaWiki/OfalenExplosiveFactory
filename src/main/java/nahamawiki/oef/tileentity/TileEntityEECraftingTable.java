@@ -1,5 +1,7 @@
 package nahamawiki.oef.tileentity;
 
+import java.util.Random;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
@@ -61,7 +63,10 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 
 	@Override
 	public void updateCreepered() {
-		// TODO 匠化の実装
+		Random random = new Random();
+		if (random.nextInt(1200) == 0) {
+			worldObj.createExplosion(null, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, random.nextFloat() * 10, true);
+		}
 	}
 
 	/** 1回のクラフトで消費するEEの量を返す。 */
@@ -137,7 +142,8 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 		// 見本レシピの完成品をコピー。
 		ItemStack result = sampleResult.copy();
 		// アイテムの作成時の処理を行う。
-		result.onCrafting(worldObj, this.getOwner(), result.stackSize);
+		if (this.getOwner() != null)
+			result.onCrafting(worldObj, owner, result.stackSize);
 		boolean flag = false;
 		// 材料を消費する。
 		for (int i = 0; i < 9; i++) {

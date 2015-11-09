@@ -105,7 +105,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 			holdingEE = 800;
 			break;
 		default:
-			holdingEE = 0;
+			return;
 		}
 		// 送信先があるなら、EEが足りる限りループする。
 		while (list.size() > 0 && holdingEE / list.size() > 0) {
