@@ -2,8 +2,6 @@ package nahamawiki.oef.entity;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -15,6 +13,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 
@@ -187,7 +187,7 @@ public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 		if (movingobjectposition != null && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) != OEFBlockCore.EECannon) {
 			if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) == Blocks.portal) {
 				this.setInPortal();
-			} else {
+			} else if (!(movingobjectposition.entityHit instanceof EntityEngineCreeper)){
 				this.onImpact(movingobjectposition);
 			}
 		}

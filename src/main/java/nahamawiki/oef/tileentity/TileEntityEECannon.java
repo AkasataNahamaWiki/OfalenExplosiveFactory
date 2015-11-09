@@ -113,7 +113,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			this.targetEntity = null;
 		}
 
-		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null) {
+		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null && !this.getCreeper()) {
 			duration = 10;
 			NBTTagCompound localnbt = new NBTTagCompound();
 			if (color.equals("Red")) {

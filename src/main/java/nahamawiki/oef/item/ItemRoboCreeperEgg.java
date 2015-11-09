@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.entity.EntityEngineCreeper;
 import nahamawiki.oef.entity.EntityRoboCreeper;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +29,7 @@ public class ItemRoboCreeperEgg extends Item {
     // このスポーンエッグから生成されるエンティティのリスト
     public static Class[] spawnableEntities = {
             EntityRoboCreeper.class,
+            EntityEngineCreeper.class
     };
 
     public ItemRoboCreeperEgg()
@@ -140,12 +143,15 @@ public class ItemRoboCreeperEgg extends Item {
         try {
             entity = (Entity)c.getConstructor(new Class[] {World.class}).newInstance(new Object[] {par0World});
 
-            EntityRoboCreeper entityliving = (EntityRoboCreeper)entity;
+            EntityCreeper entityliving = (EntityCreeper)entity;
             entity.setLocationAndAngles(par2, par4, par6, MathHelper.wrapAngleTo180_float(par0World.rand.nextFloat() * 360.0F), 0.0F);
             entityliving.rotationYawHead = entityliving.rotationYaw;
             entityliving.renderYawOffset = entityliving.rotationYaw;
             entityliving.onSpawnWithEgg((IEntityLivingData)null);
-            entityliving.setType(new Random().nextInt(4));
+            if(entityliving instanceof EntityRoboCreeper)
+            {
+            	((EntityRoboCreeper) entityliving).setType(new Random().nextInt(4));
+            }
             par0World.spawnEntityInWorld(entity);
             entityliving.playLivingSound();
         } catch (InstantiationException e) {
@@ -169,4 +175,14 @@ public class ItemRoboCreeperEgg extends Item {
             par3.add(new ItemStack(par1, 1, i));
         }
     }
+
+    @Override
+	public int getMetadata(int meta) {
+		return meta;
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack) {
+		return this.getUnlocalizedName() + "." + itemStack.getItemDamage();
+	}
 }
