@@ -26,8 +26,25 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	}
 
 	@Override
+	public void updateCreepered() {
+		super.updateCreepered();
+		Random random = new Random();
+		if (this.worldObj.loadedEntityList == null || random.nextInt(20) != 0)
+			return;
+		try {
+			for (Object entity : this.worldObj.loadedEntityList) {
+				if (entity instanceof EntityMob) {
+					EntityMob mob = (EntityMob) entity;
+					mob.getMoveHelper().setMoveTo(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
+					mob.getNavigator().tryMoveToXYZ(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
+				}
+			}
+		} catch (Exception e) {}
+	}
+
+	@Override
 	protected IInventory getIInventory(int side) {
-		// 逆流防止のためアイテム伝導管でなければnullを返すように上書き。伝導管の搬出処理で使用される。
+		// 逆流防止のためアイテム輸送管でなければnullを返すように上書き。輸送管の搬出処理で使用される。
 		IInventory iinventory = null;
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
 		if (tileEntity != null && tileEntity instanceof TileEntityEEItemTransporter) {
@@ -45,7 +62,7 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 			// 搬入するスロットがいっぱいなら次の方向へ。
 			if (itemStacks[i] != null && itemStacks[i].stackSize >= itemStacks[i].getMaxStackSize())
 				continue;
-			// 上書きしているから伝導管のものを呼び出し。
+			// 上書きしているから輸送管のものを呼び出し。
 			IInventory iinventory = super.getIInventory(i);
 			if (iinventory == null)
 				continue;
@@ -161,29 +178,7 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 	}
 
 	@Override
-	public void updateCreepered() {
-		super.updateCreepered();
-		Random rand = new Random();
-		if(this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
-		{
-			try
-			{
-				for(Object entity : this.worldObj.loadedEntityList)
-				{
-					if(entity instanceof EntityMob)
-					{
-						EntityMob mob = (EntityMob)entity;
-						mob.getMoveHelper().setMoveTo(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
-						mob.getNavigator().tryMoveToXYZ(xCoord, yCoord, zCoord, mob.getMoveHelper().getSpeed());
-					}
-				}
-			}
-			catch(Exception e){}
-		}
-	}
-	
-	protected boolean getCanSpeedUp()
-	{
+	protected boolean getCanSpeedUp() {
 		return false;
 	}
 

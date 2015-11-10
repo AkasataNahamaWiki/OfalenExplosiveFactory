@@ -45,8 +45,6 @@ public class TileEntityEELamp extends TileEntityEEMachineBase {
 	}
 
 	@Override
-	public void updateCreepered() {
-		// TODO 匠化の実装
-	}
+	public void updateCreepered() {}
 
 }

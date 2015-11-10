@@ -81,6 +81,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void updateCreepered() {
 		Random random = new Random();
 		if (random.nextInt(1200) == 0) {
+			// 雷を落とす。
 			Random x = new Random();
 			int sx = MathHelper.getRandomIntegerInRange(x, -5, 5);
 			Random y = new Random();
@@ -92,11 +93,16 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 			worldObj.addWeatherEffect(bolt);
 			worldObj.spawnEntityInWorld(bolt);
 		}
+		// 送信先の機械を匠化する。
+		if (reciever.size() < 1)
+			return;
 		for (int i = 0; i < 6; i++) {
+			if (!reciever.contains(i))
+				continue;
 			ITileEntityEEMachine machine = this.getNeighborMachine(i);
-			if (machine != null && !machine.getCreeper()) {
-				machine.setCreeper(true);
-			}
+			if (machine == null || machine.getTier(oppositeSide[i]) < tier || machine.getCreeper())
+				continue;
+			machine.setCreeper(true);
 		}
 	}
 

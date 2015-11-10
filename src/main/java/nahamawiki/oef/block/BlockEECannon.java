@@ -31,9 +31,9 @@ public class BlockEECannon extends BlockEEMachineBase {
 		if (player.getHeldItem() != null && world.getTileEntity(x, y, z) != null) {
 			if (world.isRemote)
 				return true;
-			
+
 			TileEntityEECannon tile = (TileEntityEECannon) world.getTileEntity(x, y, z);
-			tile.setOwnPlayer(player.getDisplayName());
+			tile.setOwner(player);
 			ItemStack item = player.getHeldItem();
 			String color = "";
 

@@ -5,6 +5,8 @@ import static net.minecraft.util.Facing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,8 +28,6 @@ import takumicraft.Takumi.mobs.Entity.EntityOfalenCreeper;
 import takumicraft.Takumi.mobs.Entity.EntitySquidCreeper;
 import takumicraft.Takumi.mobs.Entity.EntityTNTCreeper;
 import takumicraft.Takumi.mobs.Entity.EntityYukariCreeper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 
@@ -90,89 +90,82 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
-		for(int i = 0; i < 6; i++)
-		{
-			if(this.getNeighborMachine(i) != null && this.getNeighborMachine(i) instanceof TileEntityEEMachineBase)
-			{
-				TileEntityEEMachineBase tile = (TileEntityEEMachineBase) this.getNeighborMachine(i);
-				tile.setCreeper(true);
+		// 送信先の機械を匠化する。
+		if (reciever.size() > 0) {
+			for (int i = 0; i < 6; i++) {
+				if (!reciever.contains(i))
+					continue;
+				ITileEntityEEMachine machine = this.getNeighborMachine(i);
+				if (sideType[i] != 1 || machine == null || machine.getCreeper())
+					continue;
+				machine.setCreeper(true);
 			}
 		}
+		// ランダムで匠をスポーンさせる。
 		Random rand = new Random();
-		if(rand.nextInt(10) == 0)
-		{
-			if(!worldObj.isRemote
-	    			&& worldObj.difficultySetting != EnumDifficulty.PEACEFUL
-	    			&& worldObj.loadedEntityList != null
-	    			&& worldObj.countEntities(EnumCreatureType.monster, false) < 750)
-	    	{
-	    		EntityLivingBase entity = EntityAttackBlock.getSpawnLiving(worldObj);
-	    		if(rand.nextInt(1000) == 0)
-	    		{
-	    			int i = rand.nextInt(5);
-	    			switch(i)
-	    			{
-	    				case 0:
-	    				{
-	    					entity = new EntityOfalenCreeper(worldObj);
-	    					break;
-	    				}
-	    				case 1:
-	    				{
-	    					entity = new EntityBoltCreeper(worldObj);
-	    					break;
-	    				}
-	    				case 2:
-	    				{
-	    					entity = new EntityGiantCreeper(worldObj);
-	    					break;
-	    				}
-	    				case 3:
-	    				{
-	    					entity = new EntityTNTCreeper(worldObj);
-	    					break;
-	    				}
-	    				case 4:
-	    				{
-	    					entity = new EntityYukariCreeper(worldObj);
-	    					break;
-	    				}
-	    			}
-	    		}
-	    		entity.onStruckByLightning(null);
-	        	int x1 = xCoord + rand.nextInt(16) - 8;
-	        	int y1 = yCoord + rand.nextInt(16) - 8;
-	        	int z1 = zCoord + rand.nextInt(16) - 8;
+		if (rand.nextInt(10) == 0) {
+			if (!worldObj.isRemote
+					&& worldObj.difficultySetting != EnumDifficulty.PEACEFUL
+					&& worldObj.loadedEntityList != null
+					&& worldObj.countEntities(EnumCreatureType.monster, false) < 750) {
+				EntityLivingBase entity = EntityAttackBlock.getSpawnLiving(worldObj);
+				if (rand.nextInt(1000) == 0) {
+					int i = rand.nextInt(5);
+					switch (i) {
+					case 0: {
+						entity = new EntityOfalenCreeper(worldObj);
+						break;
+					}
+					case 1: {
+						entity = new EntityBoltCreeper(worldObj);
+						break;
+					}
+					case 2: {
+						entity = new EntityGiantCreeper(worldObj);
+						break;
+					}
+					case 3: {
+						entity = new EntityTNTCreeper(worldObj);
+						break;
+					}
+					case 4: {
+						entity = new EntityYukariCreeper(worldObj);
+						break;
+					}
+					}
+				}
+				entity.onStruckByLightning(null);
+				int x1 = xCoord + rand.nextInt(16) - 8;
+				int y1 = yCoord + rand.nextInt(16) - 8;
+				int z1 = zCoord + rand.nextInt(16) - 8;
+				// 匠水なら、イカ匠をスポーン。
+				if (worldObj.getBlock(x1, y1, z1) == TakumiCraftCore.WaterTakumiBlock
+						&& worldObj.getBlock(x1, y1 + 1, z1) == TakumiCraftCore.WaterTakumiBlock) {
+					entity = new EntitySquidCreeper(worldObj);
+					entity.setPosition(x1, y1, z1);
+					entity.onStruckByLightning(null);
+					worldObj.spawnEntityInWorld(entity);
+				}
 
-	        	if(worldObj.getBlock(x1, y1, z1) == TakumiCraftCore.WaterTakumiBlock
-	        			&& worldObj.getBlock(x1, y1 + 1, z1) == TakumiCraftCore.WaterTakumiBlock
-	        			)
-	        	{
-	        		entity = new EntitySquidCreeper(worldObj);
-	        		entity.setPosition(x1, y1, z1);
-	        		entity.onStruckByLightning(null);
-	        		worldObj.spawnEntityInWorld(entity);
-	        	}
-
-	        	else if((worldObj.getBlock(x1, y1, z1) == Blocks.air
-	        			&& worldObj.getBlock(x1, y1 + 1, z1) == Blocks.air
-	        			&& (worldObj.getBlock(x1, y1 - 1, z1) != Blocks.air
-	        			|| worldObj.getBlock(x1, y1 - 2, z1) != Blocks.air
-	        			|| worldObj.getBlock(x1, y1 - 3, z1) != Blocks.air
-	        			|| worldObj.getBlock(x1, y1 - 4, z1) != Blocks.air))
-	        			||(worldObj.getBlock(x1, y1, z1) == TakumiCraftCore.EPBlock
-	                	&& worldObj.getBlock(x1, y1 + 1, z1) == TakumiCraftCore.EPBlock
-	               		&& (worldObj.getBlock(x1, y1 - 1, z1) != TakumiCraftCore.EPBlock
-	            		|| worldObj.getBlock(x1, y1 - 2, z1) != TakumiCraftCore.EPBlock
-	                	|| worldObj.getBlock(x1, y1 - 3, z1) != TakumiCraftCore.EPBlock
-	                	|| worldObj.getBlock(x1, y1 - 4, z1) != TakumiCraftCore.EPBlock))
-	        			)
-	        	{
-	        		entity.setPosition(x1, y1, z1);
-	        		entity.onStruckByLightning(null);
-	        		worldObj.spawnEntityInWorld(entity);
-	        	}
-	    	}
+				// 空気ブロックがあり、下に空気以外のブロックがあるならスポーン。
+				else if ((worldObj.getBlock(x1, y1, z1) == Blocks.air
+						&& worldObj.getBlock(x1, y1 + 1, z1) == Blocks.air
+						&& (worldObj.getBlock(x1, y1 - 1, z1) != Blocks.air
+								|| worldObj.getBlock(x1, y1 - 2, z1) != Blocks.air
+								|| worldObj.getBlock(x1, y1 - 3, z1) != Blocks.air
+								|| worldObj.getBlock(x1, y1 - 4, z1) != Blocks.air))
+						// もしくは、爆塵があり、下に爆塵以外のブロックがあるならスポーン。
+						|| (worldObj.getBlock(x1, y1, z1) == TakumiCraftCore.EPBlock
+								&& worldObj.getBlock(x1, y1 + 1, z1) == TakumiCraftCore.EPBlock
+								&& (worldObj.getBlock(x1, y1 - 1, z1) != TakumiCraftCore.EPBlock
+										|| worldObj.getBlock(x1, y1 - 2, z1) != TakumiCraftCore.EPBlock
+										|| worldObj.getBlock(x1, y1 - 3, z1) != TakumiCraftCore.EPBlock
+										|| worldObj.getBlock(x1, y1 - 4, z1) != TakumiCraftCore.EPBlock))) {
+					entity.setPosition(x1, y1, z1);
+					entity.onStruckByLightning(null);
+					worldObj.spawnEntityInWorld(entity);
+				}
+			}
 		}
 	}
 

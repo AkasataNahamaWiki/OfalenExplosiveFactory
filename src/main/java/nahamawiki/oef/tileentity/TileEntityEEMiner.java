@@ -107,45 +107,50 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	@Override
 	public void updateCreepered() {
-
-		this.isMining = true;
-		Random rand = new Random();
-		this.miningRange[0] = 10;
-		this.miningRange[1] = 10;
+		// 置かれた時に範囲を設定する。
+		if (!isChecked || !isMining) {
+			this.setMiningArea();
+			isChecked = true;
+		}
+		if (!isMining) {
+			this.miningRange[0] = 10;
+			this.miningRange[1] = 10;
+			isMining = true;
+		}
 		// 次の採掘までの残り時間を減らす。
-		if (coolTime > 0) {
+		if (coolTime > 0)
 			coolTime--;
-		} else {
-
-			if (this.getNextBlock()) {
-				// 次に採掘するブロックの取得に成功したら、採掘する。
-				this.mineBlock();
-				switch (level) {
-				case 0:
-					coolTime = 80;
-					break;
-				case 1:
-					coolTime = 40;
-					break;
-				case 2:
-					coolTime = 20;
-					break;
-				case 3:
-					coolTime = 10;
-				}
+		// 採掘ができる条件になっていないなら終了。
+		if (coolTime > 0)
+			return;
+		if (this.getNextBlock()) {
+			// 次に採掘するブロックの取得に成功したら、採掘する。
+			this.mineBlock();
+			switch (level) {
+			case 0:
+				coolTime = 80;
+				break;
+			case 1:
+				coolTime = 40;
+				break;
+			case 2:
+				coolTime = 20;
+				break;
+			case 3:
+				coolTime = 10;
 			}
-			if (this.worldObj.playerEntities != null && rand.nextInt(100) == 0) {
-				for (Object entity : this.worldObj.playerEntities) {
-					if (entity instanceof EntityPlayer) {
-						EntityPlayer player = (EntityPlayer) entity;
-						if (this.isInArea(player.posX, player.posY, player.posZ)) {
-							worldObj.createExplosion(null, player.posX, player.posY, player.posZ, 1.5f, false);
-						}
+		}
+		Random random = new Random();
+		if (this.worldObj.playerEntities != null && random.nextInt(100) == 0) {
+			for (Object entity : this.worldObj.playerEntities) {
+				if (entity instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) entity;
+					if (this.isInArea(player.posX, player.posY, player.posZ)) {
+						worldObj.createExplosion(null, player.posX, player.posY, player.posZ, 1.5f, false);
 					}
 				}
 			}
 		}
-
 	}
 
 	/** 測量機を探して、採掘範囲を設定する。 */

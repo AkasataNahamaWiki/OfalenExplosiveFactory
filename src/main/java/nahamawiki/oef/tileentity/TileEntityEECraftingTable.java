@@ -63,6 +63,7 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 
 	@Override
 	public void updateCreepered() {
+		// ランダムで爆発を起こす。
 		Random random = new Random();
 		if (random.nextInt(1200) == 0) {
 			worldObj.createExplosion(null, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, random.nextFloat() * 10, true);
@@ -325,10 +326,10 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 			nbt.setTag("Sample", nbt1);
 		}
 
-		if ((this.ownerName == null || this.ownerName.length() == 0) && this.owner != null) {
-			this.ownerName = this.owner.getCommandSenderName();
+		if ((ownerName == null || ownerName.length() == 0) && owner != null) {
+			ownerName = owner.getCommandSenderName();
 		}
-		nbt.setString("ownerName", this.ownerName == null ? "" : this.ownerName);
+		nbt.setString("ownerName", ownerName == null ? "" : ownerName);
 	}
 
 	@Override
@@ -374,18 +375,18 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 			sheet = ItemStack.loadItemStackFromNBT(nbt1);
 		}
 
-		this.ownerName = nbt.getString("ownerName");
-		if (this.ownerName != null && this.ownerName.length() == 0) {
-			this.ownerName = null;
+		ownerName = nbt.getString("ownerName");
+		if (ownerName != null && ownerName.length() == 0) {
+			ownerName = null;
 		}
 	}
 
-	/** 最後にGUIを開いたプレイヤーを渡す。 */
+	/** 最後にGUIを開いたプレイヤーを返す。 */
 	public EntityPlayer getOwner() {
-		if (this.owner == null && this.ownerName != null && this.ownerName.length() > 0) {
-			this.owner = this.worldObj.getPlayerEntityByName(this.ownerName);
+		if (owner == null && ownerName != null && ownerName.length() > 0) {
+			owner = worldObj.getPlayerEntityByName(ownerName);
 		}
-		return this.owner;
+		return owner;
 	}
 
 	public void setOwner(EntityPlayer player) {

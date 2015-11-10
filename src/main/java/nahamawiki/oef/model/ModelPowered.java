@@ -9,10 +9,8 @@ public class ModelPowered extends ModelBase {
 	public final ModelRenderer base2;
 	public final ModelRenderer[] block = new ModelRenderer[6];
 
-	public ModelPowered(int xoff, int yoff) {
-
+	public ModelPowered() {
 		base = new ModelRenderer(this, 0, 0);
-		base.setTextureOffset(xoff, yoff);
 		base.addBox(0F, 0F, 0F, 16, 16, 16);
 		base.setRotationPoint(-8F, -8F, -8F);
 

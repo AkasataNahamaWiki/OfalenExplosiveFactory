@@ -44,6 +44,25 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		this.sendItems();
 	}
 
+	@Override
+	public void updateCreepered() {
+		super.updateCreepered();
+		Random random = new Random();
+		if (this.getCanSpeedUp() && worldObj.loadedEntityList != null && random.nextInt(20) == 0) {
+			try {
+				for (Object entity : this.worldObj.loadedEntityList) {
+					if (entity instanceof EntityMob) {
+						if (((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16) {
+							if (!((EntityMob) entity).isPotionActive(Potion.moveSpeed)) {
+								((EntityMob) entity).addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 600, 3));
+							}
+						}
+					}
+				}
+			} catch (Exception e) {}
+		}
+	}
+
 	/** アイテムを隣接インベントリへ搬出する。 */
 	protected void sendItems() {
 		// EEが足りないなら終了。
@@ -216,6 +235,10 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 				list.remove(list.indexOf(i));
 			}
 		}
+	}
+
+	protected boolean getCanSpeedUp() {
+		return true;
 	}
 
 	@Override
@@ -402,37 +425,6 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
 		return false;
-	}
-
-	@Override
-	public void updateCreepered() {
-		super.updateCreepered();
-		Random rand = new Random();
-		if(this.getCanSpeedUp() && this.worldObj.loadedEntityList != null && rand.nextInt(20) == 0)
-		{
-			try
-			{
-				for(Object entity : this.worldObj.loadedEntityList)
-				{
-					if(entity instanceof EntityMob)
-					{
-						if(((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16)
-						{
-							if(!((EntityMob) entity).isPotionActive(Potion.moveSpeed))
-							{
-								((EntityMob) entity).addPotionEffect(new PotionEffect(Potion.moveSpeed.id , 600 ,3));
-							}
-						}
-					}
-				}
-			}
-			catch(Exception e){}
-		}
-	}
-	
-	protected boolean getCanSpeedUp()
-	{
-		return true;
 	}
 
 }

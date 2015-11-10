@@ -67,10 +67,12 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
+		// ランダムで爆発を起こす。
 		Random random = new Random();
 		if (random.nextInt(1200) == 0) {
 			worldObj.createExplosion(null, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, random.nextFloat() * 10, true);
 		}
+		// 送信先の機械を匠化する。
 		if (reciever.size() < 1)
 			return;
 		for (int i = 0; i < 6; i++) {

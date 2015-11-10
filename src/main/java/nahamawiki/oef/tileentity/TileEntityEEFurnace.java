@@ -63,6 +63,7 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public void updateCreepered() {
+		// 周囲のモブ以外のEntityを炎上させる。
 		List list = this.worldObj.loadedEntityList;
 		if (list.isEmpty())
 			return;

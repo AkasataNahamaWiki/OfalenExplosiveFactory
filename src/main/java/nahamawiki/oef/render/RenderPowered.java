@@ -1,45 +1,44 @@
 package nahamawiki.oef.render;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.model.ModelPowered;
 import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Facing;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderPowered extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation texture_armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
+	ModelPowered model = new ModelPowered();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEEMachineBase machine;
-		if (tileEntity instanceof TileEntityEEMachineBase) {
-			machine = (TileEntityEEMachineBase) tileEntity;
-		} else {
-			return;
-		}
-		int f1 = machine.tick;
-		ModelPowered model = new ModelPowered(f1, f1);
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		for (int i = 0; i < 6; i++) {
-			String name = tileEntity.getBlockType().getIcon(i , tileEntity.getBlockMetadata()).getIconName().substring(4);
+			String name = tileEntity.getBlockType().getIcon(i, tileEntity.getBlockMetadata()).getIconName().substring(4);
 			ResourceLocation textures = new ResourceLocation("oef:textures/blocks/" + name + ".png");
 			Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-			model.block[i].render(0.0625F);
+			model.block[Facing.oppositeSide[i]].render(0.0625F);
 		}
 		// model.base2.render(0.0625f);
 		GL11.glPopMatrix();
 
+		TileEntityEEMachineBase machine = null;
+		if (tileEntity instanceof TileEntityEEMachineBase) {
+			machine = (TileEntityEEMachineBase) tileEntity;
+		}
+		if (machine == null)
+			return;
 		if (machine.getCreeper()) {
+			int f1 = machine.tick;
 			GL11.glPushMatrix();
 			GL11.glDepthMask(true);
 			this.bindTexture(texture_armor);
@@ -69,4 +68,5 @@ public class RenderPowered extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 	}
+
 }

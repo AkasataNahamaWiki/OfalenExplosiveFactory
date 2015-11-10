@@ -1,6 +1,7 @@
 package nahamawiki.oef.block;
 
-import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
+import nahamawiki.oef.core.OEFItemCore;
+import nahamawiki.oef.tileentity.ITileEntityEEMachine;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -23,15 +24,26 @@ public abstract class BlockEEMachineBase extends BlockOEFBase implements ITileEn
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float posX, float posY, float posZ) {
-		if(world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof TileEntityEEMachineBase)
-		{
-			TileEntityEEMachineBase tile = (TileEntityEEMachineBase) world.getTileEntity(x, y, z);
-			if(player.getHeldItem() != null && player.getHeldItem().getItem() == TakumiCraftCore.CreeperRod)
-			{
-				tile.setCreeper(true);
+		if (player.getHeldItem() != null) {
+			int item = 0;
+			if (player.getHeldItem().getItem() == TakumiCraftCore.CreeperRod)
+				item = 1;
+			if (player.getHeldItem().isItemEqual(OEFItemCore.EEPliers))
+				item = 2;
+			if (item == 0)
+				return false;
+			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
+				ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
+				if (item == 1) {
+					machine.setCreeper(true);
+				} else if (item == 2) {
+					machine.setCreeper(false);
+				}
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -49,35 +61,26 @@ public abstract class BlockEEMachineBase extends BlockOEFBase implements ITileEn
 		return false;
 	}
 
-	/**
-     * Returns the block hardness at a location. Args: world, x, y, z
-     */
-    public float getBlockHardness(World world, int x, int y, int z)
-    {
-    	if(world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof TileEntityEEMachineBase)
-		{
-			TileEntityEEMachineBase tile = (TileEntityEEMachineBase) world.getTileEntity(x, y, z);
-			if(tile.getCreeper())
-			{
+	@Override
+	public float getBlockHardness(World world, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
+			ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
+			if (machine.getCreeper())
 				return -1;
-			}
 		}
-    	return this.blockHardness;
-    }
-    
-    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion)
-    {
-    	if(world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof TileEntityEEMachineBase)
-		{
-			TileEntityEEMachineBase tile = (TileEntityEEMachineBase) world.getTileEntity(x, y, z);
-			if(!tile.getCreeper())
-			{
-				super.onBlockExploded(world, x, y, z, explosion);
-			}
+		return this.blockHardness;
+	}
+
+	@Override
+	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity != null && tileEntity instanceof ITileEntityEEMachine) {
+			ITileEntityEEMachine machine = (ITileEntityEEMachine) tileEntity;
+			if (machine.getCreeper())
+				return;
 		}
-    	else
-    	{
-    		super.onBlockExploded(world, x, y, z, explosion);
-    	}
-    }
+		super.onBlockExploded(world, x, y, z, explosion);
+	}
+
 }

@@ -11,7 +11,6 @@ import nahamawiki.oef.entity.EntityCannonEPLaser;
 import nahamawiki.oef.entity.EntityCannonGreenLaser;
 import nahamawiki.oef.entity.EntityCannonRedLaser;
 import nahamawiki.oef.entity.EntityCannonWhiteLaser;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -25,34 +24,19 @@ import net.minecraft.util.StatCollector;
 
 public class TileEntityEECannon extends TileEntityEEMachineBase {
 
-	private int duration;
-	public String color = "";
-	private String ownName;
-	private EntityLivingBase targetEntity;
+	protected boolean isSpawning;
 	public int size;
+	protected int duration;
+	protected String color = "";
+	protected String ownerName;
+	protected EntityPlayer owner;
+	protected EntityLivingBase targetEntity;
 	/** 左右角 */
-	private float rotationYaw = 0;
-	private float prevRotationYaw;
+	protected float rotationYaw = 0;
+	protected float prevRotationYaw;
 	/** 上下角 */
-	private float rotationPitch = 0;
-	private float prevRotationPitch;
-	private boolean isSpawning;
-
-	public String getColor() {
-		return this.color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getOwnPlayer() {
-		return this.ownName;
-	}
-
-	public void setOwnPlayer(String name) {
-		this.ownName = name;
-	}
+	protected float rotationPitch = 0;
+	protected float prevRotationPitch;
 
 	@Override
 	public String[] getState() {
@@ -85,92 +69,61 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		this.prevRotationPitch = this.rotationPitch;
 		if (duration > 0)
 			duration--;
-		if (holdingEE < 1 && !getCreeper())
+		if (holdingEE < 1)
 			return;
-		EntityPlayer player = null;
-		for (Object entity : worldObj.playerEntities) {
-			if (entity instanceof EntityPlayer && ((EntityPlayer) entity).getDisplayName().equalsIgnoreCase(getOwnPlayer())) {
-				player = (EntityPlayer) entity;
-				break;
+		if (this.getOwner() == null)
+			return;
+		this.updateTarget(owner);
+		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null) {
+			this.spawnLaser(color, owner);
+			isSpawning = true;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			holdingEE -= 400;
+			duration = 10;
+			size--;
+			if (size < 1) {
+				this.setColor("");
 			}
 		}
-		if (player == null) {
-			return;
-		}
-		if (this.targetEntity == null || this.targetEntity.isDead) {
-			List list = this.worldObj.loadedEntityList;
-			Collections.sort(list, new TileEntityEECannon.Sorter(player));
-			if (!list.isEmpty()) {
-				for (Object entity : list) {
-					if (entity instanceof EntityMob) {
-						this.targetEntity = (EntityLivingBase) entity;
-						break;
-					}
+	}
+
+	@Override
+	public void updateCreepered() {
+		this.angleUpdate();
+		this.prevRotationYaw = this.rotationYaw;
+		this.prevRotationPitch = this.rotationPitch;
+		if (duration > 0)
+			duration--;
+		if (this.targetEntity == null || this.targetEntity.isDead || !(targetEntity instanceof EntityPlayer)) {
+			List list = this.worldObj.playerEntities;
+			if (list.isEmpty()) {
+				targetEntity = null;
+				return;
+			}
+			for (Object entity : list) {
+				if (entity instanceof EntityPlayer) {
+					this.targetEntity = (EntityPlayer) entity;
+					break;
 				}
 			}
 		}
 		if (this.targetEntity != null && this.targetEntity.isDead) {
 			this.targetEntity = null;
 		}
-
-		if (duration < 1 && color != null && size > 0 && holdingEE >= 400 && targetEntity != null && !this.getCreeper()) {
+		if (duration < 1 && targetEntity != null) {
 			duration = 10;
-			NBTTagCompound localnbt = new NBTTagCompound();
-			if (color.equals("Red")) {
-				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
-					worldObj.spawnEntityInWorld(laser);
-				}
-			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
-			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
-			} else if (color.equals("White")) {
-				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
-					worldObj.spawnEntityInWorld(laser);
-				}
-			}
-			isSpawning = true;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			this.size--;
-			holdingEE -= 400;
-			if (size < 1) {
-				this.setColor("");
-			}
-		}
-
-		if (this.getCreeper() && duration < 1) {
-			List list = this.worldObj.playerEntities;
-			if (!list.isEmpty()) {
-				for (Object entity : list) {
-					if (entity instanceof EntityPlayer) {
-						this.targetEntity = (EntityPlayer) entity;
-						break;
-					}
-				}
-			}
-
-			duration = 10;
-			Random rand = new Random();
-			if (rand.nextBoolean()) {
-				EntityCannonBoltLaser laser = new EntityCannonBoltLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			Random random = new Random();
+			if (random.nextBoolean()) {
+				EntityCannonBoltLaser laser = new EntityCannonBoltLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			} else {
-				EntityCannonEPLaser laser = new EntityCannonEPLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+				EntityCannonEPLaser laser = new EntityCannonEPLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 				worldObj.spawnEntityInWorld(laser);
 			}
 
 			isSpawning = true;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
-	}
-
-	@Override
-	public void updateCreepered() {
-		// TODO 匠化の実装
 	}
 
 	protected void angleUpdate() {
@@ -190,30 +143,52 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	private float updateRotation(float par1, float par2, float par3) {
 		float f3 = MathHelper.wrapAngleTo180_float(par2 - par1);
-
 		if (f3 > par3) {
 			f3 = -par3;
 		}
-
 		if (f3 < -par3) {
 			f3 = par3;
 		}
-
 		return par1 + f3;
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		this.setColor(nbt.getString("Color"));
-		if (nbt.hasKey("Player"))
-			this.setOwnPlayer(nbt.getString("Player"));
-		duration = nbt.getInteger("Duration");
-		size = nbt.getInteger("Size");
-		rotationYaw = nbt.getFloat("rotationYaw");
-		rotationPitch = nbt.getFloat("rotationPitch");
-		if (nbt.getBoolean("isCreeper")) {
-			this.setCreeper(true);
+	private void updateTarget(EntityPlayer player) {
+		if (this.targetEntity == null || this.targetEntity.isDead) {
+			List list = this.worldObj.loadedEntityList;
+			Collections.sort(list, new TileEntityEECannon.Sorter(player));
+			if (!list.isEmpty()) {
+				for (Object entity : list) {
+					if (entity instanceof EntityMob) {
+						this.targetEntity = (EntityLivingBase) entity;
+						break;
+					}
+				}
+			}
+		}
+		if (this.targetEntity != null && this.targetEntity.isDead) {
+			this.targetEntity = null;
+		}
+	}
+
+	protected void spawnLaser(String color, EntityPlayer player) {
+		if (owner == null)
+			return;
+		if (color.equals("Red")) {
+			for (int i = -2; i < 3; i++) {
+				EntityCannonRedLaser laser = new EntityCannonRedLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
+				worldObj.spawnEntityInWorld(laser);
+			}
+		} else if (color.equals("Green")) {
+			EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			worldObj.spawnEntityInWorld(laser);
+		} else if (color.equals("Blue")) {
+			EntityCannonBlueLaser laser = new EntityCannonBlueLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			worldObj.spawnEntityInWorld(laser);
+		} else if (color.equals("White")) {
+			for (int i = -2; i < 3; i++) {
+				EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
+				worldObj.spawnEntityInWorld(laser);
+			}
 		}
 	}
 
@@ -221,14 +196,27 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setString("Color", this.getColor());
-		if (this.getOwnPlayer() != null)
-			nbt.setString("Player", this.getOwnPlayer());
 		nbt.setInteger("Duration", duration);
 		nbt.setInteger("Size", size);
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
-		if (getCreeper()) {
-			nbt.setBoolean("isCreeper", getCreeper());
+		if ((ownerName == null || ownerName.length() == 0) && owner != null) {
+			ownerName = owner.getCommandSenderName();
+		}
+		nbt.setString("ownerName", ownerName == null ? "" : ownerName);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.setColor(nbt.getString("Color"));
+		duration = nbt.getInteger("Duration");
+		size = nbt.getInteger("Size");
+		rotationYaw = nbt.getFloat("rotationYaw");
+		rotationPitch = nbt.getFloat("rotationPitch");
+		ownerName = nbt.getString("ownerName");
+		if (ownerName != null && ownerName.length() == 0) {
+			ownerName = null;
 		}
 	}
 
@@ -239,14 +227,16 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			nbt.setBoolean("isSpawning", true);
 			nbt.setString("color", color);
 			isSpawning = false;
-		} else {
-			nbt.setBoolean("isSpawning", false);
+			if (this.getCreeper()) {
+				nbt.setBoolean("isCreeper", true);
+			}
+			if ((ownerName == null || ownerName.length() == 0) && owner != null) {
+				ownerName = owner.getCommandSenderName();
+			}
+			nbt.setString("ownerName", ownerName == null ? "" : ownerName);
 		}
 		nbt.setFloat("rotationYaw", rotationYaw);
 		nbt.setFloat("rotationPitch", rotationPitch);
-		if (getCreeper()) {
-			nbt.setBoolean("isCreeper", getCreeper());
-		}
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
@@ -255,42 +245,43 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		NBTTagCompound nbt = pkt.func_148857_g();
 		rotationYaw = nbt.getFloat("rotationYaw");
 		rotationPitch = nbt.getFloat("rotationPitch");
-		if (nbt.getBoolean("isCreeper")) {
-			this.setCreeper(true);
+		ownerName = nbt.getString("ownerName");
+		if (ownerName != null && ownerName.length() == 0) {
+			ownerName = null;
 		}
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if (nbt.getBoolean("isSpawning")) {
-			color = nbt.getString("color");
-
-			if (color.equals("Red")) {
-				for (int i = -2; i < 3; i++) {
-					EntityCannonRedLaser laser = new EntityCannonRedLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
-					worldObj.spawnEntityInWorld(laser);
-				}
-			} else if (color.equals("Green")) {
-				EntityCannonGreenLaser laser = new EntityCannonGreenLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
-			} else if (color.equals("Blue")) {
-				EntityCannonBlueLaser laser = new EntityCannonBlueLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
-			} else if (color.equals("White")) {
-				for (int i = -2; i < 3; i++) {
-					EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
-					worldObj.spawnEntityInWorld(laser);
-				}
-			}
-
-			if (this.getCreeper()) {
-				Random rand = new Random();
-				if (rand.nextBoolean()) {
-					EntityCannonBoltLaser laser = new EntityCannonBoltLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			if (!nbt.getBoolean("isCreeper")) {
+				this.spawnLaser(nbt.getString("color"), this.getOwner());
+			} else {
+				Random random = new Random();
+				if (random.nextBoolean()) {
+					EntityCannonBoltLaser laser = new EntityCannonBoltLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 					worldObj.spawnEntityInWorld(laser);
 				} else {
-					EntityCannonEPLaser laser = new EntityCannonEPLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+					EntityCannonEPLaser laser = new EntityCannonEPLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
 					worldObj.spawnEntityInWorld(laser);
 				}
 			}
 		}
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public EntityPlayer getOwner() {
+		if (owner == null && ownerName != null && ownerName.length() > 0) {
+			owner = worldObj.getPlayerEntityByName(ownerName);
+		}
+		return owner;
+	}
+
+	public void setOwner(EntityPlayer player) {
+		owner = player;
 	}
 
 	public static class Sorter implements Comparator {
