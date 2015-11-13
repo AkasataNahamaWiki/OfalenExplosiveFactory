@@ -175,7 +175,7 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setShort("cookTime", cookTime);
+		nbt.setShort("CookTime", cookTime);
 		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < itemStacks.length; ++i) {
 			if (itemStacks[i] != null) {
@@ -191,7 +191,7 @@ public class TileEntityEEFurnace extends TileEntityEEMachineBase implements ISid
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		cookTime = nbt.getShort("cookTime");
+		cookTime = nbt.getShort("CookTime");
 		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
 		itemStacks = new ItemStack[this.getSizeInventory()];
 		for (int i = 0; i < nbttaglist.tagCount(); i++) {

@@ -244,15 +244,15 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setByteArray("nextSide", nextSide);
-		nbt.setIntArray("coolTime", coolTime);
+		nbt.setByteArray("NextSide", nextSide);
+		nbt.setIntArray("CoolTime", coolTime);
 
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < recieverI.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), recieverI.get(i));
 		}
-		nbt.setByte("recieverISize", (byte) recieverI.size());
-		nbt.setTag("recieverI", localnbt);
+		nbt.setByte("RecieverISize", (byte) recieverI.size());
+		nbt.setTag("RecieverI", localnbt);
 
 		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < itemStacks.length; ++i) {
@@ -269,12 +269,12 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		nextSide = nbt.getByteArray("nextSide");
-		coolTime = nbt.getIntArray("coolTime");
+		nextSide = nbt.getByteArray("NextSide");
+		coolTime = nbt.getIntArray("CoolTime");
 
 		recieverI.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("recieverI");
-		for (int i = 0; i < nbt.getByte("recieverISize"); i++) {
+		NBTTagCompound localnbt = nbt.getCompoundTag("RecieverI");
+		for (int i = 0; i < nbt.getByte("RecieverISize"); i++) {
 			recieverI.add(localnbt.getInteger(String.valueOf(i)));
 		}
 

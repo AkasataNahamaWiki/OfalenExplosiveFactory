@@ -1,3 +1,3 @@
 package nahamawiki.oef.item;
 
-public interface IItemEEBatteryTool{}
+public interface IItemEEBatteryTool {}

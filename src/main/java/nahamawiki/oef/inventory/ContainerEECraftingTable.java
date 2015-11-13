@@ -94,15 +94,18 @@ public class ContainerEECraftingTable extends Container {
 			itemStack = itemStack1.copy();
 
 			if ((0 <= slotNumber && slotNumber < 18) || slotNumber == 28) {
+				// 材料・完成品・レシピシートなら、インベントリに移動。
 				if (!this.mergeItemStack(itemStack1, 29, 65, true)) {
 					return null;
 				}
 			} else if (!(18 <= slotNumber && slotNumber < 28)) {
+				// インベントリ内の場合。
 				boolean flag = false;
 				for (int i = 0; i < 9; i++) {
 					if (tileEntity.getStackInSlot(i + 18) == null)
 						continue;
 					if (itemStack1.isItemEqual(tileEntity.getStackInSlot(i + 18))) {
+						// 材料なら材料スロットに移動。
 						if (!this.mergeItemStack(itemStack1, i, i + 1, false)) {
 							return null;
 						}
@@ -112,14 +115,17 @@ public class ContainerEECraftingTable extends Container {
 				}
 				if (!flag) {
 					if (itemStack1.getItem() == OEFItemCore.recipeSheet) {
+						// レシピシートならレシピシートスロットに移動。
 						if (!this.mergeItemStack(itemStack1, 28, 29, false)) {
 							return null;
 						}
 					} else if (29 <= slotNumber && slotNumber < 56) {
+						// インベントリならクックスロットに移動。
 						if (!this.mergeItemStack(itemStack1, 56, 65, false)) {
 							return null;
 						}
 					} else if (56 <= slotNumber && slotNumber < 65 && !this.mergeItemStack(itemStack1, 29, 56, false)) {
+						// クイックスロットならインベントリに移動。
 						return null;
 					}
 				}
@@ -144,6 +150,7 @@ public class ContainerEECraftingTable extends Container {
 	public ItemStack slotClick(int slot, int par2, int par3, EntityPlayer player) {
 		ItemStack itemStack = super.slotClick(slot, par2, par3, player);
 		if (18 <= slot && slot < 27) {
+			// 見本レシピのスロットをクリックしたなら、スロットを書き換えてレシピを読み込む。
 			ItemStack itemStack1 = player.inventory.getItemStack();
 			if (itemStack1 != null) {
 				ItemStack itemStack2 = new ItemStack(itemStack1.getItem(), 1, itemStack1.getItemDamage());

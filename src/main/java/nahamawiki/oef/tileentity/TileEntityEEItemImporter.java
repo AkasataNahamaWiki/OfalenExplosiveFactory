@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 
-	/** インベントリもちのTileEntityがある方向のリスト。(伝導管以外) */
+	/** インベントリもちのTileEntityがある方向のリスト。(輸送管以外) */
 	protected ArrayList<Integer> inventory = new ArrayList<Integer>();
 
 	@Override
@@ -125,8 +125,8 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 		for (int i = 0; i < inventory.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), inventory.get(i));
 		}
-		nbt.setByte("inventorySize", (byte) recieverI.size());
-		nbt.setTag("inventory", localnbt);
+		nbt.setByte("InventorySize", (byte) recieverI.size());
+		nbt.setTag("Inventory", localnbt);
 	}
 
 	@Override
@@ -134,8 +134,8 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 		super.readFromNBT(nbt);
 
 		inventory.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("inventory");
-		for (int i = 0; i < nbt.getByte("inventorySize"); i++) {
+		NBTTagCompound localnbt = nbt.getCompoundTag("Inventory");
+		for (int i = 0; i < nbt.getByte("InventorySize"); i++) {
 			inventory.add(localnbt.getInteger(String.valueOf(i)));
 		}
 	}
@@ -158,7 +158,7 @@ public class TileEntityEEItemImporter extends TileEntityEEItemTransporter {
 				}
 				TileEntity tileEntity = world.getTileEntity(x + offsetsXForSide[i], y + offsetsYForSide[i], z + offsetsZForSide[i]);
 				if (tileEntity != null && tileEntity instanceof IInventory) {
-					// インベントリもちで、伝導管以外なら搬入元リストに登録。
+					// インベントリもちで、輸送管以外なら搬入元リストに登録。
 					if (!(tileEntity instanceof TileEntityEEItemTransporter)) {
 						inventory.add(i);
 					}

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import nahamawiki.oef.model.ModelBlock;
 import nahamawiki.oef.model.ModelPowered;
 import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
@@ -16,7 +17,9 @@ import net.minecraft.util.ResourceLocation;
 public class RenderPowered extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation texture_armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-	ModelPowered model = new ModelPowered();
+	private final ModelBlock model = new ModelBlock();
+	private ModelPowered powered = new ModelPowered(0, 0);
+	private int lastTick;
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
@@ -31,14 +34,18 @@ public class RenderPowered extends TileEntitySpecialRenderer {
 		// model.base2.render(0.0625f);
 		GL11.glPopMatrix();
 
-		TileEntityEEMachineBase machine = null;
+		TileEntityEEMachineBase machine;
 		if (tileEntity instanceof TileEntityEEMachineBase) {
 			machine = (TileEntityEEMachineBase) tileEntity;
-		}
-		if (machine == null)
+		} else {
 			return;
+		}
 		if (machine.getCreeper()) {
 			int f1 = machine.tick;
+			if (f1 != lastTick) {
+				lastTick = f1;
+				powered = new ModelPowered(f1, f1);
+			}
 			GL11.glPushMatrix();
 			GL11.glDepthMask(true);
 			this.bindTexture(texture_armor);
@@ -61,7 +68,7 @@ public class RenderPowered extends TileEntitySpecialRenderer {
 			Minecraft.getMinecraft().renderEngine.bindTexture(texture_armor);
 
 			// model.render((Entity) null, 0, 0, 0, f2, f3, 0.0625F);
-			model.base.render(0.0625f);
+			powered.base.render(0.0625f);
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_BLEND);

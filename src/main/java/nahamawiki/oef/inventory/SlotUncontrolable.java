@@ -13,11 +13,13 @@ public class SlotUncontrolable extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack itemStack) {
+		// アイテムを置けないようにする。
 		return false;
 	}
 
 	@Override
 	public boolean canTakeStack(EntityPlayer player) {
+		// アイテムを取り出せないようにする。
 		return false;
 	}
 

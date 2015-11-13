@@ -1,5 +1,7 @@
 package nahamawiki.oef.item.armor;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import net.minecraft.entity.Entity;
@@ -12,10 +14,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import takumicraft.Takumi.Potion.CreeperPotion;
 import takumicraft.Takumi.enchantment.TEnchantment;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class EEArmor extends ItemArmor{
+public class EEArmor extends ItemArmor {
 
 	private IIcon overlayIcon;
 	private int slotNo;
@@ -46,15 +46,13 @@ public class EEArmor extends ItemArmor{
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
 
-		if(player.isPotionActive(CreeperPotion.exp.id))
-		{
+		if (player.isPotionActive(CreeperPotion.exp.id)) {
 			player.removePotionEffect(CreeperPotion.exp.id);
 		}
 
-		 if(itemStack.isItemEnchanted()==false)
-			{
-			 	itemStack.addEnchantment(TEnchantment.enchantmentPE, 10);
-			}
+		if (itemStack.isItemEnchanted() == false) {
+			itemStack.addEnchantment(TEnchantment.enchantmentPE, 10);
+		}
 
 		player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 400, 0));
 		// ヘルメット
@@ -77,35 +75,27 @@ public class EEArmor extends ItemArmor{
 			player.addPotionEffect(new PotionEffect(Potion.jump.id, 10, 2));
 		}
 
-		if(!world.isRemote && player.getCurrentArmor(0) != null && player.getCurrentArmor(1) != null &&
-				player.getCurrentArmor(2) != null && player.getCurrentArmor(3) != null)
-		{
-				boolean flg = true;
-            	if(player.worldObj.loadedEntityList != null)
-            	{
-            		for(Object entity : player.worldObj.loadedEntityList)
-            		{
-            			if(entity instanceof EntityPoweredArmor)
-            			{
+		if (!world.isRemote && player.getCurrentArmor(0) != null && player.getCurrentArmor(1) != null &&
+				player.getCurrentArmor(2) != null && player.getCurrentArmor(3) != null) {
+			boolean flg = true;
+			if (player.worldObj.loadedEntityList != null) {
+				for (Object entity : player.worldObj.loadedEntityList) {
+					if (entity instanceof EntityPoweredArmor) {
 
-            				if(((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getDisplayName()))
-            				{
-            					flg = false;
-            					((EntityPoweredArmor) entity).setOwnerName(player.getDisplayName());
-            				}
-            				else
-            				{
-            					((EntityPoweredArmor) entity).setDead();
-            				}
-            			}
-            		}
-            		if(flg)
-            		{
-            			EntityPoweredArmor armor = new EntityPoweredArmor(player.worldObj , player);
-            			armor.setPosition(player.posX, player.posY, player.posZ);
-            			player.worldObj.spawnEntityInWorld(armor);
-            		}
-            	}
+						if (((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getDisplayName())) {
+							flg = false;
+							((EntityPoweredArmor) entity).setOwnerName(player.getDisplayName());
+						} else {
+							((EntityPoweredArmor) entity).setDead();
+						}
+					}
+				}
+				if (flg) {
+					EntityPoweredArmor armor = new EntityPoweredArmor(player.worldObj, player);
+					armor.setPosition(player.posX, player.posY, player.posZ);
+					player.worldObj.spawnEntityInWorld(armor);
+				}
+			}
 		}
 	}
 
@@ -114,17 +104,14 @@ public class EEArmor extends ItemArmor{
 	}
 
 	@Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld)
-	{
-       if(itemStack.isItemEnchanted()==false)
-		{
+	public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean isHeld) {
+		if (itemStack.isItemEnchanted() == false) {
 			itemStack.addEnchantment(TEnchantment.enchantmentPE, 10);
 		}
 	}
 
 	@Override
-    public void onCreated(ItemStack itemStack, World p_77622_2_, EntityPlayer p_77622_3_)
-	{
+	public void onCreated(ItemStack itemStack, World p_77622_2_, EntityPlayer p_77622_3_) {
 		itemStack.addEnchantment(TEnchantment.enchantmentPE, 10);
 	}
 

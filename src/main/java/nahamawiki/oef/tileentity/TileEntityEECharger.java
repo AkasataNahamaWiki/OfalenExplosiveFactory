@@ -15,7 +15,6 @@ import net.minecraft.util.StatCollector;
 public class TileEntityEECharger extends TileEntityEEMachineBase implements ISidedInventory {
 
 	public int coolTime;
-	private int capacity = -1;
 	protected ItemStack battery;
 	protected boolean isCharging;
 
@@ -86,17 +85,17 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("coolTime", coolTime);
+		nbt.setInteger("CoolTime", coolTime);
 		if (battery != null)
-			nbt.setTag("battery", battery.writeToNBT(new NBTTagCompound()));
+			nbt.setTag("Battery", battery.writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		coolTime = nbt.getInteger("coolTime");
-		if (nbt.getTag("battery") != null && nbt.getTag("battery") instanceof NBTTagCompound)
-			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("battery"));
+		coolTime = nbt.getInteger("CoolTime");
+		if (nbt.getTag("Battery") != null && nbt.getTag("Battery") instanceof NBTTagCompound)
+			battery = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("Battery"));
 	}
 
 	public boolean isCharging() {

@@ -2,6 +2,8 @@ package nahamawiki.oef.entity;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFBlockCore;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -13,10 +15,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class EntityCannonLaser extends Entity /* implements IProjectile */ {
+public class EntityCannonLaser extends Entity {
 
 	protected int xTile = -1;
 	protected int yTile = -1;
@@ -187,7 +187,7 @@ public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 		if (movingobjectposition != null && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) != OEFBlockCore.EECannon) {
 			if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.worldObj.getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) == Blocks.portal) {
 				this.setInPortal();
-			} else if (!(movingobjectposition.entityHit instanceof EntityEngineCreeper)){
+			} else if (!(movingobjectposition.entityHit instanceof EntityEngineCreeper)) {
 				this.onImpact(movingobjectposition);
 			}
 		}
@@ -248,29 +248,29 @@ public class EntityCannonLaser extends Entity /* implements IProjectile */ {
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
-		nbt.setShort("xTile", (short) this.xTile);
-		nbt.setShort("yTile", (short) this.yTile);
-		nbt.setShort("zTile", (short) this.zTile);
-		nbt.setByte("inTile", (byte) Block.getIdFromBlock(this.inBlock));
-		nbt.setByte("shake", (byte) this.throwableShake);
-		nbt.setByte("inGround", (byte) (this.inGround ? 1 : 0));
+		nbt.setShort("XTile", (short) this.xTile);
+		nbt.setShort("YTile", (short) this.yTile);
+		nbt.setShort("ZTile", (short) this.zTile);
+		nbt.setByte("InTile", (byte) Block.getIdFromBlock(this.inBlock));
+		nbt.setByte("Shake", (byte) this.throwableShake);
+		nbt.setByte("InGround", (byte) (this.inGround ? 1 : 0));
 
 		if ((this.throwerName == null || this.throwerName.length() == 0) && this.thrower != null && this.thrower instanceof EntityPlayer) {
 			this.throwerName = this.thrower.getCommandSenderName();
 		}
 
-		nbt.setString("ownerName", this.throwerName == null ? "" : this.throwerName);
+		nbt.setString("OwnerName", this.throwerName == null ? "" : this.throwerName);
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
-		this.xTile = nbt.getShort("xTile");
-		this.yTile = nbt.getShort("yTile");
-		this.zTile = nbt.getShort("zTile");
-		this.inBlock = Block.getBlockById(nbt.getByte("inTile") & 255);
-		this.throwableShake = nbt.getByte("shake") & 255;
-		this.inGround = nbt.getByte("inGround") == 1;
-		this.throwerName = nbt.getString("ownerName");
+		this.xTile = nbt.getShort("XTile");
+		this.yTile = nbt.getShort("YTile");
+		this.zTile = nbt.getShort("ZTile");
+		this.inBlock = Block.getBlockById(nbt.getByte("InTile") & 255);
+		this.throwableShake = nbt.getByte("Shake") & 255;
+		this.inGround = nbt.getByte("InGround") == 1;
+		this.throwerName = nbt.getString("OwnerName");
 
 		if (this.throwerName != null && this.throwerName.length() == 0) {
 			this.throwerName = null;

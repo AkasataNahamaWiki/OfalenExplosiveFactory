@@ -16,11 +16,13 @@ public class ModelEEConductor extends ModelBase {
 	public ModelRenderer back;
 	public ModelRenderer front;
 
-	public ModelEEConductor() {
+	public ModelEEConductor(int x, int y, boolean flag) {
 		textureWidth = 64;
 		textureHeight = 32;
 
 		core = new ModelRenderer(this, 0, 0);
+		if (flag)
+			core.setTextureOffset(x, y);
 		core.addBox(0F, 0F, 0F, 8, 8, 8);
 		core.setRotationPoint(-4F, -4F, -4F);
 		core.setTextureSize(64, 32);
@@ -28,6 +30,8 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(core, 0F, 0F, 0F);
 
 		down = new ModelRenderer(this, 32, 0);
+		if (flag)
+			down.setTextureOffset(x, y);
 		down.addBox(0F, 0F, 0F, 8, 12, 8);
 		down.setRotationPoint(-4F, 4F, -4F);
 		down.setTextureSize(64, 32);
@@ -35,6 +39,8 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(down, 0F, 0F, 0F);
 
 		up = new ModelRenderer(this, 32, 0);
+		if (flag)
+			up.setTextureOffset(x, y);
 		up.addBox(0F, 0F, 0F, 8, 12, 8);
 		up.setRotationPoint(-4F, -16F, -4F);
 		up.setTextureSize(64, 32);
@@ -42,6 +48,8 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(up, 0F, 0F, 0F);
 
 		right = new ModelRenderer(this, 32, 0);
+		if (flag)
+			right.setTextureOffset(x, y);
 		right.addBox(0F, 0F, 0F, 8, 12, 8);
 		right.setRotationPoint(-4F, -4F, -4F);
 		right.setTextureSize(64, 32);
@@ -49,6 +57,8 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(right, 0F, 0F, 1.570796F);
 
 		left = new ModelRenderer(this, 32, 0);
+		if (flag)
+			left.setTextureOffset(x, y);
 		left.addBox(0F, 0F, 0F, 8, 12, 8);
 		left.setRotationPoint(4F, 4F, -4F);
 		left.setTextureSize(64, 32);
@@ -56,6 +66,8 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(left, 0F, 0F, -1.570796F);
 
 		back = new ModelRenderer(this, 32, 0);
+		if (flag)
+			back.setTextureOffset(x, y);
 		back.addBox(0F, 0F, 0F, 8, 12, 8);
 		back.setRotationPoint(-4F, 4F, 4F);
 		back.setTextureSize(64, 32);
@@ -63,21 +75,13 @@ public class ModelEEConductor extends ModelBase {
 		setRotation(back, 1.570796F, 0F, 0F);
 
 		front = new ModelRenderer(this, 32, 0);
+		if (flag)
+			front.setTextureOffset(x, y);
 		front.addBox(0F, 0F, 0F, 8, 12, 8);
 		front.setRotationPoint(-4F, -4F, -4F);
 		front.setTextureSize(64, 32);
 		front.mirror = true;
 		setRotation(front, -1.570796F, 0F, 0F);
-	}
-
-	public void setOffset(int x, int y) {
-		core.setTextureOffset(x, y);
-		down.setTextureOffset(x, y);
-		up.setTextureOffset(x, y);
-		right.setTextureOffset(x, y);
-		left.setTextureOffset(x, y);
-		back.setTextureOffset(x, y);
-		front.setTextureOffset(x, y);
 	}
 
 	@Override

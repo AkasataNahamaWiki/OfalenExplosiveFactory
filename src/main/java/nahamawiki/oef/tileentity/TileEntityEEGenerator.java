@@ -154,8 +154,8 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		for (int i = 0; i < reciever.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), reciever.get(i));
 		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
+		nbt.setInteger("RecieverSize", reciever.size());
+		nbt.setTag("Reciever", localnbt);
 	}
 
 	@Override
@@ -163,8 +163,8 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		super.readFromNBT(nbt);
 
 		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+		NBTTagCompound localnbt = nbt.getCompoundTag("Reciever");
+		for (int i = 0; i < nbt.getInteger("RecieverSize"); i++) {
 			reciever.add(localnbt.getInteger(String.valueOf(i)));
 		}
 	}

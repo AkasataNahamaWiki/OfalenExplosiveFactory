@@ -373,12 +373,12 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setBoolean("isChecked", isChecked);
-		nbt.setBoolean("isMining", isMining);
-		nbt.setBoolean("isFinished", isFinished);
-		nbt.setInteger("coolTime", coolTime);
-		nbt.setIntArray("miningCoord", miningCoord);
-		nbt.setIntArray("miningRange", miningRange);
+		nbt.setBoolean("IsChecked", isChecked);
+		nbt.setBoolean("IsMining", isMining);
+		nbt.setBoolean("IsFinished", isFinished);
+		nbt.setInteger("CoolTime", coolTime);
+		nbt.setIntArray("MiningCoord", miningCoord);
+		nbt.setIntArray("MiningRange", miningRange);
 		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < itemStacks.length; ++i) {
 			if (itemStacks[i] != null) {
@@ -394,12 +394,12 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		isChecked = nbt.getBoolean("isChecked");
-		isMining = nbt.getBoolean("isMining");
-		isFinished = nbt.getBoolean("isFinished");
-		coolTime = nbt.getInteger("coolTime");
-		miningCoord = nbt.getIntArray("miningCoord");
-		miningRange = nbt.getIntArray("miningRange");
+		isChecked = nbt.getBoolean("IsChecked");
+		isMining = nbt.getBoolean("IsMining");
+		isFinished = nbt.getBoolean("IsFinished");
+		coolTime = nbt.getInteger("CoolTime");
+		miningCoord = nbt.getIntArray("MiningCoord");
+		miningRange = nbt.getIntArray("MiningRange");
 		NBTTagList nbttaglist = nbt.getTagList("Items", 10);
 		itemStacks = new ItemStack[this.getSizeInventory()];
 		for (int i = 0; i < nbttaglist.tagCount(); i++) {
@@ -427,18 +427,20 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("isSpawning", isSpawning);
-		nbt.setBoolean("isMining", isMining);
-		nbt.setIntArray("miningRange", miningRange);
+		nbt.setBoolean("IsSpawning", isSpawning);
+		nbt.setBoolean("IsMining", isMining);
+		nbt.setIntArray("MiningRange", miningRange);
+		nbt.setBoolean("IsCreeper", isCreeper);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
-		isSpawning = nbt.getBoolean("isSpawning");
-		isMining = nbt.getBoolean("isMining");
-		miningRange = nbt.getIntArray("miningRange");
+		isSpawning = nbt.getBoolean("IsSpawning");
+		isMining = nbt.getBoolean("IsMining");
+		miningRange = nbt.getIntArray("MiningRange");
+		isCreeper = nbt.getBoolean("IsCreeper");
 		// this.spawnParticles();
 	}
 

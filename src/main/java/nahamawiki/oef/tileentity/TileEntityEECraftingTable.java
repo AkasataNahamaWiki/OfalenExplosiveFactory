@@ -329,7 +329,7 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 		if ((ownerName == null || ownerName.length() == 0) && owner != null) {
 			ownerName = owner.getCommandSenderName();
 		}
-		nbt.setString("ownerName", ownerName == null ? "" : ownerName);
+		nbt.setString("OwnerName", ownerName == null ? "" : ownerName);
 	}
 
 	@Override
@@ -375,7 +375,7 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 			sheet = ItemStack.loadItemStackFromNBT(nbt1);
 		}
 
-		ownerName = nbt.getString("ownerName");
+		ownerName = nbt.getString("OwnerName");
 		if (ownerName != null && ownerName.length() == 0) {
 			ownerName = null;
 		}

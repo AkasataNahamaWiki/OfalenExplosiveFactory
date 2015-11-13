@@ -1,6 +1,5 @@
 package nahamawiki.oef.block;
 
-import java.util.List;
 import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
@@ -9,9 +8,6 @@ import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
@@ -31,6 +27,7 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 		return new TileEntityEEGenerator();
 	}
 
+	/** 周囲のブロックが更新された時の処理。 */
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
@@ -38,6 +35,7 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 			((TileEntityEEGenerator) tileEntity).updateDirection(world, x, y, z);
 	}
 
+	/** ブロックが追加された時の処理。 */
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
@@ -45,6 +43,7 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 			((TileEntityEEGenerator) tileEntity).updateDirection(world, x, y, z);
 	}
 
+	/** 爆破時にドロップするかどうかを返す。 */
 	@Override
 	public boolean canDropFromExplosion(Explosion explosion) {
 		return false;
@@ -57,8 +56,10 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 		this.onBlockDestroyedByExplosion(world, x, y, z, explosion);
 	}
 
+	/** ブロックが更新された時の処理。 */
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random random) {
+		// 爆破から40tick後に呼ばれる。
 		world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 3, 2);
 		world.notifyBlocksOfNeighborChange(x, y, z, OEFBlockCore.EEGenerator);
 	}
@@ -68,6 +69,7 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 		return 41;
 	}
 
+	/** ブロックのテクスチャを登録する処理。 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister register) {
@@ -76,23 +78,11 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 		}
 	}
 
+	/** ブロックのテクスチャを返す。 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		return iicon[meta & 7];
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs creativeTab, List list) {
-		for (int i = 0; i < 4; i++) {
-			list.add(new ItemStack(item, 1, i));
-		}
-	}
-
-	@Override
-	public int damageDropped(int meta) {
-		return meta & 3;
 	}
 
 }

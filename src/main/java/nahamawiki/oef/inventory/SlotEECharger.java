@@ -6,12 +6,13 @@ import net.minecraft.item.ItemStack;
 
 public class SlotEECharger extends Slot {
 
-	public SlotEECharger(IInventory iInventory, int index, int x, int y) {
-		super(iInventory, index, x, y);
+	public SlotEECharger(IInventory iinventory, int index, int x, int y) {
+		super(iinventory, index, x, y);
 	}
 
 	@Override
 	public boolean isItemValid(ItemStack itemStack) {
+		// EEをチャージできるアイテムだけ置けるようにする。
 		if (itemStack != null) {
 			if (itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("canChargeEE")) {
 				return true;

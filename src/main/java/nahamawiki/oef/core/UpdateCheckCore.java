@@ -55,7 +55,6 @@ public class UpdateCheckCore {
 			@Override
 			public void run() {
 				try {
-					// Update info reception
 					String receivedData;
 					try {
 						URL url = new URL(OEFCore.meta.updateUrl);
@@ -68,7 +67,6 @@ public class UpdateCheckCore {
 						return;
 					}
 
-					// Convert into Json
 					List<Map<String, Object>> updateInfoList;
 					try {
 						updateInfoList = new Gson().fromJson(receivedData, List.class);
@@ -77,7 +75,6 @@ public class UpdateCheckCore {
 						return;
 					}
 
-					// Retrieve update info for this MC version
 					Map<String, String> updateInfoJson = findUpdateInfoForMcVersion(updateInfoList);
 
 					if (updateInfoJson == null) {
@@ -99,12 +96,6 @@ public class UpdateCheckCore {
 				}
 			}
 
-			/**
-			 * Retrieve update info for current MC version
-			 *
-			 * @param list
-			 * @return
-			 */
 			private Map<String, String> findUpdateInfoForMcVersion(List<Map<String, Object>> list) {
 				String currentVer = container.getVersion();
 				for (Map<String, Object> map : list) {

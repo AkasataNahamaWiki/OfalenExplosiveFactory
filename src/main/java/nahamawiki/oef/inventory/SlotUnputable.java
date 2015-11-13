@@ -6,12 +6,13 @@ import net.minecraft.item.ItemStack;
 
 public class SlotUnputable extends Slot {
 
-	public SlotUnputable(IInventory iInventory, int index, int x, int y) {
-		super(iInventory, index, x, y);
+	public SlotUnputable(IInventory iinventory, int index, int x, int y) {
+		super(iinventory, index, x, y);
 	}
 
 	@Override
 	public boolean isItemValid(ItemStack itemStack) {
+		// アイテムを置けないようにする。
 		return false;
 	}
 

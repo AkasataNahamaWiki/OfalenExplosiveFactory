@@ -1,23 +1,20 @@
 package nahamawiki.oef.block;
 
-import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.tileentity.TileEntityEECraftingTable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEECraftingTable extends BlockEEMachineBase {
 
@@ -32,14 +29,15 @@ public class BlockEECraftingTable extends BlockEEMachineBase {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity instanceof TileEntityEECraftingTable)
 			((TileEntityEECraftingTable) tileEntity).setOwner(player);
-		player.openGui(OEFCore.instance, 1, world, x, y, z);
+		if (!super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ))
+			player.openGui(OEFCore.instance, 1, world, x, y, z);
 		return true;
 	}
 
+	/** ブロックが破壊された時の処理。 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
 		TileEntityEECraftingTable tileentity = (TileEntityEECraftingTable) world.getTileEntity(x, y, z);
@@ -81,6 +79,7 @@ public class BlockEECraftingTable extends BlockEEMachineBase {
 		super.breakBlock(world, x, y, z, block, meta);
 	}
 
+	/** ブロックのテクスチャを登録する処理。 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister register) {
@@ -91,6 +90,7 @@ public class BlockEECraftingTable extends BlockEEMachineBase {
 		}
 	}
 
+	/** ブロックのテクスチャを返す。 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
@@ -101,19 +101,6 @@ public class BlockEECraftingTable extends BlockEEMachineBase {
 			i = 3;
 		}
 		return iicon[i][meta & 3];
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs creativeTab, List list) {
-		for (int i = 0; i < 4; i++) {
-			list.add(new ItemStack(item, 1, i));
-		}
-	}
-
-	@Override
-	public int damageDropped(int meta) {
-		return meta & 3;
 	}
 
 }

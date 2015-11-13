@@ -18,6 +18,7 @@ public class GuiEEMiner extends GuiContainer {
 	public GuiEEMiner(EntityPlayer player, TileEntityEEMiner tileEntity) {
 		super(new ContainerEEMiner(player, tileEntity));
 		this.tileEntity = tileEntity;
+		// サイズを大きくする。
 		this.ySize = 222;
 	}
 

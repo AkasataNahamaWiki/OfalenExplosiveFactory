@@ -193,17 +193,27 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	}
 
 	@Override
+	public void setCreeper(boolean flag) {
+		if (!worldObj.isRemote && !flag) {
+			if (targetEntity != null && targetEntity instanceof EntityPlayer) {
+				targetEntity = null;
+			}
+		}
+		super.setCreeper(flag);
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setString("Color", this.getColor());
 		nbt.setInteger("Duration", duration);
 		nbt.setInteger("Size", size);
-		nbt.setFloat("rotationYaw", rotationYaw);
-		nbt.setFloat("rotationPitch", rotationPitch);
+		nbt.setFloat("RotationYaw", rotationYaw);
+		nbt.setFloat("RotationPitch", rotationPitch);
 		if ((ownerName == null || ownerName.length() == 0) && owner != null) {
 			ownerName = owner.getCommandSenderName();
 		}
-		nbt.setString("ownerName", ownerName == null ? "" : ownerName);
+		nbt.setString("OwnerName", ownerName == null ? "" : ownerName);
 	}
 
 	@Override
@@ -212,9 +222,9 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		this.setColor(nbt.getString("Color"));
 		duration = nbt.getInteger("Duration");
 		size = nbt.getInteger("Size");
-		rotationYaw = nbt.getFloat("rotationYaw");
-		rotationPitch = nbt.getFloat("rotationPitch");
-		ownerName = nbt.getString("ownerName");
+		rotationYaw = nbt.getFloat("RotationYaw");
+		rotationPitch = nbt.getFloat("RotationPitch");
+		ownerName = nbt.getString("OwnerName");
 		if (ownerName != null && ownerName.length() == 0) {
 			ownerName = null;
 		}
@@ -224,34 +234,34 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if (isSpawning) {
-			nbt.setBoolean("isSpawning", true);
-			nbt.setString("color", color);
+			nbt.setBoolean("IsSpawning", true);
+			nbt.setString("Color", color);
 			isSpawning = false;
 			if (this.getCreeper()) {
-				nbt.setBoolean("isCreeper", true);
+				nbt.setBoolean("IsCreeper", true);
 			}
 			if ((ownerName == null || ownerName.length() == 0) && owner != null) {
 				ownerName = owner.getCommandSenderName();
 			}
-			nbt.setString("ownerName", ownerName == null ? "" : ownerName);
+			nbt.setString("OwnerName", ownerName == null ? "" : ownerName);
 		}
-		nbt.setFloat("rotationYaw", rotationYaw);
-		nbt.setFloat("rotationPitch", rotationPitch);
+		nbt.setFloat("RotationYaw", rotationYaw);
+		nbt.setFloat("RotationPitch", rotationPitch);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
-		rotationYaw = nbt.getFloat("rotationYaw");
-		rotationPitch = nbt.getFloat("rotationPitch");
-		ownerName = nbt.getString("ownerName");
+		rotationYaw = nbt.getFloat("RotationYaw");
+		rotationPitch = nbt.getFloat("RotationPitch");
+		ownerName = nbt.getString("OwnerName");
 		if (ownerName != null && ownerName.length() == 0) {
 			ownerName = null;
 		}
-		if (nbt.getBoolean("isSpawning")) {
-			if (!nbt.getBoolean("isCreeper")) {
-				this.spawnLaser(nbt.getString("color"), this.getOwner());
+		if (nbt.getBoolean("IsSpawning")) {
+			if (!nbt.getBoolean("IsCreeper")) {
+				this.spawnLaser(nbt.getString("Color"), this.getOwner());
 			} else {
 				Random random = new Random();
 				if (random.nextBoolean()) {

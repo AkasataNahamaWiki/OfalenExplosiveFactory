@@ -20,6 +20,7 @@ public class BlockEEItemTransporter extends BlockEEConductor {
 		return new TileEntityEEItemTransporter();
 	}
 
+	/** ブロックが破壊された時の処理。 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
 		TileEntityEEItemTransporter tileentity = (TileEntityEEItemTransporter) world.getTileEntity(x, y, z);

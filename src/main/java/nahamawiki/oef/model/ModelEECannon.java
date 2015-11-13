@@ -10,7 +10,7 @@ public class ModelEECannon extends ModelBase {
 	ModelRenderer pole;
 	ModelRenderer barrel;
 	ModelRenderer base;
-	
+
 	private static final float yawOffset = 0;
 	private static final float pitchOffset = 0;
 
@@ -19,19 +19,22 @@ public class ModelEECannon extends ModelBase {
 		textureHeight = 32;
 
 		pole = new ModelRenderer(this, 48, 0);
-		if(xoff != 0 && yoff != 0)pole.setTextureOffset(xoff, yoff);
+		if (xoff != 0 && yoff != 0)
+			pole.setTextureOffset(xoff, yoff);
 		pole.addBox(-3F, 0F, -3F, 6, 8, 6);
 		pole.setRotationPoint(0F, -3F, 0F);
 		pole.setTextureSize(128, 32);
 		setRotation(pole, 0F, 0F, 0F);
 		barrel = new ModelRenderer(this, 72, 0);
-		if(xoff != 0 && yoff != 0)barrel.setTextureOffset(xoff, yoff);
+		if (xoff != 0 && yoff != 0)
+			barrel.setTextureOffset(xoff, yoff);
 		barrel.addBox(-2F, -2F, 0F, 4, 4, 8);
 		barrel.setRotationPoint(0F, 2F, 0F);
 		barrel.setTextureSize(128, 32);
 		setRotation(barrel, 0F, 0F, 0F);
 		base = new ModelRenderer(this, 0, 0);
-		if(xoff != 0 && yoff != 0)base.setTextureOffset(xoff, yoff);
+		if (xoff != 0 && yoff != 0)
+			base.setTextureOffset(xoff, yoff);
 		base.addBox(0F, 0F, 0F, 16, 5, 16);
 		base.setRotationPoint(-8F, -8F, -8F);
 		base.setTextureSize(128, 32);
@@ -48,9 +51,9 @@ public class ModelEECannon extends ModelBase {
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
-		model.rotateAngleX =MathHelper.wrapAngleTo180_float( x  / (180F / (float)Math.PI));
-		model.rotateAngleY =MathHelper.wrapAngleTo180_float( y  / (180F / (float)Math.PI));
-		model.rotateAngleZ =MathHelper.wrapAngleTo180_float( z  / (180F / (float)Math.PI));
+		model.rotateAngleX = MathHelper.wrapAngleTo180_float(x / (180F / (float) Math.PI));
+		model.rotateAngleY = MathHelper.wrapAngleTo180_float(y / (180F / (float) Math.PI));
+		model.rotateAngleZ = MathHelper.wrapAngleTo180_float(z / (180F / (float) Math.PI));
 	}
 
 }

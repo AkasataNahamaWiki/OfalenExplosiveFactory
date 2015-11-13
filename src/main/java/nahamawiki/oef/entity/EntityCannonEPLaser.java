@@ -19,18 +19,16 @@ public class EntityCannonEPLaser extends EntityCannonLaser {
 
 	@Override
 	protected void onImpact(MovingObjectPosition position) {
-		if(this.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getBlockHardness(worldObj, position.blockX, position.blockY, position.blockZ) > 0 && this.worldObj.getBlock(position.blockX, position.blockY, position.blockZ) != TakumiCraftCore.EPBlock)
-		{
+		if (this.worldObj.getBlock(position.blockX, position.blockY, position.blockZ).getBlockHardness(worldObj, position.blockX, position.blockY, position.blockZ) > 0 && this.worldObj.getBlock(position.blockX, position.blockY, position.blockZ) != TakumiCraftCore.EPBlock) {
 			this.worldObj.setBlock(position.blockX, position.blockY, position.blockZ, TakumiCraftCore.EPBlock);
 			this.power--;
 		}
-		
-		else if(position.entityHit != null && position.entityHit instanceof EntityLivingBase)
-		{
-			((EntityLivingBase) position.entityHit).addPotionEffect(new PotionEffect(CreeperPotion.exp.id , PotionExplosion.sec * 20 + 1 , 0));
+
+		else if (position.entityHit != null && position.entityHit instanceof EntityLivingBase) {
+			((EntityLivingBase) position.entityHit).addPotionEffect(new PotionEffect(CreeperPotion.exp.id, PotionExplosion.sec * 20 + 1, 0));
 			this.power--;
 		}
-		
+
 		if (this.power <= 0) {
 			this.setDead();
 		}

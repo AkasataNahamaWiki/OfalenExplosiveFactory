@@ -129,7 +129,8 @@ public class ItemEEBattery extends ItemOEFBase {
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean flag) {
 		if (itemStack.hasTagCompound())
 			list.add(StatCollector.translateToLocal("info.EEMachineState.holding")
-					+ itemStack.getTagCompound().getInteger("holdingEE"));
+					+ itemStack.getTagCompound().getInteger("holdingEE") + " EE / "
+					+ EEUtil.getBaseCapacity(itemStack.getItemDamage() & 3) + " EE");
 	}
 
 	@Override

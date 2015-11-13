@@ -2,6 +2,9 @@ package nahamawiki.oef.tileentity;
 
 import nahamawiki.oef.core.OEFConfigCore;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public abstract class TileEntityEEMachineBase extends TileEntity implements ITileEntityEEMachine {
@@ -13,7 +16,7 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	/** 機械のレベル。 */
 	protected byte level = -1;
 	/** 匠化しているか否か。 */
-	private boolean isCreeper;
+	protected boolean isCreeper;
 
 	public int tick;
 
@@ -56,6 +59,8 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	@Override
 	public void setCreeper(boolean flg) {
 		this.isCreeper = flg;
+		if (!worldObj.isRemote)
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -78,17 +83,32 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("holdingEE", holdingEE);
-		nbt.setByte("level", level);
-		nbt.setBoolean("isCreeper", isCreeper);
+		nbt.setInteger("HoldingEE", holdingEE);
+		nbt.setByte("Level", level);
+		nbt.setBoolean("IsCreeper", isCreeper);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		holdingEE = nbt.getInteger("holdingEE");
-		level = nbt.getByte("level");
-		isCreeper = nbt.getBoolean("isCreeper");
+		holdingEE = nbt.getInteger("HoldingEE");
+		level = nbt.getByte("Level");
+		isCreeper = nbt.getBoolean("IsCreeper");
+	}
+
+	/** 送信するパケットを返す。 */
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("IsCreeper", isCreeper);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
+	}
+
+	/** パケットを受信した時の処理。 */
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.func_148857_g();
+		isCreeper = nbt.getBoolean("IsCreeper");
 	}
 
 }

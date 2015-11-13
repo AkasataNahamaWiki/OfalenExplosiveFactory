@@ -1,5 +1,22 @@
 package nahamawiki.oef;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import nahama.ofalenmod.model.ModelLaser;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.core.OEFConfigCore;
@@ -33,24 +50,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-
 /**
  * @author Tom Kate & Akasata Nahama
  */
@@ -77,22 +76,31 @@ public class OEFCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		// MODの情報を登録する。
 		OEFInfoCore.registerInfo(meta);
+		// Configからデータを読み込む。
 		OEFConfigCore.loadConfig(event);
+		// 最新版かどうかチェックする。
 		update = new UpdateCheckCore();
 		update.checkUpdate();
 		update.showBalloon();
 		MinecraftForge.EVENT_BUS.register(new OEFEventCore());
+		// Event処理を登録する。
 		FMLCommonHandler.instance().bus().register(new OEFEventCore());
+		// 追加するアイテム・ブロックを登録する。
 		OEFItemCore.registerItems();
 		OEFBlockCore.registerBlocks();
+		// GUIを登録する。
 		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new OEFGuiHandler());
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		// 追加レシピを登録する。
 		OEFRecipeCore.registerRecipes();
+		// 追加Entityを登録する。
 		OEFEntityCore.register(this);
+		// クライアントなら、TileEntityとレーザーのレンダラーを登録する。
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECapacitor.class, new RenderEECapacitor());
@@ -109,11 +117,13 @@ public class OEFCore {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		// 鉱石辞書からアイテム・ブロックを取得する。
 		OEFOreDicCore.getOres();
 	}
 
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
+		// サーバーの起動時にアップデートの通知をする。
 		if (update != null && event.getSide() == Side.SERVER) {
 			update.notifyUpdate(event.getServer(), event.getSide());
 		}

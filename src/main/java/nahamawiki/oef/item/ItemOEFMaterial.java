@@ -37,16 +37,14 @@ public class ItemOEFMaterial extends ItemOEFBase {
 	}
 
 	private boolean onEEMaterUse(EntityPlayer player, World world, int x, int y, int z) {
+		// メーターで機械を右クリックしたなら、情報をチャットに表示させる。
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity instanceof ITileEntityEEMachine) {
-			if (world.isRemote) {
+			if (world.isRemote)
 				return true;
-			}
 			String[] state = ((ITileEntityEEMachine) tileEntity).getState();
-			if (state == null) {
-				player.addChatMessage(new ChatComponentText("Error on reciving packet"));
+			if (state == null)
 				return true;
-			}
 			for (int i = 0; i < state.length; i++) {
 				player.addChatMessage(new ChatComponentText(state[i]));
 			}

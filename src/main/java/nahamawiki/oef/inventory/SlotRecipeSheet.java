@@ -17,15 +17,18 @@ public class SlotRecipeSheet extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack itemStack) {
+		// レシピシートしか置けないようにする。
 		return itemStack.getItem() == OEFItemCore.recipeSheet;
 	}
 
+	/** スロットが更新された時の処理。 */
 	@Override
 	public void onSlotChanged() {
 		super.onSlotChanged();
 		if (this.getStack() == null)
 			return;
 		if (!this.getStack().hasTagCompound()) {
+			// NBTを持っていないなら今並んでいるレシピを記入する。
 			if (tileEntity.getStackInSlot(27) == null)
 				return;
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -33,6 +36,7 @@ public class SlotRecipeSheet extends Slot {
 			tileEntity.writeToRecipeSheet(nbt);
 			this.getStack().setTagCompound(nbt);
 		} else if (!this.getStack().getTagCompound().getBoolean("IsWrited")) {
+			// 記入済みだが無効化されていたら記入しなおす。
 			if (tileEntity.getStackInSlot(27) == null)
 				return;
 			NBTTagCompound nbt = this.getStack().getTagCompound();
@@ -40,6 +44,7 @@ public class SlotRecipeSheet extends Slot {
 			tileEntity.writeToRecipeSheet(nbt);
 			this.getStack().setTagCompound(nbt);
 		} else {
+			// 記入済みで有効なら反映する。
 			tileEntity.readFromRecipeSheet(this.getStack().getTagCompound());
 		}
 	}

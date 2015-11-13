@@ -16,7 +16,8 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.world.ExplosionEvent.Detonate;
 
 public class OEFEventCore {
-	/** アイテム耐久値ゼロの時にフック **/
+
+	/** アイテム耐久値ゼロの時にフック */
 	@SubscribeEvent
 	public void EEItemBroken(PlayerDestroyItemEvent e) {
 		if (e.original.getItem() instanceof IItemEEBatteryTool && !e.entity.worldObj.isRemote) {
@@ -25,7 +26,7 @@ public class OEFEventCore {
 		}
 	}
 
-	/** 爆発にフック **/
+	/** 爆発にフック */
 	@SubscribeEvent
 	public void ExpEvent(Detonate e) {
 		if (e.explosion.exploder != null) {
@@ -61,7 +62,7 @@ public class OEFEventCore {
 		}
 	}
 
-	/** プレイヤー負傷時にフック **/
+	/** プレイヤー負傷時にフック */
 	@SubscribeEvent
 	public void onHurt(LivingHurtEvent e) {
 		boolean flg[] = new boolean[4];
@@ -89,7 +90,7 @@ public class OEFEventCore {
 		}
 	}
 
-	/** プレイヤーログイン時のイベント **/
+	/** プレイヤーログイン時のイベント */
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		if (OEFCore.update != null) {

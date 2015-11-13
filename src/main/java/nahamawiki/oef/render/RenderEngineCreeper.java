@@ -16,10 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import takumicraft.Takumi.TakumiCraftCore;
 
-/*
- * テクスチャへのResourceLocationを設定する.
- */
-
 @SideOnly(Side.CLIENT)
 public class RenderEngineCreeper extends RenderLiving {
 	private static final ResourceLocation texture = new ResourceLocation("oef:textures/models/eng_creeper.png");

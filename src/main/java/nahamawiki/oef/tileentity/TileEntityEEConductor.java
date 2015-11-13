@@ -79,6 +79,8 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 
 	@Override
 	public void updateCreepered() {
+		if (isUpdated)
+			isUpdated = false;
 		Random random = new Random();
 		if (random.nextInt(1200) == 0) {
 			// 雷を落とす。
@@ -181,44 +183,44 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("tier", tier);
+		nbt.setInteger("Tier", tier);
 
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < reciever.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), reciever.get(i));
 		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
+		nbt.setInteger("RecieverSize", reciever.size());
+		nbt.setTag("Reciever", localnbt);
 
 		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+			nbt.setBoolean("IsConnecting-" + i, isConnecting[i]);
 		}
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		tier = nbt.getInteger("tier");
+		tier = nbt.getInteger("Tier");
 
 		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+		NBTTagCompound localnbt = nbt.getCompoundTag("Reciever");
+		for (int i = 0; i < nbt.getInteger("RecieverSize"); i++) {
 			reciever.add(localnbt.getInteger(String.valueOf(i)));
 		}
 
 		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			isConnecting[i] = nbt.getBoolean("IsConnecting-" + i);
 		}
 	}
 
-	/** 送信するパケットを返す。 */
 	@Override
 	public Packet getDescriptionPacket() {
 		// WorldクラスのmarkBlockForUpdateをすると呼ばれる。
 		NBTTagCompound nbt = new NBTTagCompound();
 		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+			nbt.setBoolean("IsConnecting-" + i, isConnecting[i]);
 		}
+		nbt.setBoolean("IsCreeper", isCreeper);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
@@ -227,8 +229,9 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
 		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			isConnecting[i] = nbt.getBoolean("IsConnecting-" + i);
 		}
+		isCreeper = nbt.getBoolean("IsCreeper");
 	}
 
 	/** 周囲のブロックを確認する */

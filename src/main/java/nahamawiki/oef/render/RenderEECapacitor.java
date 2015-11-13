@@ -19,6 +19,8 @@ public class RenderEECapacitor extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation texture_armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
 	private final ModelEECapacitor model = new ModelEECapacitor();
+	private ModelPowered powered;
+	int lastTick;
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
@@ -41,8 +43,10 @@ public class RenderEECapacitor extends TileEntitySpecialRenderer {
 
 		if (machine.getCreeper()) {
 			int f1 = machine.tick;
-			ModelPowered model = new ModelPowered();
-			model.setOffset(f1, f1);
+			if (f1 != lastTick) {
+				lastTick = f1;
+				powered = new ModelPowered(f1, f1);
+			}
 			GL11.glPushMatrix();
 			GL11.glDepthMask(true);
 			this.bindTexture(texture_armor);
@@ -65,7 +69,7 @@ public class RenderEECapacitor extends TileEntitySpecialRenderer {
 			Minecraft.getMinecraft().renderEngine.bindTexture(texture_armor);
 
 			// model.render((Entity) null, 0, 0, 0, f2, f3, 0.0625F);
-			model.base.render(0.0625f);
+			powered.base.render(0.0625f);
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_BLEND);

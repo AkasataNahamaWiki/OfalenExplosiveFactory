@@ -226,30 +226,30 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 		for (int i = 0; i < reciever.size(); i++) {
 			localnbt.setInteger(String.valueOf(i), reciever.get(i));
 		}
-		nbt.setInteger("reciverSize", reciever.size());
-		nbt.setTag("reciver", localnbt);
+		nbt.setInteger("RecieverSize", reciever.size());
+		nbt.setTag("Reciever", localnbt);
 
 		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+			nbt.setBoolean("IsConnecting-" + i, isConnecting[i]);
 		}
 
-		nbt.setByteArray("sideType", sideType);
+		nbt.setByteArray("SideType", sideType);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		reciever.clear();
-		NBTTagCompound localnbt = nbt.getCompoundTag("reciver");
-		for (int i = 0; i < nbt.getInteger("reciverSize"); i++) {
+		NBTTagCompound localnbt = nbt.getCompoundTag("Reciever");
+		for (int i = 0; i < nbt.getInteger("RecieverSize"); i++) {
 			reciever.add(localnbt.getInteger(String.valueOf(i)));
 		}
 
 		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			isConnecting[i] = nbt.getBoolean("IsConnecting-" + i);
 		}
 
-		sideType = nbt.getByteArray("sideType");
+		sideType = nbt.getByteArray("SideType");
 	}
 
 	/** 送信するパケットを返す。 */
@@ -258,9 +258,10 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 		// WorldクラスのmarkBlockForUpdateをすると呼ばれる。
 		NBTTagCompound nbt = new NBTTagCompound();
 		for (int i = 0; i < 6; i++) {
-			nbt.setBoolean("isConnecting-" + i, isConnecting[i]);
+			nbt.setBoolean("IsConnecting-" + i, isConnecting[i]);
 		}
-		nbt.setByteArray("sideType", sideType);
+		nbt.setByteArray("SideType", sideType);
+		nbt.setBoolean("IsCreeper", isCreeper);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
 	}
 
@@ -269,9 +270,10 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.func_148857_g();
 		for (int i = 0; i < 6; i++) {
-			isConnecting[i] = nbt.getBoolean("isConnecting-" + i);
+			isConnecting[i] = nbt.getBoolean("IsConnecting-" + i);
 		}
-		sideType = nbt.getByteArray("sideType");
+		sideType = nbt.getByteArray("SideType");
+		isCreeper = nbt.getBoolean("IsCreeper");
 	}
 
 	/** 周囲のブロックを確認する */
