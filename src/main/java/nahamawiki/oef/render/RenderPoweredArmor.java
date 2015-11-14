@@ -2,18 +2,21 @@ package nahamawiki.oef.render;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import nahamawiki.oef.model.ModelPoweredArmor;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderPoweredArmor extends RenderLiving {
@@ -82,5 +85,22 @@ public class RenderPoweredArmor extends RenderLiving {
 	protected int inheritRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3) {
 		return -1;
 	}
+	
+	 public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float pitch)
+	    {
+	        if(entity instanceof EntityPoweredArmor)
+	        {
+	        	super.doRender((EntityPoweredArmor)entity, x, y, z, yaw, pitch);
+	        }
+	    }
+	 
+	 public void doRender(EntityPoweredArmor entity, double x, double y, double z, float yaw, float pitch)
+	    {
+		 	EntityPlayer player = entity.getOwner();
+		 	if(player != null)
+		 	{
+		 		super.doRender((EntityLivingBase)entity, player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+		 	}
+	    }
 
 }

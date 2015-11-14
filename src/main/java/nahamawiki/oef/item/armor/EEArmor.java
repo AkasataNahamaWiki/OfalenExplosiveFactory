@@ -1,8 +1,7 @@
 package nahamawiki.oef.item.armor;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +13,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import takumicraft.Takumi.Potion.CreeperPotion;
 import takumicraft.Takumi.enchantment.TEnchantment;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EEArmor extends ItemArmor {
 
@@ -77,23 +78,27 @@ public class EEArmor extends ItemArmor {
 
 		if (!world.isRemote && player.getCurrentArmor(0) != null && player.getCurrentArmor(1) != null &&
 				player.getCurrentArmor(2) != null && player.getCurrentArmor(3) != null) {
-			boolean flg = true;
-			if (player.worldObj.loadedEntityList != null) {
-				for (Object entity : player.worldObj.loadedEntityList) {
-					if (entity instanceof EntityPoweredArmor) {
+			if(player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet && player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate &&
+					player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings && player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots)
+			{
+				boolean flg = true;
+				if (player.worldObj.loadedEntityList != null) {
+					for (Object entity : player.worldObj.loadedEntityList) {
+						if (entity instanceof EntityPoweredArmor) {
 
-						if (((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getDisplayName())) {
-							flg = false;
-							((EntityPoweredArmor) entity).setOwnerName(player.getDisplayName());
-						} else {
-							((EntityPoweredArmor) entity).setDead();
+							if (((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getDisplayName())) {
+								flg = false;
+								((EntityPoweredArmor) entity).setOwnerName(player.getDisplayName());
+							} else {
+								((EntityPoweredArmor) entity).setDead();
+							}
 						}
 					}
-				}
-				if (flg) {
-					EntityPoweredArmor armor = new EntityPoweredArmor(player.worldObj, player);
-					armor.setPosition(player.posX, player.posY, player.posZ);
-					player.worldObj.spawnEntityInWorld(armor);
+					if (flg) {
+						EntityPoweredArmor armor = new EntityPoweredArmor(player.worldObj, player);
+						armor.setPosition(player.posX, player.posY, player.posZ);
+						player.worldObj.spawnEntityInWorld(armor);
+					}
 				}
 			}
 		}

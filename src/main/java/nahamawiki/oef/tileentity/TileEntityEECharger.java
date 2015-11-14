@@ -2,15 +2,16 @@ package nahamawiki.oef.tileentity;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.util.EEUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEECharger extends TileEntityEEMachineBase implements ISidedInventory {
 
@@ -75,7 +76,20 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 			for (Object entity : this.worldObj.loadedEntityList) {
 				if (entity instanceof EntityMob) {
 					if (((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16) {
-						((EntityMob) entity).onStruckByLightning(null);
+						try
+						{
+							if (
+									((Entity) entity).getDataWatcher().getWatchableObjectByte(17) == 1)
+							{
+
+								((Entity) entity).getDataWatcher().updateObject(17, (byte)0);
+
+							}
+						}
+						catch (Throwable throwable)
+						{}
+						finally
+						{}
 					}
 				}
 			}
