@@ -11,6 +11,7 @@ import nahamawiki.oef.entity.EntityCannonEPLaser;
 import nahamawiki.oef.entity.EntityCannonGreenLaser;
 import nahamawiki.oef.entity.EntityCannonRedLaser;
 import nahamawiki.oef.entity.EntityCannonWhiteLaser;
+import nahamawiki.oef.entity.EntityEngineCreeper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -158,7 +159,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			Collections.sort(list, new TileEntityEECannon.Sorter(player));
 			if (!list.isEmpty()) {
 				for (Object entity : list) {
-					if (entity instanceof EntityMob) {
+					 if (entity instanceof EntityMob && !(entity instanceof EntityEngineCreeper)) {
 						this.targetEntity = (EntityLivingBase) entity;
 						break;
 					}
