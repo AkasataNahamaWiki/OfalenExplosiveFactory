@@ -5,6 +5,7 @@ import static net.minecraft.util.Facing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.util.EEUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,6 +15,8 @@ import net.minecraft.world.World;
 public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	protected ArrayList<Integer> reciever = new ArrayList<Integer>();
+	protected byte duration;
+	protected boolean isSending;
 
 	@Override
 	public int getMachineType(int side) {
@@ -27,26 +30,10 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	@Override
 	public String[] getState() {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		int sendingEE = 0;
-		switch (blockMetadata) {
-		case 4:
-			sendingEE = 100;
-			break;
-		case 5:
-			sendingEE = 200;
-			break;
-		case 6:
-			sendingEE = 400;
-			break;
-		case 7:
-			sendingEE = 800;
-			break;
-		}
 		return new String[] {
 				StatCollector.translateToLocal("info.EEMachineState.name") + StatCollector.translateToLocal(this.getBlockType().getLocalizedName()),
 				StatCollector.translateToLocal("info.EEMachineState.level") + level,
-				StatCollector.translateToLocal("info.EEMachineState.generating") + sendingEE + " EE"
+				StatCollector.translateToLocal("info.EEMachineState.generating") + this.getSendEE() + " EE"
 		};
 	}
 
@@ -63,6 +50,17 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	@Override
 	public void updateMachine() {
 		this.sendEE();
+		if (duration > 0)
+			duration--;
+		if (duration > 0 != isSending) {
+			if (duration > 0) {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level + 4, 2);
+				isSending = true;
+			} else {
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level, 2);
+				isSending = false;
+			}
+		}
 	}
 
 	@Override
@@ -87,28 +85,14 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 
 	/** 隣接する機械にEEを送信する。 */
 	protected void sendEE() {
-		// 送信先がないなら終了。
-		if (reciever.size() < 1)
+		// 送信中でないか、送信先がないなら終了。
+		if (duration < 1 || reciever.size() < 1)
 			return;
 		// 送信先リストをコピー。
 		ArrayList<Integer> list = EEUtil.copyList(reciever);
-		// メタデータに応じてEEを生成する。
-		switch (worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) {
-		case 4:
-			holdingEE = 100;
-			break;
-		case 5:
-			holdingEE = 200;
-			break;
-		case 6:
-			holdingEE = 400;
-			break;
-		case 7:
-			holdingEE = 800;
-			break;
-		default:
-			return;
-		}
+		// 送信する量を記録。
+		holdingEE = this.getSendEE();
+		OEFCore.logger.info("Set holdingEE to " + holdingEE);
 		// 送信先があるなら、EEが足りる限りループする。
 		while (list.size() > 0 && holdingEE / list.size() > 0) {
 			// 蓄えているEEを送信先の数で割って代入。
@@ -138,6 +122,23 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		}
 	}
 
+	/** 送信するEEの量を返す。 */
+	protected int getSendEE() {
+		if (duration < 1)
+			return 0;
+		switch (level) {
+		case 0:
+			return 100;
+		case 1:
+			return 200;
+		case 2:
+			return 400;
+		case 3:
+			return 800;
+		}
+		return 0;
+	}
+
 	/** 指定された方向の機械を取得する。 */
 	protected ITileEntityEEMachine getNeighborMachine(int side) {
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord + offsetsXForSide[side], yCoord + offsetsYForSide[side], zCoord + offsetsZForSide[side]);
@@ -149,6 +150,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		nbt.setByte("Duration", duration);
 
 		NBTTagCompound localnbt = new NBTTagCompound();
 		for (int i = 0; i < reciever.size(); i++) {
@@ -161,6 +163,7 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		duration = nbt.getByte("Duration");
 
 		reciever.clear();
 		NBTTagCompound localnbt = nbt.getCompoundTag("Reciever");
@@ -183,6 +186,15 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 				}
 			}
 		}
+	}
+
+	public void onExploded() {
+		if (worldObj.isRemote)
+			return;
+		duration = 40;
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level + 4, 2);
+		isSending = true;
+		OEFCore.logger.info("onExploded");
 	}
 
 }

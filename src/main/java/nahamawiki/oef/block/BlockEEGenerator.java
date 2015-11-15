@@ -1,10 +1,7 @@
 package nahamawiki.oef.block;
 
-import java.util.Random;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.tileentity.TileEntityEEGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -51,22 +48,10 @@ public class BlockEEGenerator extends BlockEEMachineBase {
 
 	@Override
 	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
-		world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 4, 2);
-		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity instanceof TileEntityEEGenerator)
+			((TileEntityEEGenerator) tileEntity).onExploded();
 		this.onBlockDestroyedByExplosion(world, x, y, z, explosion);
-	}
-
-	/** ブロックが更新された時の処理。 */
-	@Override
-	public void updateTick(World world, int x, int y, int z, Random random) {
-		// 爆破から40tick後に呼ばれる。
-		world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 3, 2);
-		world.notifyBlocksOfNeighborChange(x, y, z, OEFBlockCore.EEGenerator);
-	}
-
-	@Override
-	public int tickRate(World world) {
-		return 41;
 	}
 
 	/** ブロックのテクスチャを登録する処理。 */
