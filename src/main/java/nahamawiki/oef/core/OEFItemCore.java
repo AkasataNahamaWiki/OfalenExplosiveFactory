@@ -1,4 +1,4 @@
-﻿package nahamawiki.oef.core;
+package nahamawiki.oef.core;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import nahama.ofalenmod.core.OfalenModConfigCore;

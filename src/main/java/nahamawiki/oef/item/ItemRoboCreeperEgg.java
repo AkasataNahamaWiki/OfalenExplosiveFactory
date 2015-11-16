@@ -1,4 +1,4 @@
-﻿package nahamawiki.oef.item;
+package nahamawiki.oef.item;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

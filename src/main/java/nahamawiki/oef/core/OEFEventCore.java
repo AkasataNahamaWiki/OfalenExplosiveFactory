@@ -1,4 +1,4 @@
-﻿package nahamawiki.oef.core;
+package nahamawiki.oef.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
