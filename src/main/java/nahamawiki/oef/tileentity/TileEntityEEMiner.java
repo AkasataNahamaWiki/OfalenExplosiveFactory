@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.block.BlockEESurveyor;
 import nahamawiki.oef.core.OEFBlockCore;
+import nahamawiki.oef.util.ControllerCreeperedMiner;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.item.EntityItem;
@@ -107,38 +108,9 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	@Override
 	public void updateCreepered() {
-		// 置かれた時に範囲を設定する。
-		if (!isChecked || !isMining) {
-			this.setMiningArea();
-			isChecked = true;
-		}
-		if (!isMining) {
-			this.miningRange[0] = 10;
-			this.miningRange[1] = 10;
-			isMining = true;
-		}
-		// 次の採掘までの残り時間を減らす。
-		if (coolTime > 0)
-			coolTime--;
-		// 採掘ができる条件になっていないなら終了。
-		if (coolTime > 0)
-			return;
-		if (this.getNextBlock()) {
-			// 次に採掘するブロックの取得に成功したら、採掘する。
-			this.mineBlock();
-			switch (level) {
-			case 0:
-				coolTime = 80;
-				break;
-			case 1:
-				coolTime = 40;
-				break;
-			case 2:
-				coolTime = 20;
-				break;
-			case 3:
-				coolTime = 10;
-			}
+		if (!isFinished) {
+			ControllerCreeperedMiner.getInstance(worldObj).registerArea(new int[] { xCoord, yCoord, zCoord }, miningRange);
+			isFinished = true;
 		}
 		Random random = new Random();
 		if (this.worldObj.playerEntities != null && random.nextInt(100) == 0) {
@@ -345,29 +317,48 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 
 	/** 引数の座標が採掘範囲に含まれているか。 */
 	private boolean isInArea(double x, double y, double z) {
-		if (!this.getCreeper()) {
-			if (!isMining)
-				return false;
-			x -= 0.5;
-			z -= 0.5;
-			if ((xCoord < x && x < xCoord + miningRange[0]) || (xCoord + miningRange[0] < x && x < xCoord)) {
-				if ((zCoord < z && z < zCoord + miningRange[1]) || (zCoord + miningRange[1] < z && z < zCoord)) {
-					if (0 < y && y <= yCoord) {
-						return true;
-					}
-				}
-			}
-			return false;
-		} else {
-			if ((xCoord < x && x < xCoord + 10) || (xCoord - 10 < x && x < xCoord)) {
-				if ((zCoord < z && z < zCoord + 10) || (zCoord - 10 < z && z < zCoord)) {
+		if (this.getCreeper()) {
+			if (xCoord - 10 < x && x < xCoord + 10) {
+				if (zCoord - 10 < z && z < zCoord + 10) {
 					if (0 < y && y <= yCoord) {
 						return true;
 					}
 				}
 			}
 		}
+		if (!isMining)
+			return false;
+		x -= 0.5;
+		z -= 0.5;
+		if ((xCoord < x && x < xCoord + miningRange[0]) || (xCoord + miningRange[0] < x && x < xCoord)) {
+			if ((zCoord < z && z < zCoord + miningRange[1]) || (zCoord + miningRange[1] < z && z < zCoord)) {
+				if (0 < y && y <= yCoord) {
+					return true;
+				}
+			}
+		}
 		return false;
+	}
+
+	@Override
+	public void setCreeper(boolean flag) {
+		if (worldObj.isRemote || flag == isCreeper)
+			return;
+		if (flag) {
+			if (!isChecked || !isMining) {
+				miningRange[0] = 10;
+				miningRange[1] = 10;
+				isChecked = true;
+				isMining = false;
+				isFinished = false;
+			}
+		} else {
+			ControllerCreeperedMiner.getInstance(worldObj).removeArea(new int[] { xCoord, yCoord, zCoord }, miningRange);
+			miningRange = new int[2];
+			isMining = false;
+			isFinished = false;
+		}
+		super.setCreeper(flag);
 	}
 
 	@Override
@@ -409,6 +400,8 @@ public class TileEntityEEMiner extends TileEntityEEMachineBase implements IInven
 				itemStacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
+		if (this.getCreeper())
+			isFinished = false;
 	}
 
 	@SideOnly(Side.CLIENT)

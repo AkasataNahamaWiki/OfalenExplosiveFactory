@@ -8,7 +8,7 @@ import java.util.Random;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.core.OEFConfigCore;
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -79,7 +79,7 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 
 	@Override
 	public int getCapacity(int level) {
-		return EEUtil.getBaseCapacity(level) * 4;
+		return OEFUtil.getBaseCapacity(level) * 4;
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class TileEntityEECapacitor extends TileEntityEEMachineBase {
 		if (reciever.size() < 1)
 			return;
 		// 送信先リストをコピー。
-		ArrayList<Integer> list = EEUtil.copyList(reciever);
+		ArrayList<Integer> list = OEFUtil.copyList(reciever);
 		// 送信先があるなら、EEが足りる限りループする。
 		while (list.size() > 0 && holdingEE / list.size() > 0) {
 			// 蓄えているEEを送信先の数で割って代入。

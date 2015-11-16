@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import nahamawiki.oef.core.OEFConfigCore;
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -150,7 +150,7 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 		if (reciever.size() < 1)
 			return;
 		// 送信先リストをコピー。
-		ArrayList<Integer> list = EEUtil.copyList(reciever);
+		ArrayList<Integer> list = OEFUtil.copyList(reciever);
 		// 送信先があるなら、EEが足りる限りループする。
 		while (list.size() > 0 && holdingEE / list.size() > 0) {
 			// 蓄えているEEを送信先の数で割って代入。

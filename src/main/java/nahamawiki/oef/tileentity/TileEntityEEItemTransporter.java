@@ -5,7 +5,7 @@ import static net.minecraft.util.Facing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.monster.EntityMob;
@@ -76,7 +76,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 				continue;
 			flag = false;
 			// recieverIをコピー。
-			ArrayList<Integer> list = EEUtil.copyList(recieverI);
+			ArrayList<Integer> list = OEFUtil.copyList(recieverI);
 			// 搬出先リストから受け取った方向を除外。
 			if (list.contains(i))
 				list.remove(list.indexOf(i));
@@ -214,7 +214,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 		// 256 EEを残すようにオーバーライドする。
 		if (reciever.size() < 1)
 			return;
-		ArrayList<Integer> list = EEUtil.copyList(reciever);
+		ArrayList<Integer> list = OEFUtil.copyList(reciever);
 		while (list.size() > 0 && (holdingEE - 256) / list.size() > 0) {
 			int sendingEE = (holdingEE - 256) / list.size();
 			holdingEE = (holdingEE - 256) % list.size();

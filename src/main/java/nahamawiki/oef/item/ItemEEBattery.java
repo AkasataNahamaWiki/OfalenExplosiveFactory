@@ -5,7 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.tileentity.ITileEntityEEMachine;
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -37,8 +37,8 @@ public class ItemEEBattery extends ItemOEFBase {
 			itemStack.setTagCompound(nbt);
 		}
 		NBTTagCompound nbt = itemStack.getTagCompound();
-		if (nbt.getInteger("holdingEE") > EEUtil.getBaseCapacity(itemStack.getItemDamage()))
-			nbt.setInteger("holdingEE", EEUtil.getBaseCapacity(itemStack.getItemDamage()));
+		if (nbt.getInteger("holdingEE") > OEFUtil.getBaseCapacity(itemStack.getItemDamage()))
+			nbt.setInteger("holdingEE", OEFUtil.getBaseCapacity(itemStack.getItemDamage()));
 		if (!nbt.hasKey("canChargeEE"))
 			nbt.setBoolean("canChargeEE", true);
 	}
@@ -119,7 +119,7 @@ public class ItemEEBattery extends ItemOEFBase {
 
 			itemStack = new ItemStack(item, 1, i);
 			nbt = new NBTTagCompound();
-			nbt.setInteger("holdingEE", EEUtil.getBaseCapacity(i));
+			nbt.setInteger("holdingEE", OEFUtil.getBaseCapacity(i));
 			itemStack.setTagCompound(nbt);
 			list.add(itemStack);
 		}
@@ -130,7 +130,7 @@ public class ItemEEBattery extends ItemOEFBase {
 		if (itemStack.hasTagCompound())
 			list.add(StatCollector.translateToLocal("info.EEMachineState.holding")
 					+ itemStack.getTagCompound().getInteger("holdingEE") + " EE / "
-					+ EEUtil.getBaseCapacity(itemStack.getItemDamage() & 3) + " EE");
+					+ OEFUtil.getBaseCapacity(itemStack.getItemDamage() & 3) + " EE");
 	}
 
 	@Override

@@ -159,7 +159,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			Collections.sort(list, new TileEntityEECannon.Sorter(player));
 			if (!list.isEmpty()) {
 				for (Object entity : list) {
-					 if (entity instanceof EntityMob && !(entity instanceof EntityEngineCreeper)) {
+					if (entity instanceof EntityMob && !(entity instanceof EntityEngineCreeper)) {
 						this.targetEntity = (EntityLivingBase) entity;
 						break;
 					}
@@ -195,6 +195,8 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	@Override
 	public void setCreeper(boolean flag) {
+		if (flag == isCreeper)
+			return;
 		if (!worldObj.isRemote && !flag) {
 			if (targetEntity != null && targetEntity instanceof EntityPlayer) {
 				targetEntity = null;

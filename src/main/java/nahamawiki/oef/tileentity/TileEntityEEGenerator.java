@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import nahamawiki.oef.OEFCore;
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
@@ -89,10 +89,9 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		if (duration < 1 || reciever.size() < 1)
 			return;
 		// 送信先リストをコピー。
-		ArrayList<Integer> list = EEUtil.copyList(reciever);
+		ArrayList<Integer> list = OEFUtil.copyList(reciever);
 		// 送信する量を記録。
 		holdingEE = this.getSendEE();
-		OEFCore.logger.info("Set holdingEE to " + holdingEE);
 		// 送信先があるなら、EEが足りる限りループする。
 		while (list.size() > 0 && holdingEE / list.size() > 0) {
 			// 蓄えているEEを送信先の数で割って代入。
@@ -194,7 +193,6 @@ public class TileEntityEEGenerator extends TileEntityEEMachineBase {
 		duration = 40;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, level + 4, 2);
 		isSending = true;
-		OEFCore.logger.info("onExploded");
 	}
 
 }

@@ -7,12 +7,14 @@ import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityRoboCreeper;
 import nahamawiki.oef.item.IItemEEBatteryTool;
 import nahamawiki.oef.item.armor.EEArmor;
+import nahamawiki.oef.util.ControllerCreeperedMiner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.event.world.ExplosionEvent.Detonate;
 
 public class OEFEventCore {
@@ -96,6 +98,19 @@ public class OEFEventCore {
 		if (OEFCore.update != null) {
 			OEFCore.update.notifyUpdate(event.player, Side.CLIENT);
 		}
+	}
+
+	/** ブロック設置時のイベント */
+	@SubscribeEvent
+	public void onBlockPlaced(PlaceEvent event) {
+		if (event.world.isRemote)
+			return;
+		if (!ControllerCreeperedMiner.getInstance(event.world).isInArea(event.x, event.y, event.z))
+			return;
+		// 匠化採掘機の採掘範囲内ならブロックの設置をキャンセルさせて爆発を起こす。
+		event.setCanceled(true);
+		// event.world.setBlockToAir(event.x, event.y, event.z);
+		event.world.createExplosion(null, event.x + 0.5, event.y + 0.5, event.z + 0.5, 2, true);
 	}
 
 }

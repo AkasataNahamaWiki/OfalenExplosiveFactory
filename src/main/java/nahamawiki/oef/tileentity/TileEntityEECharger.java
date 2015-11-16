@@ -2,7 +2,7 @@ package nahamawiki.oef.tileentity;
 
 import java.util.Random;
 
-import nahamawiki.oef.util.EEUtil;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 
 	@Override
 	public int getCapacity(int level) {
-		return EEUtil.getBaseCapacity(level);
+		return OEFUtil.getBaseCapacity(level);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		}
 		if (coolTime > 0)
 			coolTime--;
-		if (battery == null || holdingEE <= 0 || coolTime > 0 || battery.getTagCompound().getInteger("holdingEE") > EEUtil.getBaseCapacity(battery.getItemDamage()))
+		if (battery == null || holdingEE <= 0 || coolTime > 0 || battery.getTagCompound().getInteger("holdingEE") > OEFUtil.getBaseCapacity(battery.getItemDamage()))
 			return;
 		battery.getTagCompound().setInteger("holdingEE", battery.getTagCompound().getInteger("holdingEE") + 1);
 		holdingEE--;
@@ -232,7 +232,7 @@ public class TileEntityEECharger extends TileEntityEEMachineBase implements ISid
 		if (slot == 0 && battery != null) {
 			if (!battery.hasTagCompound() || !battery.getTagCompound().getBoolean("canChargeEE"))
 				return true;
-			if (battery.getTagCompound().getInteger("holdingEE") == EEUtil.getBaseCapacity(battery.getItemDamage()))
+			if (battery.getTagCompound().getInteger("holdingEE") == OEFUtil.getBaseCapacity(battery.getItemDamage()))
 				return true;
 		}
 		return false;

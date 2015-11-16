@@ -57,8 +57,8 @@ public abstract class TileEntityEEMachineBase extends TileEntity implements ITil
 	}
 
 	@Override
-	public void setCreeper(boolean flg) {
-		this.isCreeper = flg;
+	public void setCreeper(boolean flag) {
+		this.isCreeper = flag;
 		if (!worldObj.isRemote)
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
