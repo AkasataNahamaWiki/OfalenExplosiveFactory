@@ -50,6 +50,8 @@ public class BlockEEMiner extends BlockEEMachineBase {
 		// インベントリ内にあったアイテムをドロップする。
 		TileEntityEEMiner tileentity = (TileEntityEEMiner) world.getTileEntity(x, y, z);
 		if (tileentity != null) {
+			if (!world.isRemote)
+				tileentity.setCreeper(false);
 			for (int i = 0; i < tileentity.getSizeInventory(); ++i) {
 				ItemStack itemstack = tileentity.getStackInSlot(i);
 

@@ -1,6 +1,9 @@
 package nahamawiki.oef.item.armor;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
+import nahamawiki.oef.core.OEFConfigCore;
 import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import net.minecraft.entity.Entity;
@@ -13,8 +16,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import takumicraft.Takumi.Potion.CreeperPotion;
 import takumicraft.Takumi.enchantment.TEnchantment;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EEArmor extends ItemArmor {
 
@@ -58,29 +59,38 @@ public class EEArmor extends ItemArmor {
 		player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 400, 0));
 		// ヘルメット
 		if (player.getCurrentArmor(3) != null) {
-			player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 10, 0));
+			if (player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet) {
+				player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 10, 0));
+			}
 		}
 
 		// チェストプレート
-		if (player.getCurrentArmor(2) != null && !player.isPotionActive(23)) {
-			player.addPotionEffect(new PotionEffect(23, 1200, 0));
+		if (player.getCurrentArmor(2) != null) {
+			if (player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate) {
+				player.addPotionEffect(new PotionEffect(23, 10, 0));
+			}
 		}
 
 		// レギンス
 		if (player.getCurrentArmor(1) != null) {
-			player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10, 2));
+			if (player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings) {
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10, 2));
+			}
 		}
 
 		// ブーツ
 		if (player.getCurrentArmor(0) != null) {
-			player.addPotionEffect(new PotionEffect(Potion.jump.id, 10, 2));
+			if (player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots) {
+				player.addPotionEffect(new PotionEffect(Potion.jump.id, 10, 2));
+			}
 		}
 
+		if (!OEFConfigCore.isArmorPowered)
+			return;
 		if (!world.isRemote && player.getCurrentArmor(0) != null && player.getCurrentArmor(1) != null &&
 				player.getCurrentArmor(2) != null && player.getCurrentArmor(3) != null) {
-			if(player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet && player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate &&
-					player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings && player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots)
-			{
+			if (player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet && player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate &&
+					player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings && player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots) {
 				boolean flg = true;
 				if (player.worldObj.loadedEntityList != null) {
 					for (Object entity : player.worldObj.loadedEntityList) {

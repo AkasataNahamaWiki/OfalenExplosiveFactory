@@ -4,11 +4,14 @@ import static nahama.ofalenmod.core.OfalenModRecipeCore.*;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import nahama.ofalenmod.core.OfalenModItemCore;
+import nahamawiki.oef.util.OEFUtil;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import takumicraft.Takumi.TakumiCraftCore;
@@ -57,7 +60,7 @@ public class OEFRecipeCore {
 				'A', ITEM.EEControlChipA, 'B', ITEM.EEControlChipB, 'C', ITEM.EEControlChipC);
 
 		// エメラルドパウダー
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ITEM.materials, 9, 1), gemEmerald));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ITEM.materials, 9, 1), "E", 'E', gemEmerald));
 
 		// EEパウダー
 		addRecipe(ITEM.EEPowder,
@@ -156,7 +159,7 @@ public class OEFRecipeCore {
 		// EE伝導管
 		addRecipe(BLOCK.EEConductor,
 				"IBI", "XCY", "IBI",
-				OfalenModItemCore.partsOfalen3D, 'B', CreeperBomb, 'X', ITEM.EEControlChipA, 'C', ITEM.EEPoweredCrystal, 'Y', ITEM.EEControlChipC);
+				'I', OfalenModItemCore.partsOfalen3D, 'B', CreeperBomb, 'X', ITEM.EEControlChipA, 'C', ITEM.EEPoweredCrystal, 'Y', ITEM.EEControlChipC);
 		addDuctLvUpRecipe(BLOCK.EEConductor);
 
 		// EEアイテム輸送管
@@ -211,6 +214,18 @@ public class OEFRecipeCore {
 		addRecipe(ITEM.EETool,
 				"OBO", "ETE", "LBL",
 				'O', Creeper_sOfalenStone, 'B', ITEM.EEBattery, 'E', ITEM.EEPoweredCrystal, 'T', OfalenModItemCore.toolPerfectOfalen, 'L', BoltStone);
+
+		// 充填
+		addChargeRecipe(ITEM.EESword);
+		addChargeRecipe(ITEM.EESword_RED);
+		addChargeRecipe(ITEM.EESword_GREEN);
+		addChargeRecipe(ITEM.EESword_BLUE);
+		addChargeRecipe(ITEM.EESword_WHITE);
+		addChargeRecipe(ITEM.EEHelmet);
+		addChargeRecipe(ITEM.EEChestPlate);
+		addChargeRecipe(ITEM.EELeggings);
+		addChargeRecipe(ITEM.EEBoots);
+		addChargeRecipe(ITEM.EETool);
 	}
 
 	private static void addRecipe(Item result, Object... recipe) {
@@ -263,6 +278,15 @@ public class OEFRecipeCore {
 		addRecipe(ee,
 				"CCC", "OCT", "CCC",
 				'C', ITEM.EEPoweredCrystal, 'O', ofalen, 'T', takumi);
+	}
+
+	private static void addChargeRecipe(Item tool) {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("holdingEE", OEFUtil.getBaseCapacity(0));
+		ItemStack battery = new ItemStack(ITEM.EEBattery);
+		battery.setTagCompound(nbt);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(tool,
+				new ItemStack(tool, 1, OreDictionary.WILDCARD_VALUE), battery));
 	}
 
 }
