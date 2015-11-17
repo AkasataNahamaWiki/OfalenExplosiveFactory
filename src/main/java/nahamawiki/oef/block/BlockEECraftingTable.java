@@ -43,7 +43,7 @@ public class BlockEECraftingTable extends BlockEEMachineBase {
 		TileEntityEECraftingTable tileentity = (TileEntityEECraftingTable) world.getTileEntity(x, y, z);
 		if (tileentity != null) {
 			for (int i = 0; i < tileentity.getSizeInventory(); ++i) {
-				if (18 <= i && i > 28)
+				if (18 <= i && i < 28)
 					continue;
 				ItemStack itemstack = tileentity.getStackInSlot(i);
 

@@ -141,7 +141,11 @@ public class TileEntityEEConductor extends TileEntityEEMachineBase {
 				break;
 			}
 		}
+		if (holdingEE == 0)
+			return;
 		holdingEE -= loss;
+		if (holdingEE < 0)
+			holdingEE = 0;
 	}
 
 	/** 隣接する機械にEEを送信する。 */

@@ -105,6 +105,13 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 				// 空か、材料と一致していないスロットなら次へ。
 				if (itemStacks[j] == null || !itemStacks[j].isItemEqual(sampleMaterials[i]))
 					continue;
+				// 見本レシピがNBTを持っているなら比較し、違うなら次へ。
+				if (sampleMaterials[i].hasTagCompound()) {
+					if (!itemStacks[j].hasTagCompound())
+						continue;
+					if (!sampleMaterials[i].getTagCompound().equals(itemStacks[j].getTagCompound()))
+						continue;
+				}
 				flag = true;
 				// レシピに同じアイテムが複数回使われていた時の為に、カウントを減らす。
 				itemStacks[j].stackSize--;
@@ -225,8 +232,11 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 					int limit = Math.min(this.getInventoryStackLimit(), results[j].getMaxStackSize());
 					if (results[j].stackSize >= limit)
 						continue;
+					int size = itemStack.stackSize;
 					itemStack.stackSize -= (limit - results[j].stackSize);
-					results[j].stackSize += itemStack.stackSize;
+					if (itemStack.stackSize < 0)
+						itemStack.stackSize = 0;
+					results[j].stackSize += (size - itemStack.stackSize);
 					if (itemStack.stackSize < 1) {
 						flag = true;
 						break;
@@ -251,8 +261,11 @@ public class TileEntityEECraftingTable extends TileEntityEEMachineBase implement
 					int limit = Math.min(this.getInventoryStackLimit(), materials[j].getMaxStackSize());
 					if (materials[j].stackSize >= limit)
 						continue;
+					int size = itemStack.stackSize;
 					itemStack.stackSize -= (limit - materials[j].stackSize);
-					materials[j].stackSize += itemStack.stackSize;
+					if (itemStack.stackSize < 0)
+						itemStack.stackSize = 0;
+					materials[j].stackSize += (size - itemStack.stackSize);
 					if (itemStack.stackSize < 1) {
 						flag = true;
 						break;

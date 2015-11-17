@@ -113,7 +113,7 @@ public class OEFItemCore {
 
 		EEChestPlate = new EEArmor(AMEE, 1)
 				.setUnlocalizedName("EEChestPlate")
-				.setTextureName(OEFCore.DOMEINNAME + "EEChestPlate");
+				.setTextureName(OEFCore.DOMEINNAME + "EEChestplate");
 		GameRegistry.registerItem(EEChestPlate, EEChestPlate.getUnlocalizedName());
 
 		EELeggings = new EEArmor(AMEE, 2)
