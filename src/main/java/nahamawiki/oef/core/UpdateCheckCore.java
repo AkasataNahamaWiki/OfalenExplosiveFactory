@@ -16,15 +16,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import nahamawiki.oef.OEFCore;
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-
 import org.apache.logging.log4j.Level;
 
 import com.google.common.io.ByteStreams;
@@ -36,6 +27,14 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
+import nahamawiki.oef.OEFCore;
+import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 public class UpdateCheckCore {
 
@@ -142,8 +141,7 @@ public class UpdateCheckCore {
 	}
 
 	public void showBalloon() {
-		if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
-		{
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			SystemTray tray = SystemTray.getSystemTray();
 			PopupMenu menu = new PopupMenu();
 			MenuItem item = new MenuItem(StatCollector.translateToLocal("info.message.dl"));

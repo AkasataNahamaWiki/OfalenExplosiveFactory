@@ -8,6 +8,7 @@ import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.model.ModelEECapacitor;
 import nahamawiki.oef.model.ModelPowered;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
+import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -24,12 +25,9 @@ public class RenderEECapacitor extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEECapacitor machine;
-		if (tileEntity instanceof TileEntityEECapacitor) {
-			machine = (TileEntityEECapacitor) tileEntity;
-		} else {
+		if (tileEntity == null || !(tileEntity instanceof TileEntityEEMachineBase))
 			return;
-		}
+		TileEntityEECapacitor machine = (TileEntityEECapacitor) tileEntity;
 		model.setConnectingArray(machine.getConnectingArray());
 		model.setSideTypes(machine.getSideTypes());
 		String textureName = "EECapacitor";

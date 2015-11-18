@@ -52,7 +52,7 @@ public class TileEntityEEItemTransporter extends TileEntityEEConductor implement
 			try {
 				for (Object entity : this.worldObj.loadedEntityList) {
 					if (entity instanceof EntityMob) {
-						if (((EntityMob) entity).getDistanceSq(xCoord, yCoord, zCoord) < 16 * 16) {
+						if (((EntityMob) entity).getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 16 * 16) {
 							if (!((EntityMob) entity).isPotionActive(Potion.moveSpeed)) {
 								((EntityMob) entity).addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 600, 3));
 							}

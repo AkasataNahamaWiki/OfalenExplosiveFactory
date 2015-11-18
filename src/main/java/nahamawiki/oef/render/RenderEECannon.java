@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.model.ModelEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
+import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -22,15 +23,13 @@ public class RenderEECannon extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEECannon machine;
-		if (tileEntity instanceof TileEntityEECannon) {
-			machine = (TileEntityEECannon) tileEntity;
-		} else {
+		if (tileEntity == null || !(tileEntity instanceof TileEntityEEMachineBase))
 			return;
-		}
+		TileEntityEECannon machine = (TileEntityEECannon) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
+
 		ResourceLocation textures = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/EECannon.png");
 		float pYawOffset = this.interpolateRotation(0, 0, 1);
 		float pYaw = this.interpolateRotation(machine.getPrevRotationYaw(), machine.getRotationYaw(), 1);
@@ -71,10 +70,10 @@ public class RenderEECannon extends TileEntitySpecialRenderer {
 		}
 	}
 
-	private float interpolateRotation(float p_77034_1_, float p_77034_2_, float p_77034_3_) {
+	private float interpolateRotation(float par1, float par2, float par3) {
 		float f3;
 
-		for (f3 = p_77034_2_ - p_77034_1_; f3 < -180.0F; f3 += 360.0F) {
+		for (f3 = par2 - par1; f3 < -180.0F; f3 += 360.0F) {
 			;
 		}
 
@@ -82,7 +81,7 @@ public class RenderEECannon extends TileEntitySpecialRenderer {
 			f3 -= 360.0F;
 		}
 
-		return p_77034_1_ + p_77034_3_ * f3;
+		return par1 + par3 * f3;
 	}
 
 }

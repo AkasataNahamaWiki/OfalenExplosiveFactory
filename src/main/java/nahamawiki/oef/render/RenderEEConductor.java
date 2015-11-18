@@ -9,6 +9,7 @@ import nahamawiki.oef.model.ModelEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEItemImporter;
 import nahamawiki.oef.tileentity.TileEntityEEItemTransporter;
+import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -25,12 +26,9 @@ public class RenderEEConductor extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
-		TileEntityEEConductor machine;
-		if (tileEntity instanceof TileEntityEEConductor) {
-			machine = (TileEntityEEConductor) tileEntity;
-		} else {
+		if (tileEntity == null || !(tileEntity instanceof TileEntityEEMachineBase))
 			return;
-		}
+		TileEntityEEConductor machine = (TileEntityEEConductor) tileEntity;
 		model.setConnectingArray(machine.getConnectingArray());
 		String textureName = "EEConductor";
 		if (tileEntity instanceof TileEntityEEItemTransporter) {
