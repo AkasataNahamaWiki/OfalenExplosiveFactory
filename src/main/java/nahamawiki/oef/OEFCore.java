@@ -1,22 +1,5 @@
 package nahamawiki.oef;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
 import nahama.ofalenmod.model.ModelLaser;
 import nahamawiki.oef.core.OEFBlockCore;
 import nahamawiki.oef.core.OEFConfigCore;
@@ -35,12 +18,18 @@ import nahamawiki.oef.entity.EntityCannonEPLaser;
 import nahamawiki.oef.entity.EntityCannonGreenLaser;
 import nahamawiki.oef.entity.EntityCannonRedLaser;
 import nahamawiki.oef.entity.EntityCannonWhiteLaser;
+import nahamawiki.oef.entity.EntityEngineCreeper;
+import nahamawiki.oef.entity.EntityPoweredArmor;
+import nahamawiki.oef.entity.EntityRoboCreeper;
 import nahamawiki.oef.material.OEFMaterial;
 import nahamawiki.oef.render.RenderCannonLaser;
 import nahamawiki.oef.render.RenderEECannon;
 import nahamawiki.oef.render.RenderEECapacitor;
 import nahamawiki.oef.render.RenderEEConductor;
+import nahamawiki.oef.render.RenderEngineCreeper;
 import nahamawiki.oef.render.RenderPowered;
+import nahamawiki.oef.render.RenderPoweredArmor;
+import nahamawiki.oef.render.RenderRoboCreeper;
 import nahamawiki.oef.tileentity.TileEntityEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
@@ -49,6 +38,25 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Tom Kate & Akasata Nahama
@@ -102,16 +110,7 @@ public class OEFCore {
 		OEFEntityCore.register(this);
 		// クライアントなら、TileEntityとレーザーのレンダラーを登録する。
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECapacitor.class, new RenderEECapacitor());
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECannon.class, new RenderEECannon());
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEMachineBase.class, new RenderPowered());
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonRedLaser.class, new RenderCannonLaser(new ModelLaser(), "red"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonGreenLaser.class, new RenderCannonLaser(new ModelLaser(), "green"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonBlueLaser.class, new RenderCannonLaser(new ModelLaser(), "blue"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonWhiteLaser.class, new RenderCannonLaser(new ModelLaser(), "white"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonEPLaser.class, new RenderCannonLaser(new ModelLaser(), "EP"));
-			RenderingRegistry.registerEntityRenderingHandler(EntityCannonBoltLaser.class, new RenderCannonLaser(new ModelLaser(), "BO"));
+			this.registRenderer();
 		}
 	}
 
@@ -127,6 +126,25 @@ public class OEFCore {
 		if (update != null && event.getSide() == Side.SERVER) {
 			update.notifyUpdate(event.getServer(), event.getSide());
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registRenderer()
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEConductor.class, new RenderEEConductor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECapacitor.class, new RenderEECapacitor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEECannon.class, new RenderEECannon());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEEMachineBase.class, new RenderPowered());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonRedLaser.class, new RenderCannonLaser(new ModelLaser(), "red"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonGreenLaser.class, new RenderCannonLaser(new ModelLaser(), "green"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonBlueLaser.class, new RenderCannonLaser(new ModelLaser(), "blue"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonWhiteLaser.class, new RenderCannonLaser(new ModelLaser(), "white"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonEPLaser.class, new RenderCannonLaser(new ModelLaser(), "EP"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCannonBoltLaser.class, new RenderCannonLaser(new ModelLaser(), "BO"));
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityPoweredArmor.class, new RenderPoweredArmor());
+		RenderingRegistry.registerEntityRenderingHandler(EntityRoboCreeper.class, new RenderRoboCreeper());
+		RenderingRegistry.registerEntityRenderingHandler(EntityEngineCreeper.class, new RenderEngineCreeper());
 	}
 
 }

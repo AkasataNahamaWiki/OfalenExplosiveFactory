@@ -16,16 +16,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.apache.logging.log4j.Level;
-
-import com.google.common.io.ByteStreams;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
-import cpw.mods.fml.relauncher.Side;
 import nahamawiki.oef.OEFCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -34,6 +24,18 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.apache.logging.log4j.Level;
+
+import com.google.common.io.ByteStreams;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
+import cpw.mods.fml.relauncher.Side;
 
 public class UpdateCheckCore {
 
@@ -140,31 +142,34 @@ public class UpdateCheckCore {
 	}
 
 	public void showBalloon() {
-		SystemTray tray = SystemTray.getSystemTray();
-		PopupMenu menu = new PopupMenu();
-		MenuItem item = new MenuItem(StatCollector.translateToLocal("info.message.dl"));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				BalloonDL();
-			}
-		});
-		menu.add(item);
-
-		try {
-			creeper = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(OEFCore.DOMEINNAME + "textures/blocks/EELamp-1.png")).getInputStream());
-
-			icon = new TrayIcon(creeper, "OEF", menu);
-			icon.addActionListener(new ActionListener() {
+		if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
+		{
+			SystemTray tray = SystemTray.getSystemTray();
+			PopupMenu menu = new PopupMenu();
+			MenuItem item = new MenuItem(StatCollector.translateToLocal("info.message.dl"));
+			item.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					BalloonDL();
 				}
 			});
+			menu.add(item);
 
-			tray.add(icon);
-		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				creeper = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(OEFCore.DOMEINNAME + "textures/blocks/EELamp-1.png")).getInputStream());
+
+				icon = new TrayIcon(creeper, "OEF", menu);
+				icon.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						BalloonDL();
+					}
+				});
+
+				tray.add(icon);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -184,7 +189,7 @@ public class UpdateCheckCore {
 				this.notifyUpdateChat(sender, side);
 			}
 
-			else if (OEFConfigCore.updateType.equalsIgnoreCase("BALLOON")) {
+			else if (OEFConfigCore.updateType.equalsIgnoreCase("BALLOON") && FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 				this.notifyUpdateBalloon();
 			}
 
