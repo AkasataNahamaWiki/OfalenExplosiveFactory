@@ -2,6 +2,7 @@ package nahamawiki.oef.entity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.item.armor.EEArmor;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 public class EntityPoweredArmor extends EntityLiving {
 
 	private EntityPlayer owner;
-	private String ownerName = "";
+	private String ownerName;
 
 	public EntityPoweredArmor(World world) {
 		super(world);
@@ -24,7 +25,6 @@ public class EntityPoweredArmor extends EntityLiving {
 		this(world);
 		owner = player;
 		ownerName = player.getCommandSenderName();
-
 	}
 
 	@Override
@@ -37,11 +37,27 @@ public class EntityPoweredArmor extends EntityLiving {
 
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
+			if (owner == null) {
+				double distance = Double.MAX_VALUE;
+				for (Object object : worldObj.playerEntities) {
+					if (!(object instanceof EntityPlayer))
+						continue;
+					EntityPlayer player = (EntityPlayer) object;
+					if (distance < player.getDistanceSqToEntity(this))
+						continue;
+					owner = player;
+					ownerName = player.getCommandSenderName();
+					OEFCore.logger.info("set name to " + ownerName);
+				}
+			}
+			super.onUpdate();
+			this.updateCoord();
 			return;
+		}
 		if (owner == null || owner.isDead) {
 			this.setDead();
+			super.onUpdate();
 			return;
 		}
 		ticksExisted = owner.ticksExisted;
@@ -50,10 +66,42 @@ public class EntityPoweredArmor extends EntityLiving {
 			armor[i] = owner.getCurrentArmor(i);
 			if (armor[i] == null || !(armor[i].getItem() instanceof EEArmor)) {
 				this.setDead();
+				super.onUpdate();
 				return;
 			}
 		}
-		this.setPosition(owner.posX, owner.posY, owner.posZ);
+		super.onUpdate();
+		this.updateCoord();
+	}
+
+	public void updateCoord() {
+		if (owner == null) {
+			if (ownerName == null) {
+				OEFCore.logger.info("ownerName == null");
+				return;
+			}
+			owner = worldObj.getPlayerEntityByName(ownerName);
+		}
+		this.prevPosX = owner.prevPosX;
+		this.prevPosY = owner.prevPosY + 2;
+		this.prevPosZ = owner.prevPosZ;
+		this.posX = owner.posX;
+		this.posY = owner.posY + 2;
+		this.posZ = owner.posZ;
+		this.lastTickPosX = owner.lastTickPosX;
+		this.lastTickPosY = owner.lastTickPosY + 2;
+		this.lastTickPosZ = owner.lastTickPosZ;
+		this.motionX = owner.motionX;
+		this.motionY = owner.motionY;
+		this.motionZ = owner.motionZ;
+		this.rotationPitch = 0;
+		this.rotationYaw = 0;
+	}
+
+	@Override
+	public void setDead() {
+		OEFCore.logger.info("Set dead");
+		super.setDead();
 	}
 
 	@Override

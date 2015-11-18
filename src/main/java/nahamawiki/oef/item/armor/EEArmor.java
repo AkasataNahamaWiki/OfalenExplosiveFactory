@@ -108,6 +108,7 @@ public class EEArmor extends ItemArmor {
 			EntityPoweredArmor armor = new EntityPoweredArmor(world, player);
 			armor.setPosition(player.posX, player.posY, player.posZ);
 			world.spawnEntityInWorld(armor);
+			OEFCore.logger.info("spawned armor");
 		}
 	}
 

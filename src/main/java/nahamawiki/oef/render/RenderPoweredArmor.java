@@ -1,7 +1,5 @@
 package nahamawiki.oef.render;
 
-import java.util.Random;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -9,12 +7,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import nahamawiki.oef.model.ModelPoweredArmor;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -26,7 +22,7 @@ public class RenderPoweredArmor extends RenderLiving {
 	int tick;
 	int lastLivingTick;
 
-	private static ModelBase creeperModel = new ModelPoweredArmor();
+	private static ModelPoweredArmor creeperModel = new ModelPoweredArmor();
 
 	public RenderPoweredArmor() {
 		super(creeperModel, 0F);
@@ -34,15 +30,10 @@ public class RenderPoweredArmor extends RenderLiving {
 
 	protected int renderArmorPassModel(EntityPoweredArmor living, int par2, float par3) {
 		GL11.glDepthMask(true);
-		if (lastLivingTick != living.ticksExisted) {
-			lastLivingTick = living.ticksExisted;
-			if (living.getOwner() != null)
-				living.setPosition(living.getOwner().posX, living.getOwner().posY, living.getOwner().posZ);
-		}
+		living.updateCoord();
 
 		tick += 5;
 		if (par2 == 1) {
-			Random rand = new Random();
 			float f1 = par3 + tick;
 			this.bindTexture(texture_armor);
 			GL11.glMatrixMode(GL11.GL_TEXTURE);
@@ -53,7 +44,7 @@ public class RenderPoweredArmor extends RenderLiving {
 			this.setRenderPassModel(this.creeperModel);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glEnable(GL11.GL_BLEND);
-			float f4 = 0.5F;
+			float f4 = 0.75F;
 			GL11.glColor4f(f4, f4, f4, 1.0F);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
@@ -89,15 +80,10 @@ public class RenderPoweredArmor extends RenderLiving {
 	@Override
 	public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float pitch) {
 		if (entity instanceof EntityPoweredArmor) {
-			super.doRender(entity, x, y, z, yaw, pitch);
+			EntityPoweredArmor armor = (EntityPoweredArmor) entity;
+			armor.updateCoord();
 		}
-	}
-
-	public void doRender(EntityPoweredArmor entity, double x, double y, double z, float yaw, float pitch) {
-		EntityPlayer player = entity.getOwner();
-		if (player != null) {
-			super.doRender((EntityLivingBase) entity, player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-		}
+		super.doRender(entity, x, y, z, 0, 0);
 	}
 
 }

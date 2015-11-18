@@ -16,7 +16,7 @@ public class ModelPoweredArmor extends ModelBase {
 		// モデルの形を作る
 		base = new ModelRenderer(this, 0, 0);
 		base.addBox(0, 0, 0, 16, 32, 16);
-		base.setRotationPoint(-8F, -8F, -8F);
+		base.setRotationPoint(-8F, 50F, -8F);
 	}
 
 	@Override
