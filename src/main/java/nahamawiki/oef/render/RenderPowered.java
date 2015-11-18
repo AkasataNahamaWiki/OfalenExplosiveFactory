@@ -36,11 +36,18 @@ public class RenderPowered extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		
-		for (int i = 0; i < 6; i++) {
-			String name = tileEntity.getBlockType().getIcon(i, tileEntity.getBlockMetadata()).getIconName().substring(4);
-			ResourceLocation textures = new ResourceLocation("oef:textures/blocks/" + name + ".png");
-			Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-			model.block[Facing.oppositeSide[i]].render(0.0625F);
+		try
+		{
+			for (int i = 0; i < 6; i++) {
+				String name = tileEntity.getBlockType().getIcon(i, tileEntity.getBlockMetadata()).getIconName().substring(4);
+				ResourceLocation textures = new ResourceLocation("oef:textures/blocks/" + name + ".png");
+				Minecraft.getMinecraft().renderEngine.bindTexture(textures);
+				model.block[Facing.oppositeSide[i]].render(0.0625F);
+			}
+		}
+		catch(Exception e)
+		{
+			return;
 		}
 		// model.base2.render(0.0625f);
 		GL11.glPopMatrix();
