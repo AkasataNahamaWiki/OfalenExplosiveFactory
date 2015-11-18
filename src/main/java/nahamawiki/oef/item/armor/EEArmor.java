@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.core.OEFConfigCore;
-import nahamawiki.oef.core.OEFItemCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,6 +46,7 @@ public class EEArmor extends ItemArmor {
 	/** アップデート時の処理 */
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+		boolean flag[] = new boolean[4];
 
 		if (player.isPotionActive(CreeperPotion.exp.id)) {
 			player.removePotionEffect(CreeperPotion.exp.id);
@@ -59,58 +59,55 @@ public class EEArmor extends ItemArmor {
 		player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 400, 0));
 		// ヘルメット
 		if (player.getCurrentArmor(3) != null) {
-			if (player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet) {
+			if (player.getCurrentArmor(3).getItem() instanceof EEArmor) {
 				player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 10, 0));
+				flag[3] = true;
 			}
 		}
 
 		// チェストプレート
 		if (player.getCurrentArmor(2) != null) {
-			if (player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate) {
+			if (player.getCurrentArmor(2).getItem() instanceof EEArmor) {
 				player.addPotionEffect(new PotionEffect(23, 10, 0));
+				flag[2] = true;
 			}
 		}
 
 		// レギンス
 		if (player.getCurrentArmor(1) != null) {
-			if (player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings) {
+			if (player.getCurrentArmor(1).getItem() instanceof EEArmor) {
 				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10, 2));
+				flag[1] = true;
 			}
 		}
 
 		// ブーツ
 		if (player.getCurrentArmor(0) != null) {
-			if (player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots) {
+			if (player.getCurrentArmor(0).getItem() instanceof EEArmor) {
 				player.addPotionEffect(new PotionEffect(Potion.jump.id, 10, 2));
+				flag[0] = true;
 			}
 		}
 
-		if (!OEFConfigCore.isArmorPowered)
+		if (world.isRemote || !OEFConfigCore.isArmorPowered)
 			return;
-		if (!world.isRemote && player.getCurrentArmor(0) != null && player.getCurrentArmor(1) != null &&
-				player.getCurrentArmor(2) != null && player.getCurrentArmor(3) != null) {
-			if (player.getCurrentArmor(3).getItem() == OEFItemCore.EEHelmet && player.getCurrentArmor(2).getItem() == OEFItemCore.EEChestPlate &&
-					player.getCurrentArmor(1).getItem() == OEFItemCore.EELeggings && player.getCurrentArmor(0).getItem() == OEFItemCore.EEBoots) {
-				boolean flg = true;
-				if (player.worldObj.loadedEntityList != null) {
-					for (Object entity : player.worldObj.loadedEntityList) {
-						if (entity instanceof EntityPoweredArmor) {
-
-							if (((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getDisplayName())) {
-								flg = false;
-								((EntityPoweredArmor) entity).setOwnerName(player.getDisplayName());
-							} else {
-								((EntityPoweredArmor) entity).setDead();
-							}
-						}
-					}
-					if (flg) {
-						EntityPoweredArmor armor = new EntityPoweredArmor(player.worldObj, player);
-						armor.setPosition(player.posX, player.posY, player.posZ);
-						player.worldObj.spawnEntityInWorld(armor);
-					}
-				}
+		if (!flag[0] || !flag[1] || !flag[2] || !flag[3])
+			return;
+		boolean flag1 = false;
+		if (world.loadedEntityList == null || world.loadedEntityList.isEmpty())
+			return;
+		for (Object entity : world.loadedEntityList) {
+			if (!(entity instanceof EntityPoweredArmor))
+				continue;
+			if (((EntityPoweredArmor) entity).getOwnerName().equalsIgnoreCase(player.getCommandSenderName())) {
+				flag1 = true;
+				break;
 			}
+		}
+		if (!flag1) {
+			EntityPoweredArmor armor = new EntityPoweredArmor(world, player);
+			armor.setPosition(player.posX, player.posY, player.posZ);
+			world.spawnEntityInWorld(armor);
 		}
 	}
 
