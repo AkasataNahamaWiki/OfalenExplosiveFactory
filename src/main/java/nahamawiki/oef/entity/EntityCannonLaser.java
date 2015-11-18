@@ -271,11 +271,10 @@ public class EntityCannonLaser extends Entity {
 		this.throwableShake = nbt.getByte("Shake") & 255;
 		this.inGround = nbt.getByte("InGround") == 1;
 		this.throwerName = nbt.getString("OwnerName");
+
 		if (this.throwerName != null && this.throwerName.length() == 0) {
 			this.throwerName = null;
 		}
-		if (throwerName != null)
-			thrower = this.worldObj.getPlayerEntityByName(this.throwerName);
 	}
 
 	@Override

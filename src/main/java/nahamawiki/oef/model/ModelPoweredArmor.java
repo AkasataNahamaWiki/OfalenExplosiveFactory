@@ -10,8 +10,8 @@ public class ModelPoweredArmor extends ModelBase {
 
 	public ModelPoweredArmor() {
 		// テクスチャの縦と横のサイズ
-		textureWidth = 64;
-		textureHeight = 32;
+		textureWidth = 32;
+		textureHeight = 64;
 
 		// モデルの形を作る
 		base = new ModelRenderer(this, 0, 0);

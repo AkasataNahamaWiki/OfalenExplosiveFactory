@@ -2,10 +2,6 @@ package nahamawiki.oef.render;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import nahamawiki.oef.OEFCore;
 import nahamawiki.oef.entity.EntityPoweredArmor;
 import nahamawiki.oef.model.ModelPoweredArmor;
@@ -17,31 +13,32 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 @SideOnly(Side.CLIENT)
 public class RenderPoweredArmor extends RenderLiving {
-
 	private static final ResourceLocation texture = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/null.png");
 	private static final ResourceLocation texture_armor = new ResourceLocation(OEFCore.DOMEINNAME + "textures/models/armor.png");
 
 	int tick;
-	int lastLivingTick;
 
+	/** The creeper model. */
 	private static ModelBase creeperModel = new ModelPoweredArmor();
 
 	public RenderPoweredArmor() {
 		super(creeperModel, 0F);
 	}
 
+	/**
+	 * A method used to render a creeper's powered form as a pass model.
+	 */
 	protected int renderArmorPassModel(EntityPoweredArmor living, int par2, float par3) {
 		GL11.glDepthMask(true);
-		if (lastLivingTick != living.ticksExisted) {
-			lastLivingTick = living.ticksExisted;
-			if (living.getOwner() != null)
-				living.setPosition(living.getOwner().posX, living.getOwner().posY, living.getOwner().posZ);
-		}
-
-		tick += 5;
 		if (par2 == 1) {
+			tick++;
 			Random rand = new Random();
 			float f1 = par3 + tick;
 			this.bindTexture(texture_armor);
@@ -71,6 +68,9 @@ public class RenderPoweredArmor extends RenderLiving {
 		return -1;
 	}
 
+	/**
+	 * Queries whether should render the specified pass or not.
+	 */
 	@Override
 	protected int shouldRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3) {
 		return this.renderArmorPassModel((EntityPoweredArmor) par1EntityLiving, par2, par3);
@@ -85,19 +85,22 @@ public class RenderPoweredArmor extends RenderLiving {
 	protected int inheritRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3) {
 		return -1;
 	}
-
-	@Override
-	public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float pitch) {
-		if (entity instanceof EntityPoweredArmor) {
-			super.doRender(entity, x, y, z, yaw, pitch);
-		}
-	}
-
-	public void doRender(EntityPoweredArmor entity, double x, double y, double z, float yaw, float pitch) {
-		EntityPlayer player = entity.getOwner();
-		if (player != null) {
-			super.doRender((EntityLivingBase) entity, player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-		}
-	}
+	
+	 public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float pitch)
+	    {
+	        if(entity instanceof EntityPoweredArmor)
+	        {
+	        	super.doRender((EntityPoweredArmor)entity, x, y, z, yaw, pitch);
+	        }
+	    }
+	 
+	 public void doRender(EntityPoweredArmor entity, double x, double y, double z, float yaw, float pitch)
+	    {
+		 	EntityPlayer player = entity.getOwner();
+		 	if(player != null)
+		 	{
+		 		super.doRender((EntityLivingBase)entity, player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+		 	}
+	    }
 
 }
