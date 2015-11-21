@@ -259,13 +259,13 @@ public class OEFRecipeCore {
 	private static void addDuctLvUpRecipe(Block duct) {
 		addRecipe(new ItemStack(duct, 1, 1),
 				"AOC", "BDB", "OEO",
-				'A', ITEM.EEControlChipA, 'O', gem[3], 'C', ITEM.EEControlChipB, 'B', CreeperBomb, 'D', new ItemStack(duct), 'E', ITEM.EEPoweredCrystal);
+				'A', ITEM.EEControlChipA, 'O', gem[3], 'C', ITEM.EEControlChipC, 'B', CreeperBomb, 'D', new ItemStack(duct), 'E', ITEM.EEPoweredCrystal);
 		addRecipe(new ItemStack(duct, 1, 2),
 				"ASC", "PDP", "SES",
-				'A', ITEM.EEControlChipA, 'S', TDiamond, 'C', ITEM.EEControlChipB, 'P', ITEM.EEControlChipS, 'D', new ItemStack(duct, 1, 1), 'E', ITEM.EEPoweredCrystal);
+				'A', ITEM.EEControlChipA, 'S', TDiamond, 'C', ITEM.EEControlChipC, 'P', ITEM.EEControlChipS, 'D', new ItemStack(duct, 1, 1), 'E', ITEM.EEPoweredCrystal);
 		addRecipe(new ItemStack(duct, 1, 3),
 				"ABC", "SDS", "OEO",
-				'A', ITEM.EEControlChipA, 'B', BoltStone, 'C', ITEM.EEControlChipB, 'S', ITEM.EEControlChipS, 'D', new ItemStack(duct, 1, 2), 'O', core[3], 'E', ITEM.EEPoweredCrystal);
+				'A', ITEM.EEControlChipA, 'B', BoltStone, 'C', ITEM.EEControlChipC, 'S', ITEM.EEControlChipS, 'D', new ItemStack(duct, 1, 2), 'O', core[3], 'E', ITEM.EEPoweredCrystal);
 	}
 
 	private static void addSwordRecipe(Item sword, int color) {

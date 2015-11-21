@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 
 public class ItemEEBattery extends ItemOEFBase {
 
-	private IIcon[][] iicon = new IIcon[2][4];
+	private IIcon[] iicon = new IIcon[4];
 
 	public ItemEEBattery() {
 		super();
@@ -81,15 +81,16 @@ public class ItemEEBattery extends ItemOEFBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
 		for (int i = 0; i < 4; i++) {
-			this.iicon[0][i] = register.registerIcon(this.getIconString() + "-" + i);
-			this.iicon[1][i] = register.registerIcon(this.getIconString() + "_Full-" + i);
+			this.iicon[i] = register.registerIcon(this.getIconString() + "_Full-" + i);
 		}
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
-		return this.iicon[1][meta];
+		return this.iicon[meta & 3];
 	}
 
 	@Override
@@ -98,10 +99,10 @@ public class ItemEEBattery extends ItemOEFBase {
 		if (itemStack.hasTagCompound()) {
 			NBTTagCompound nbt = itemStack.getTagCompound();
 			if (nbt.getInteger("holdingEE") == 0)
-				return this.iicon[0][itemStack.getItemDamage()];
-			return this.iicon[1][itemStack.getItemDamage()];
+				return this.itemIcon;
+			return this.iicon[itemStack.getItemDamage() & 3];
 		}
-		return this.iicon[0][itemStack.getItemDamage()];
+		return this.itemIcon;
 	}
 
 	@Override

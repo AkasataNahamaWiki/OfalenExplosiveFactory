@@ -26,6 +26,7 @@ import net.minecraft.util.StatCollector;
 public class TileEntityEECannon extends TileEntityEEMachineBase {
 
 	protected boolean isSpawning;
+	protected byte type;
 	public int size;
 	protected int duration;
 	protected String color = "";
@@ -66,8 +67,8 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public void updateMachine() {
 		this.angleUpdate();
-		this.prevRotationYaw = this.rotationYaw;
-		this.prevRotationPitch = this.rotationPitch;
+		prevRotationYaw = rotationYaw;
+		prevRotationPitch = rotationPitch;
 		if (duration > 0)
 			duration--;
 		if (holdingEE < 1)
@@ -91,52 +92,53 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public void updateCreepered() {
 		this.angleUpdate();
-		this.prevRotationYaw = this.rotationYaw;
-		this.prevRotationPitch = this.rotationPitch;
+		prevRotationYaw = rotationYaw;
+		prevRotationPitch = rotationPitch;
 		if (duration > 0)
 			duration--;
-		if (this.targetEntity == null || this.targetEntity.isDead || !(targetEntity instanceof EntityPlayer)) {
-			List list = this.worldObj.playerEntities;
+		if (targetEntity == null || targetEntity.isDead || !(targetEntity instanceof EntityPlayer)) {
+			List list = worldObj.playerEntities;
 			if (list.isEmpty()) {
 				targetEntity = null;
 				return;
 			}
 			for (Object entity : list) {
 				if (entity instanceof EntityPlayer) {
-					this.targetEntity = (EntityPlayer) entity;
+					targetEntity = (EntityPlayer) entity;
 					break;
 				}
 			}
 		}
-		if (this.targetEntity != null && this.targetEntity.isDead) {
-			this.targetEntity = null;
+		if (targetEntity != null && targetEntity.isDead) {
+			targetEntity = null;
 		}
 		if (duration < 1 && targetEntity != null) {
+			if (this.getOwner() == null)
+				owner = (EntityPlayer) targetEntity;
 			duration = 10;
 			Random random = new Random();
 			if (random.nextBoolean()) {
-				EntityCannonBoltLaser laser = new EntityCannonBoltLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
+				this.spawnLaser("Bolt", owner);
+				type = 1;
 			} else {
-				EntityCannonEPLaser laser = new EntityCannonEPLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-				worldObj.spawnEntityInWorld(laser);
+				this.spawnLaser("EP", owner);
+				type = 2;
 			}
-
 			isSpawning = true;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	protected void angleUpdate() {
-		if (this.targetEntity != null) {
-			double x = this.targetEntity.posX - this.xCoord;
-			double y = this.targetEntity.posY - this.yCoord;
-			double z = this.targetEntity.posZ - this.zCoord;
+		if (targetEntity != null) {
+			double x = targetEntity.posX - xCoord;
+			double y = targetEntity.posY - yCoord;
+			double z = targetEntity.posZ - zCoord;
 			double distance = MathHelper.sqrt_double(x * x + z * z);
 			float pYaw = (float) (Math.atan2(z, x) * (180.0D / Math.PI)) - 90.0F;
 			float pPitch = (float) (-(Math.atan2(y, distance) * (180.0D / Math.PI)));
-			this.rotationPitch = MathHelper.wrapAngleTo180_float(this.updateRotation(this.rotationPitch, pPitch, 360f));
-			this.rotationYaw = MathHelper.wrapAngleTo180_float(this.updateRotation(this.rotationYaw, pYaw, 360f));
+			rotationPitch = MathHelper.wrapAngleTo180_float(this.updateRotation(rotationPitch, pPitch, 360f));
+			rotationYaw = MathHelper.wrapAngleTo180_float(this.updateRotation(rotationYaw, pYaw, 360f));
 
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -154,25 +156,25 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	}
 
 	private void updateTarget(EntityPlayer player) {
-		if (this.targetEntity == null || this.targetEntity.isDead) {
-			List list = this.worldObj.loadedEntityList;
+		if (targetEntity == null || targetEntity.isDead) {
+			List list = worldObj.loadedEntityList;
 			Collections.sort(list, new TileEntityEECannon.Sorter(player));
 			if (!list.isEmpty()) {
 				for (Object entity : list) {
 					if (entity instanceof EntityMob && !(entity instanceof EntityEngineCreeper)) {
-						this.targetEntity = (EntityLivingBase) entity;
+						targetEntity = (EntityLivingBase) entity;
 						break;
 					}
 				}
 			}
 		}
-		if (this.targetEntity != null && this.targetEntity.isDead) {
-			this.targetEntity = null;
+		if (targetEntity != null && targetEntity.isDead) {
+			targetEntity = null;
 		}
 	}
 
 	protected void spawnLaser(String color, EntityPlayer player) {
-		if (owner == null)
+		if (player == null)
 			return;
 		if (color.equals("Red")) {
 			for (int i = -2; i < 3; i++) {
@@ -190,6 +192,12 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 				EntityCannonWhiteLaser laser = new EntityCannonWhiteLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch, i);
 				worldObj.spawnEntityInWorld(laser);
 			}
+		} else if (color.equals("Bolt")) {
+			EntityCannonBoltLaser laser = new EntityCannonBoltLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			worldObj.spawnEntityInWorld(laser);
+		} else if (color.equals("EP")) {
+			EntityCannonEPLaser laser = new EntityCannonEPLaser(player, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
+			worldObj.spawnEntityInWorld(laser);
 		}
 	}
 
@@ -208,7 +216,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setString("Color", this.getColor());
+		nbt.setString("Color", color);
 		nbt.setInteger("Duration", duration);
 		nbt.setInteger("Size", size);
 		nbt.setFloat("RotationYaw", rotationYaw);
@@ -242,6 +250,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 			isSpawning = false;
 			if (this.getCreeper()) {
 				nbt.setBoolean("IsCreeper", true);
+				nbt.setByte("Type", type);
 			}
 			if ((ownerName == null || ownerName.length() == 0) && owner != null) {
 				ownerName = owner.getCommandSenderName();
@@ -250,7 +259,7 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		}
 		nbt.setFloat("RotationYaw", rotationYaw);
 		nbt.setFloat("RotationPitch", rotationPitch);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
 	}
 
 	@Override
@@ -259,22 +268,24 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		rotationYaw = nbt.getFloat("RotationYaw");
 		rotationPitch = nbt.getFloat("RotationPitch");
 		ownerName = nbt.getString("OwnerName");
+		this.setColor(nbt.getString("Color"));
+		isCreeper = nbt.getBoolean("IsCreeper");
+		type = nbt.getByte("Type");
 		if (ownerName != null && ownerName.length() == 0) {
 			ownerName = null;
 		}
 		if (nbt.getBoolean("IsSpawning")) {
-			if (!nbt.getBoolean("IsCreeper")) {
-				this.spawnLaser(nbt.getString("Color"), this.getOwner());
-			} else {
-				Random random = new Random();
-				if (random.nextBoolean()) {
-					EntityCannonBoltLaser laser = new EntityCannonBoltLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-					worldObj.spawnEntityInWorld(laser);
+			String s = color;
+			if (isCreeper) {
+				if (type == 1) {
+					s = "Bolt";
+				} else if (type == 2) {
+					s = "EP";
 				} else {
-					EntityCannonEPLaser laser = new EntityCannonEPLaser(owner, worldObj, xCoord + 0.5, yCoord + 0.65, zCoord + 0.5, rotationYaw, rotationPitch);
-					worldObj.spawnEntityInWorld(laser);
+					s = "";
 				}
 			}
+			this.spawnLaser(s, this.getOwner());
 		}
 	}
 
@@ -301,12 +312,12 @@ public class TileEntityEECannon extends TileEntityEEMachineBase {
 		private final Entity theEntity;
 
 		public Sorter(Entity entity) {
-			this.theEntity = entity;
+			theEntity = entity;
 		}
 
 		public int compare(Entity entity1, Entity entity2) {
-			double d0 = this.theEntity.getDistanceSqToEntity(entity1);
-			double d1 = this.theEntity.getDistanceSqToEntity(entity2);
+			double d0 = theEntity.getDistanceSqToEntity(entity1);
+			double d1 = theEntity.getDistanceSqToEntity(entity2);
 			return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
 		}
 
