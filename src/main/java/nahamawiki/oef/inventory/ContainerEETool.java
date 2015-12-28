@@ -9,6 +9,14 @@ import net.minecraft.item.ItemStack;
 public class ContainerEETool extends Container {
 
 	private InventoryEETool inventory;
+	/** EEToolのインベントリの第一スロットの番号 */
+	private static final int index0 = 0;
+	/** プレイヤーのインベントリの第一スロットの番号 */
+	private static final int index1 = 54;
+	/** クイックスロットの第一スロットの番号 */
+	private static final int index2 = 81;
+	/** このコンテナの全体のスロット数 */
+	private static final int index3 = 90;
 
 	public ContainerEETool(InventoryPlayer inventoryPlayer) {
 		inventory = new InventoryEETool(inventoryPlayer);
@@ -41,31 +49,37 @@ public class ContainerEETool extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_) {
+	public ItemStack slotClick(int slotNumber, int par2, int par3, EntityPlayer player) {
+		if (slotNumber - index1 == player.inventory.currentItem + 27) {
+			return null;
+		}
+		return super.slotClick(slotNumber, par2, par3, player);
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(p_82846_2_);
+		Slot slot = (Slot) this.inventorySlots.get(slotNumber);
 
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (p_82846_2_ < this.inventory.getSizeInventory()) {
+			if (slotNumber < this.inventory.getSizeInventory()) {
 				if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true)) {
 					return null;
 				}
-			}
-			/* //シフトクリック時に、このアイテムだったら動かさない。
-			 * else if(slot.getStack() != null)
-			 * {
-			 * return null;
-			 * } */
-			else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false)) {
-				return null;
-			}
-			if (itemstack1.stackSize == 0) {
-				slot.putStack((ItemStack) null);
 			} else {
-				slot.onSlotChanged();
+				if (slotNumber - index1 == player.inventory.currentItem + 27)
+					return null;
+				if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false)) {
+					return null;
+				}
+				if (itemstack1.stackSize == 0) {
+					slot.putStack((ItemStack) null);
+				} else {
+					slot.onSlotChanged();
+				}
 			}
 		}
 

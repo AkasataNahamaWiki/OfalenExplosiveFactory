@@ -50,6 +50,7 @@ import nahamawiki.oef.tileentity.TileEntityEECannon;
 import nahamawiki.oef.tileentity.TileEntityEECapacitor;
 import nahamawiki.oef.tileentity.TileEntityEEConductor;
 import nahamawiki.oef.tileentity.TileEntityEEMachineBase;
+import nahamawiki.oef.util.ControllerCreeperedMiner;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -119,6 +120,7 @@ public class OEFCore {
 
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
+		ControllerCreeperedMiner.init();
 		// サーバーの起動時にアップデートの通知をする。
 		if (update != null && event.getSide() == Side.SERVER) {
 			update.notifyUpdate(event.getServer(), event.getSide());

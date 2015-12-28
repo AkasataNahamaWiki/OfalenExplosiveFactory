@@ -15,6 +15,10 @@ public class ControllerCreeperedMiner {
 		this.id = id;
 	}
 
+	public static void init() {
+		instanceList.clear();
+	}
+
 	/** ディメンションに対応したコントローラのインスタンスを返す。 */
 	public static ControllerCreeperedMiner getInstance(World world) {
 		// ディメンションIDを取得し、そのディメンションに対応するコントローラがないなら生成して返す。
